@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, Image, FlatList, RefreshControl } from 'react-native'
 import ProjectItem from './ProjectItem'
 
-
+import * as api from '../api'
 
 
 class ProjectList extends React.Component {
@@ -22,6 +22,13 @@ class ProjectList extends React.Component {
             refreshing: false,
             projects: []
         }
+    }
+
+    componentDidMount() {
+        api.getProj().then(data => {
+            const { count: total, data: list } = data
+            this.setState({ projects: list })
+        })
     }
 
     onRefresh = () => {
@@ -45,6 +52,7 @@ class ProjectList extends React.Component {
                     </View>
                 </View>
                 <FlatList
+                    style={{backgroundColor: '#f4f4f4'}}
                     data={list}
                     keyExtractor={(item,index)=>item}
                     renderItem={() => <ProjectItem />}

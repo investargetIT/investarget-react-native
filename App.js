@@ -6,7 +6,9 @@ import Posts from './src/components/Posts'
 import Events from './src/components/Events'
 import UserCenter from './src/components/UserCenter'
 import Contact from './src/components/Contact'
+import AsyncStorage from './src/AsyncStorage'
 
+AsyncStorage.setItem('source', '1')
 
 const MainNavigator = TabNavigator({
   ProjectList: {
