@@ -7,6 +7,9 @@ import Events from './src/components/Events'
 import UserCenter from './src/components/UserCenter'
 import Contact from './src/components/Contact'
 import AsyncStorage from './src/AsyncStorage'
+import { Provider } from 'react-redux'
+import rootReducer from './reducers'
+import { createStore } from 'redux'
 
 AsyncStorage.setItem('source', '1')
 
@@ -75,8 +78,11 @@ const App = StackNavigator({
   Contact: { screen: Contact },
 })
 
-// StatusBar.setTranslucent(true) // why not working ?
-StatusBar.setHidden(true)
+StatusBar.setBarStyle('light-content');
 
-export default App
+export default () => (
+  <Provider store={createStore(rootReducer)}>
+    <App />
+  </Provider>
+)
 

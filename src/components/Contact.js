@@ -1,12 +1,11 @@
 import React from 'react'
-import { Image, Text } from 'react-native'
+import { Image, Text, View, StatusBar } from 'react-native'
 
 class Contact extends React.Component {
     
     static navigationOptions = {
         title: '联系我们',
         headerStyle: {
-            height: 48,
             backgroundColor: '#10458f',
         },
         headerTintColor: '#fff',
@@ -19,7 +18,12 @@ class Contact extends React.Component {
     }
 
     render() {
-        return <Text>联系方式</Text>
+        return (
+            <View>
+                <StatusBar backgroundColor="red" barStyle="light-content" />
+                <Text>联系方式</Text>
+            </View>
+        )
     }
 }
 
