@@ -1,6 +1,13 @@
 import React from 'react'
-import { StatusBar } from 'react-native'
-import { TabNavigator, StackNavigator } from 'react-navigation'
+import { StatusBar, View } from 'react-native'
+import { 
+  TabNavigator, 
+  StackNavigator, 
+  TabRouter,
+  createNavigationContainer,
+  createNavigator,
+  addNavigationHelpers,
+} from 'react-navigation';
 import ProjectList from './src/components/ProjectList'
 import Posts from './src/components/Posts'
 import Events from './src/components/Events'
@@ -10,6 +17,7 @@ import AsyncStorage from './src/AsyncStorage'
 import { Provider } from 'react-redux'
 import rootReducer from './reducers'
 import { createStore } from 'redux'
+import CustomTabBar from './src/components/CustomTabBar';
 
 AsyncStorage.setItem('source', '1')
 
@@ -72,6 +80,36 @@ const MainNavigator = TabNavigator({
   lazy: false,
 })
 
+const CustomTabView = ({ router, navigation }) => {
+  const { routes, index } = navigation.state;
+  const ActiveScreen = router.getComponentForRouteName(routes[index].routeName);
+  return (
+    <View style={{ flex: 1 }}>
+      <View style={{ height: 24, backgroundColor: '#10458F' }} />
+      <CustomTabBar navigation={navigation} />
+      <ActiveScreen
+        navigation={addNavigationHelpers({
+          ...navigation,
+          state: routes[index],
+        })}
+      />
+    </View>
+  );
+};
+
+const CustomTabRouter = TabRouter(
+  {
+    project: {
+      screen: ProjectList,
+    },
+    service: {
+      screen: Posts,
+    },
+  }
+);
+const CustomTabs = createNavigationContainer(
+  createNavigator(CustomTabRouter)(CustomTabView)
+);
 
 const App = StackNavigator({
   Home: { screen:  MainNavigator },
@@ -82,7 +120,8 @@ StatusBar.setBarStyle('light-content');
 
 export default () => (
   <Provider store={createStore(rootReducer)}>
-    <App />
+    {/* <App /> */}
+    <CustomTabs />
   </Provider>
 )
 

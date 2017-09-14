@@ -44,16 +44,7 @@ class ProjectList extends React.Component {
         return (
             <View style={{flex:1}}>
                 
-                <View style={{ height: 24, backgroundColor: '#10458F' }} />
-
-                <View style={{ backgroundColor: '#10458F', flexDirection: 'row', justifyContent: 'center' }}>
-                    <View style={{ borderBottomWidth: 2, borderBottomColor: 'white', padding: 10 }}>
-                        <Text style={{ fontSize: 18, color: 'white' }}>项目</Text>
-                    </View>
-                    <View style={{ borderBottomWidth: 0, borderBottomColor: 'white', padding: 10 }}>
-                        <Text style={{ fontSize: 18, color: 'white' }}>服务</Text>
-                    </View>
-                </View>
+                
 
                 <View style={{height:45,backgroundColor: '#F4F4F4',display: 'flex',flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
                     <View style={{marginLeft:8,borderLeftWidth:2,borderLeftColor:'#10458f',paddingLeft:8}}>
