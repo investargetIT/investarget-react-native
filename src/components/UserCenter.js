@@ -49,7 +49,7 @@ class UserCenter extends React.Component {
                 </ImageBackground>
 
                 <View style={{marginBottom:20,backgroundColor:'#fff'}}>
-                    <SettingItem icon={require('../images/userCenter/ht-usercenter-6.png')} label="我的交易师" />
+                    <SettingItem icon={require('../images/userCenter/ht-usercenter-6.png')} label="我的交易师"  onPress={() => {this.props.navigation.navigate('Login')}} />
                     <Seperator />
                     <SettingItem icon={require('../images/userCenter/ht-usercenter-6.png')} label="通知消息" />
                 </View>
@@ -67,7 +67,7 @@ class UserCenter extends React.Component {
                     <Seperator />
                     <SettingItem icon={require('../images/userCenter/name_card.png')} label="修改名片" />
                     <Seperator />
-                    <SettingItem icon={require('../images/userCenter/ht-usercenter-8.png')} label="联系我们" onPress={() => {this.props.navigation.navigate('Contact')}} />
+                    <SettingItem icon={require('../images/userCenter/ht-usercenter-8.png')} label="联系我们" />
                 </View>
 
                 <View style={{marginBottom:20,backgroundColor:'#fff'}}>

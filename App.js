@@ -13,6 +13,10 @@ import Posts from './src/components/Posts'
 import Events from './src/components/Events'
 import UserCenter from './src/components/UserCenter'
 import Contact from './src/components/Contact'
+import Login from './src/containers/Login'
+import Register from './src/containers/Register'
+import Register2 from './src/containers/Register2'
+import RetrievePassword from './src/containers/RetrievePassword'
 import AsyncStorage from './src/AsyncStorage'
 import { Provider } from 'react-redux'
 import rootReducer from './reducers'
@@ -114,13 +118,17 @@ const CustomTabs = createNavigationContainer(
 const App = StackNavigator({
   Home: { screen:  MainNavigator },
   Contact: { screen: Contact },
+  Login: { screen: Login },
+  Register: { screen: Register },
+  Register2: { screen: Register2 },
+  RetrievePassword: { screen: RetrievePassword },
 })
 
 StatusBar.setBarStyle('light-content');
+const store = createStore(rootReducer)
 
 export default () => (
-  <Provider store={createStore(rootReducer)}>
-    {/* <App /> */}
+  <Provider store={store}>
     <CustomTabs />
   </Provider>
 )
