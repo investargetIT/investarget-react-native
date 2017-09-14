@@ -105,9 +105,15 @@ const CustomTabRouter = TabRouter(
   {
     project: {
       screen: ProjectList,
+      navigationOptions: {
+        header: null,
+      }
     },
     service: {
       screen: Posts,
+      navigationOptions: {
+        header: null,
+      }
     },
   }
 );
@@ -116,7 +122,7 @@ const CustomTabs = createNavigationContainer(
 );
 
 const App = StackNavigator({
-  Home: { screen:  MainNavigator },
+  Home: { screen:  CustomTabs },
   Contact: { screen: Contact },
   Login: { screen: Login },
   Register: { screen: Register },
@@ -129,7 +135,7 @@ const store = createStore(rootReducer)
 
 export default () => (
   <Provider store={store}>
-    <CustomTabs />
+    <App />
   </Provider>
 )
 
