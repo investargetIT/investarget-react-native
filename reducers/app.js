@@ -25,7 +25,7 @@ import {
     HIDE_TOAST,
     SAVE_REDIRECT_URL,
     UPDATE_PROJECT_STRUCTURE,
-  } from './actions'
+  } from '../actions'
   
   const initialState = {
     isLogin: false,

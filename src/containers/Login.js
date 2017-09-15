@@ -6,6 +6,7 @@ import FormButton from '../components/FormButton'
 import FormLink from '../components/FormLink'
 import Toast from 'react-native-root-toast'
 import * as api from '../api'
+import { NavigationActions } from 'react-navigation'
 
 class Login extends React.Component {
 
@@ -45,6 +46,8 @@ class Login extends React.Component {
         //     Toast.show(error.message)
         // })
 
+        const backAction = NavigationActions.back()
+        this.props.navigation.dispatch(backAction)
     }
 
     handleRegister = () => {
