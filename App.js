@@ -7,6 +7,7 @@ import {
   createNavigationContainer,
   createNavigator,
   addNavigationHelpers,
+  DrawerNavigator,
 } from 'react-navigation';
 import ProjectList from './src/components/ProjectList'
 import Posts from './src/components/Posts'
@@ -22,6 +23,7 @@ import { Provider } from 'react-redux'
 import rootReducer from './reducers'
 import { createStore } from 'redux'
 import CustomTabBar from './src/components/CustomTabBar';
+import CustomDrawerContentComponent from './src/components/CustomDrawerContentComponent'
 
 AsyncStorage.setItem('source', '1')
 
@@ -130,12 +132,43 @@ const App = StackNavigator({
   RetrievePassword: { screen: RetrievePassword },
 })
 
+const DrawerApp = DrawerNavigator(
+  {
+    App: {
+      path: '/',
+      screen: App,
+    },
+    Contact: {
+      path: '/sent',
+      screen: Contact,
+    },
+    Login: {
+      screen: Login
+    },
+    Register: {
+      screen: Register
+    },
+    Register2: {
+      screen: Register2
+    },
+    RetrievePassword: {
+      screen: RetrievePassword
+    }
+  },
+  {
+    initialRouteName: 'App',
+    contentOptions: {
+      activeTintColor: '#e91e63',
+    },
+    contentComponent: CustomDrawerContentComponent,
+  }
+);
 StatusBar.setBarStyle('light-content');
 const store = createStore(rootReducer)
 
 export default () => (
   <Provider store={store}>
-    <App />
+    <DrawerApp />
   </Provider>
 )
 
