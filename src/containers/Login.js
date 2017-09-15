@@ -1,8 +1,11 @@
 import React from 'react'
+import { Alert, Text } from 'react-native'
 import FormContainer from '../components/FormContainer'
-import FormTextInput, { FormTextInputWithIcon } from '../components/FormTextInput'
+import FormTextInput, { FormTextInputWithIcon, FormPassword } from '../components/FormTextInput'
 import FormButton from '../components/FormButton'
 import FormLink from '../components/FormLink'
+import Toast from 'react-native-root-toast'
+import * as api from '../api'
 
 class Login extends React.Component {
 
@@ -31,6 +34,16 @@ class Login extends React.Component {
     }
 
     handleLogin = () => {
+        // const param = {
+        //     username: this.state.account,
+        //     password: this.state.password, 
+        // }
+        // api.login(param).then(data => {
+        //     console.log('>>>', data)
+        // }).catch(error => {
+        //     console.log('===', error)
+        //     Toast.show(error.message)
+        // })
 
     }
 
@@ -40,6 +53,10 @@ class Login extends React.Component {
 
     handleForget = () => {
         this.props.navigation.navigate('RetrievePassword')
+    }
+
+    componentDidMount() {
+
     }
 
     render() {
@@ -53,11 +70,10 @@ class Login extends React.Component {
                     value={this.state.account}
                     onChange={this.handleAccountChange}
                 />
-                <FormTextInputWithIcon
+                <FormPassword
                     containerStyle={{marginBottom: 30}}
                     icon={require('../images/login/Locked.png')}
                     placeholder="请输入密码"
-                    secureTextEntry={true}
                     value={this.state.password}
                     onChange={this.handlePasswordChange}    
                 />

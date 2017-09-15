@@ -73,6 +73,50 @@ class FormTextInputWithIcon extends React.Component {
 }
 
 
+class FormPassword extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            secure: true,
+        }
+    }
+
+    toggle = () => {
+        this.setState({
+            secure: !this.state.secure
+        })
+    }
+
+    render() {
+        const { containerStyle, style, icon, value, onChange, ...extraProps } = this.props
+
+        const eyeIcon = this.state.secure ? require('../images/login/eyeClose.png')
+                                        : require('../images/login/eyeOpen.png')
+
+        return (
+            <View style={{..._containerStyle, borderBottomWidth: 0, ...containerStyle}}>
+                <Image source={icon} style={_iconStyle} />
+                <TextInput
+                    autoCapitalize="none"
+                    spellCheck={false}
+                    underlineColorAndroid="transparent"
+                    selectionColor="#2269d4"
+                    placeholderTextColor="#999"
+                    secureTextEntry={this.state.secure}
+                    style={{..._style, borderBottomWidth: 1, borderBottomColor: '#2269d4', ...style}}
+                    value={value}
+                    onChangeText={onChange}
+                    {...extraProps}
+                />
+                <TouchableOpacity onPress={this.toggle} style={{position:'absolute',right:0,top:5,width:20,height:20}}>
+                    <Image source={eyeIcon} style={{width:20,height:20}} />
+                </TouchableOpacity>
+            </View>
+        )
+    }
+}
+
+
 class FormVerificationCode extends React.Component {
 
     render() {
@@ -155,6 +199,7 @@ export default FormTextInput
 
 export {
     FormTextInputWithIcon,
+    FormPassword,
     FormVerificationCode,
-    FormMobileInput
+    FormMobileInput,
 }
