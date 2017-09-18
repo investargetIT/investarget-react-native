@@ -62,6 +62,7 @@ class Login extends React.Component {
             })
             .then(data => this.props.navigation.dispatch(NavigationActions.back()))
             .catch(error => {
+                this.setState({ loading: false });
                 console.log('===', error)
                 Toast.show(error.message)
             })
