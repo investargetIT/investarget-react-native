@@ -77,13 +77,10 @@ import {
         })
       case RECEIVE_USER_INFO:
         const userInfo = Object.assign({}, action.object, {
-      token: action.token,
-      username: action.username,
-      password: action.password
+          token: action.token,
+          username: action.username,
+          password: action.password
         })
-  
-        localStorage.setItem('userInfo', JSON.stringify(userInfo))
-  
         return Object.assign({}, state, {
           isLogin: true,
           userInfo: userInfo

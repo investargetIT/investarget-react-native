@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
+import AsyncStorage from '../AsyncStorage';
 
 class CustomTabBar extends React.Component {
   routeToName = {
@@ -10,10 +11,22 @@ class CustomTabBar extends React.Component {
     active: 'project'
   };
   handleTabItemOnPress(route) {
-    this.setState({ active: route.routeName });
-    this.props.navigation.navigate(route.routeName);
+    AsyncStorage.getItem('userInfo')
+      .then(data => {
+        if (!data && route.routeName === 'service') {
+          this.props.navigation.navigate('Login');
+        } else {
+          this.setState({ active: route.routeName });
+          this.props.navigation.navigate(route.routeName);
+        }
+      })
+      .catch(error => console.error(error));
   }
-  handleIconPressed = () => this.props.navigation.navigate('DrawerOpen');
+  handleIconPressed = () => {
+    AsyncStorage.getItem('userInfo')
+      .then(data => this.props.navigation.navigate(data ? 'DrawerOpen' : 'Login'))
+      .catch(error => console.error(error));
+  };
   render() {
     const { routes } = this.props.navigation.state;
     return (

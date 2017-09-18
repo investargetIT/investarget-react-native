@@ -7,6 +7,10 @@ import FormLink from '../components/FormLink'
 import Toast from 'react-native-root-toast'
 import * as api from '../api'
 import { NavigationActions } from 'react-navigation'
+import * as utils from '../utils';
+import { receiveCurrentUserInfo } from '../../actions';
+import { connect } from 'react-redux';
+import AsyncStorage from '../AsyncStorage';
 
 class Login extends React.Component {
 
@@ -35,19 +39,34 @@ class Login extends React.Component {
     }
 
     handleLogin = () => {
-        // const param = {
-        //     username: this.state.account,
-        //     password: this.state.password, 
-        // }
-        // api.login(param).then(data => {
-        //     console.log('>>>', data)
-        // }).catch(error => {
-        //     console.log('===', error)
-        //     Toast.show(error.message)
-        // })
 
-        const backAction = NavigationActions.back()
-        this.props.navigation.dispatch(backAction)
+        const param = {
+            username: this.state.account,
+            password: this.state.password, 
+        };
+
+        // this.props.dispatch(requestContents(''));
+
+        api.login(param)
+            .then(data => {
+                const { token: authToken, user_info, permissions } = data
+                // this.props.dispatch(hideLoading())
+                let userInfo = utils.convertUserInfo(user_info, permissions)
+                this.props.dispatch(receiveCurrentUserInfo(authToken, userInfo, this.state.username, this.state.password))
+                userInfo = Object.assign({}, userInfo, {
+                    token: authToken,
+                    username: this.state.username,
+                    password: this.state.password
+                });
+                return AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+            })
+            .then(data => this.props.navigation.dispatch(NavigationActions.back()))
+            .catch(error => {
+                console.log('===', error)
+                Toast.show(error.message)
+            })
+
+
     }
 
     handleRegister = () => {
@@ -88,4 +107,4 @@ class Login extends React.Component {
     }
 }
 
-export default Login
+export default connect()(Login);
