@@ -9,7 +9,6 @@ import AppWithNavigationState from './AppNavigator'
 
 AsyncStorage.setItem('source', '1')
 StatusBar.setBarStyle('light-content');
-AsyncStorage.removeItem('userInfo');
 const store = createStore(rootReducer)
 
 export default () => (

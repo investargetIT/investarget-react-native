@@ -92,7 +92,6 @@ import {
         delete newObj.errorMsg
         return newObj
       case LOGOUT:
-        localStorage.removeItem('userInfo')
         var newObj1 = Object.assign({}, state, {
           isLogin: false
         })
