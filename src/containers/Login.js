@@ -11,6 +11,7 @@ import * as utils from '../utils';
 import { receiveCurrentUserInfo } from '../../actions';
 import { connect } from 'react-redux';
 import AsyncStorage from '../AsyncStorage';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 class Login extends React.Component {
 
@@ -45,12 +46,11 @@ class Login extends React.Component {
             password: this.state.password, 
         };
 
-        // this.props.dispatch(requestContents(''));
-
+        this.setState({ loading: true });
         api.login(param)
             .then(data => {
-                const { token: authToken, user_info, permissions } = data
-                // this.props.dispatch(hideLoading())
+                this.setState({ loading: false });
+                const { token: authToken, user_info, permissions } = data;
                 let userInfo = utils.convertUserInfo(user_info, permissions)
                 this.props.dispatch(receiveCurrentUserInfo(authToken, userInfo, this.state.username, this.state.password))
                 userInfo = Object.assign({}, userInfo, {
@@ -84,6 +84,7 @@ class Login extends React.Component {
     render() {
         return (
             <FormContainer>
+                <Spinner visible={this.state.loading} />
                 <FormTextInputWithIcon
                     containerStyle={{marginBottom: 30}}
                     icon={require('../images/login/User-copy.png')}
