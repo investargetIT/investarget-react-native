@@ -118,12 +118,6 @@ class Register extends React.Component {
                         <FormButton containerStyle={{marginBottom: 30}} onPress={this.handleNext} type="primary">下一步</FormButton>
                     )}
                 </FormContainer>
-
-                {(Platform.OS == 'ios' && this.state.showPicker) ? (
-                    <View style={{ display: 'flex', position: 'absolute',bottom: 0,left: 0, width: '100%',backgroundColor: '#fff',borderTopWidth:1,borderTopColor:'#ddd'}}>
-                        <PickerIOS2 value={this.state.areaCode} options={this.state.areaCodeOptions} onCancel={this.handleCancel} onConfirm={this.handleConfirm} title="国家区号" />
-                    </View>
-                ):null}
             </View>
         )
     }

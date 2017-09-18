@@ -1,6 +1,7 @@
 import React from 'react'
-import { View, TextInput, Image, Picker, Platform, TouchableOpacity } from 'react-native'
+import { View, TextInput, Image, Platform, TouchableOpacity } from 'react-native'
 import Button from './Button'
+import Picker2 from './Picker'
 
 
 const _containerStyle = {
@@ -148,36 +149,19 @@ class FormVerificationCode extends React.Component {
 
 
 class FormMobileInput extends React.Component {
+
     render() {
 
         return (
             <View style={{..._containerStyle, ...this.props.containerStyle}}>
-                {Platform.OS == 'android' ? (
-                    <Picker mode="dropdown" selectedValue={this.props.areaCode} onValueChange={this.props.onAreaCodeChange} style={{flex: 0, width: 120, height: 30}}>
-                        { this.props.areaCodeOptions.map(option => <Picker.Item key={option.value} label={option.label} value={option.value} />) }
-                    </Picker>
-                ):null}
-
-                {Platform.OS == 'ios' ? (
-                    <View style={{flex: 0, width: 120, height: 30, display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                        <TouchableOpacity style={{position: 'absolute',zIndex: 1,width: '100%',height:'100%'}} onPress={this.props.onPick}>
-                        </TouchableOpacity>
-                        <TextInput
-                            editable={false}
-                            underlineColorAndroid="transparent"
-                            selectionColor="#2269d4"
-                            placeholderTextColor="#999"
-                            placeholder="区号"
-                            style={{flex: 1, height: 30, fontSize: 15, marginLeft: 8,}}
-                            value={'+' + this.props.areaCode}
-                        />
-                        <Image
-                            source={require('../images/home/filterDown.png')}
-                            style={{flex: 0, width: 8,marginLeft: 8,marginRight: 16}}
-                        />
-                    </View>
-                ):null}
-
+                <Picker2
+                    value={this.props.areaCode}
+                    onChange={this.props.onAreaCodeChange}
+                    options={this.props.areaCodeOptions}
+                    title="国家代码"
+                    placeholder="国家代码"
+                    style={{flex: 0, width: 120, height: 30}}
+                />
                 <TextInput
                     autoCapitalize="none"
                     spellCheck={false}
