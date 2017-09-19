@@ -41,7 +41,8 @@ const CustomDrawerContentComponent = (props) => {
         <Text style={{ backgroundColor: 'transparent', color: 'white', marginTop: 10 }}>{props.userInfo && props.userInfo.name}       {props.userInfo&&props.userInfo.title&&props.userInfo.title.titleName}</Text>
       </ImageBackground>
       <DrawerItems {...props} />
-      <Text style={{ marginLeft: 15, marginTop: 10 }} onPress={confirm}>退出登录</Text>
+      <Text style={{ marginLeft: 15, marginTop: 10 }} onPress={confirm}>清除缓存</Text>
+      <Text style={{ marginLeft: 15, marginTop: 28 }} onPress={confirm}>退出登录</Text>
     </View>
   );
 };

@@ -104,11 +104,11 @@ const CustomTabView = ({ router, navigation }) => {
         path: '/',
         screen: AppNavigator,
       },
-      TimelineManagement: {
-        screen: TimelineManagement
-      },
       MyTags: {
         screen: MyTags
+      },
+      TimelineManagement: {
+        screen: TimelineManagement
       },
       MyFavoriteProject: {
         screen: MyFavoriteProject

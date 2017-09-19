@@ -14,9 +14,9 @@ class MyTags extends React.Component {
     static navigationOptions = {
         title: '关注标签',
         headerStyle: {
-            height: 48,
-            backgroundColor: '#fff',
+            backgroundColor: '#10458f',
         },
+        headerTintColor: '#fff',
     }
 
     constructor(props) {
