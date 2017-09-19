@@ -61,7 +61,7 @@ class Register extends React.Component {
                 if (data.result) {
                     this.setState({ userExist: true })
                     const { areaCode, mobile } = this.state
-                    this.props.navigation.navigate('RetrievePassword', { areaCode, mobile })
+                    this.props.navigation.navigate('RetrievePassword', { areaCode, mobile, title: '设置密码' })
                 } else {
                     this.setState({ showNext: true, userExist: false })
                 }

@@ -11,6 +11,7 @@ import { connect } from 'react-redux'
 import * as api from '../api'
 import { NavigationActions } from 'react-navigation'
 import Toast from 'react-native-root-toast'
+import Spinner from 'react-native-loading-spinner-overlay';
 
 
 class Register2 extends React.Component {
@@ -31,6 +32,7 @@ class Register2 extends React.Component {
             title: 1,
             tags: [1],
             password: 'xzm1991',
+            loading: false,
         }
     }
 
@@ -46,7 +48,9 @@ class Register2 extends React.Component {
         const { areaCode, mobile, code, token: smstoken, email, userType: type } = this.props.navigation.state.params
 
         const param = { areaCode, mobile, code, smstoken, email, type, username, organization, title, tags, password }
+        this.setState({ loading: true })
         api.register(param).then(data => {
+            this.setState({ loading: false })
             console.log('@@@', data)
             Toast.show('注册成功', {
                 position: Toast.positions.CENTER,
@@ -57,6 +61,7 @@ class Register2 extends React.Component {
             })
             this.props.navigation.dispatch(resetAction)
         }).catch(error => {
+            this.setState({ loading: false })
             console.log('>>>', error)
             // this.props.dispatch(handleError(error))
             Toast.show(error.message, {
@@ -88,6 +93,7 @@ class Register2 extends React.Component {
     render() {
         return (
             <FormContainer>
+                <Spinner visible={this.state.loading} />
                 <FormTextInput
                     containerStyle={{marginBottom: 30}}
                     placeholder="姓名"

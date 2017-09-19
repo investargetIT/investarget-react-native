@@ -74,7 +74,12 @@ const CustomTabView = ({ router, navigation }) => {
     Login: { screen: Login },
     Register: { screen: Register },
     Register2: { screen: Register2 },
-    RetrievePassword: { screen: RetrievePassword },
+    RetrievePassword: {
+      screen: RetrievePassword,
+      navigationOptions: ({navigation}) => ({
+        title: navigation.state.params ? navigation.state.params.title : '找回密码'
+      })
+    },
     Events: { screen: Events },
   })
 
