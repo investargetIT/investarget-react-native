@@ -8,6 +8,7 @@ import rootReducer from './reducers'
 import AppWithNavigationState from './AppNavigator'
 
 AsyncStorage.setItem('source', '1')
+window.LANG = 'cn'
 StatusBar.setBarStyle('light-content');
 const store = createStore(rootReducer)
 

@@ -2,6 +2,7 @@ import React from 'react'
 import { View, TextInput, Image, Platform, TouchableOpacity } from 'react-native'
 import Button from './Button'
 import Picker2 from './Picker'
+import Select from './Select'
 
 
 const _containerStyle = {
@@ -120,8 +121,38 @@ class FormPassword extends React.Component {
 
 class FormVerificationCode extends React.Component {
 
+    constructor(props) {
+        super(props)
+        this.state = {
+            timing: false,
+            waitingTime: 60
+        }
+    }
+
+    handleClick = () => {
+        if (!this.timer) {
+            this.timer = setInterval(() => {
+                if (this.state.waitingTime == 1) {
+                    clearTimeout(this.timer)
+                    this.timer = null
+                    this.setState({ timing: false, waitingTime: 60 })
+                } else {
+                    this.setState({ waitingTime: this.state.waitingTime - 1 })
+                }
+            }, 1000)
+            this.setState({ timing: true })
+            this.props.onSend()
+        }
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timer)
+    }
+
     render() {
         const { containerStyle, style, onChange, onSend, ...extraProps } = this.props
+
+        const disabledStyle = this.state.timing ? { backgroundColor: 'gray' } : {}
 
         return (
             <View style={{..._containerStyle, ...containerStyle}}>
@@ -137,10 +168,10 @@ class FormVerificationCode extends React.Component {
                     {...extraProps} />
                 <Button
                     type="primary"
-                    containerStyle={{flex: 0, backgroundColor: '#2269d4', width: 90, height: 26, borderRadius: 13}}
+                    containerStyle={{flex: 0, backgroundColor: '#2269d4', width: 90, height: 26, borderRadius: 13, ...disabledStyle}}
                     style={{color: '#fff', fontSize: 13}}
-                    onPress={this.props.onSend}>
-                    发送验证码
+                    onPress={this.handleClick}>
+                    { this.state.timing ? `${this.state.waitingTime}s` : '发送验证码' }
                 </Button>
             </View>
         )
@@ -179,6 +210,27 @@ class FormMobileInput extends React.Component {
 }
 
 
+class FormSelect extends React.Component {
+
+    render() {
+        return (
+            <View style={{..._containerStyle, ...this.props.containerStyle}}>
+                <Select
+                    title={this.props.title}
+                    value={this.props.value}
+                    onChange={this.props.onChange}
+                    options={this.props.options}
+                    multiple={'multiple' in this.props}
+                    placeholder={this.props.placeholder}
+                    containerStyle={{ flex: 1, height: 30, ...this.props.style}}
+                    style={{fontSize: 15, color: '#333'}}
+                />
+            </View>
+        )
+    }
+}
+
+
 export default FormTextInput
 
 export {
@@ -186,4 +238,5 @@ export {
     FormPassword,
     FormVerificationCode,
     FormMobileInput,
+    FormSelect,
 }
