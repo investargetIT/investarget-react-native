@@ -22,9 +22,12 @@ import Register from './src/containers/Register'
 import Register2 from './src/containers/Register2'
 import RetrievePassword from './src/containers/RetrievePassword'
 import MyTags from './src/containers/MyTags'
-
+import ModifyBusinessCard from './src/containers/ModifyBusinessCard';
 import CustomTabBar from './src/components/CustomTabBar';
 import CustomDrawerContentComponent from './src/components/CustomDrawerContentComponent'
+import TimelineManagement from './src/containers/TimelineManagement';
+import ModifyPassword from './src/containers/ModifyPassword';
+import MyFavoriteProject from './src/containers/MyFavoriteProject';
 
 
 
@@ -70,7 +73,13 @@ const CustomTabView = ({ router, navigation }) => {
   );
   
   const AppNavigator = StackNavigator({
-    Home: { screen:  CustomTabs },
+    Home: { 
+      screen:  CustomTabs,
+      navigationOptions: ({navigation}) => ({
+        title: '首页',
+        headerBackTitle: null,
+      }),
+    },
     Contact: { screen: Contact },
     Login: { screen: Login },
     Register: { screen: Register },
@@ -83,6 +92,10 @@ const CustomTabView = ({ router, navigation }) => {
     },
     Events: { screen: Events },
     MyTags: { screen: MyTags },
+    TimelineManagement: { screen: TimelineManagement },
+    ModifyBusinessCard: { screen: ModifyBusinessCard },
+    ModifyPassword: { screen: ModifyPassword },
+    MyFavoriteProject: { screen: MyFavoriteProject },
   })
 
   const DrawerApp = DrawerNavigator(
@@ -91,25 +104,25 @@ const CustomTabView = ({ router, navigation }) => {
         path: '/',
         screen: AppNavigator,
       },
-      Contact: {
-        path: '/sent',
-        screen: Contact,
+      TimelineManagement: {
+        screen: TimelineManagement
       },
       MyTags: {
         screen: MyTags
       },
-      Login: {
-        screen: Login
+      MyFavoriteProject: {
+        screen: MyFavoriteProject
       },
-      Register: {
-        screen: Register
+      ModifyPassword: {
+        screen: ModifyPassword
       },
-      Register2: {
-        screen: Register2
+      ModifyBusinessCard: {
+        screen: ModifyBusinessCard
       },
-      RetrievePassword: {
-        screen: RetrievePassword
-      }
+      Contact: {
+        path: '/sent',
+        screen: Contact,
+      },
     },
     {
       initialRouteName: 'App',

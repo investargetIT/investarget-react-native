@@ -21,7 +21,10 @@ const CustomDrawerContentComponent = (props) => {
   }
   function handleLogout() {
     AsyncStorage.removeItem('userInfo')
-      .then(data => props.dispatch(logout()))
+      .then(data => {
+        props.dispatch(logout());
+        props.navigation.navigate('Login');
+      })
       .catch(error => console.log(error));
   }
   return (
