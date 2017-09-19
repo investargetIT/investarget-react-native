@@ -1,17 +1,17 @@
 import React from 'react'
 import { View, Picker, TextInput, Image, Platform, TouchableOpacity } from 'react-native'
+import { connect } from 'react-redux'
+import { NavigationActions } from 'react-navigation'
+import Toast from 'react-native-root-toast'
+import Spinner from 'react-native-loading-spinner-overlay'
+
 import FormContainer from '../components/FormContainer'
 import FormTextInput, { FormSelect } from '../components/FormTextInput'
 import FormButton from '../components/FormButton'
-import FormLink from '../components/FormLink'
-import PickerIOS2 from '../components/PickerIOS2'
-import Button from '../components/Button'
-import { receiveTitles, receiveTags, handleError } from '../../actions'
-import { connect } from 'react-redux'
 import * as api from '../api'
-import { NavigationActions } from 'react-navigation'
-import Toast from 'react-native-root-toast'
-import Spinner from 'react-native-loading-spinner-overlay';
+import * as utils from '../utils'
+import AsyncStorage from '../AsyncStorage'
+import { receiveTitles, receiveTags, receiveCurrentUserInfo, handleError } from '../../actions'
 
 
 class Register2 extends React.Component {
@@ -27,11 +27,11 @@ class Register2 extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            username: '许志铭',
-            organization: '多维海拓',
-            title: 1,
-            tags: [1],
-            password: 'xzm1991',
+            username: '',
+            organization: '',
+            title: null,
+            tags: [],
+            password: '',
             loading: false,
         }
     }
@@ -40,45 +40,71 @@ class Register2 extends React.Component {
         this.setState({ [key]: value })
     }
 
-    handleRegister = () => {
+    checkFields = () => {
         const { username, organization, title, tags, password } = this.state
-        if (!(username && organization && title && tags && password)) {
+        var errMsg = null
+        if (!username) {
+            errMsg = '请输入姓名'
+        } else if (!organization) {
+            errMsg = '请输入公司名称'
+        } else if (!title) {
+            errMsg = '请选择职位'
+        } else if (!tags.length) {
+            errMsg = '请选择关注的行业'
+        } else if (!password) {
+            errMsg = '请输入密码'
+        }
+        return errMsg
+    }
+
+    handleRegister = () => {
+        const errMsg = this.checkFields()
+        if (errMsg) {
+            Toast.show(errMsg, { position: Toast.positions.CENTER })
             return
         }
-        const { areaCode, mobile, code, token: smstoken, email, userType: type } = this.props.navigation.state.params
 
+        const { areaCode, mobile, code, token: smstoken, email, userType: type } = this.props.navigation.state.params
+        const { username, organization, title, tags, password } = this.state
         const param = { areaCode, mobile, code, smstoken, email, type, username, organization, title, tags, password }
         this.setState({ loading: true })
         api.register(param).then(data => {
             this.setState({ loading: false })
-            console.log('@@@', data)
-            Toast.show('注册成功', {
-                position: Toast.positions.CENTER,
-            })
+            Toast.show('注册成功', { position: Toast.positions.CENTER })
+            this.login()
+        }).catch(error => {
+            this.setState({ loading: false })
+            Toast.show(error.message, { position: Toast.positions.CENTER })
+        })
+    }
+
+    login = () => {
+        api.login({username: mobile, password}).then(data => {
+            const { token: authToken, user_info, permissions } = data;
+            let userInfo = utils.convertUserInfo(user_info, permissions)
+            this.props.dispatch(receiveCurrentUserInfo(authToken, userInfo, mobile, password))
+            userInfo = Object.assign({}, userInfo, {
+                token: authToken,
+                username: mobile,
+                password: password
+            });
+            return AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+        }).then(data => {
             const resetAction = NavigationActions.reset({
                 index: 0,
                 actions: [ NavigationActions.navigate({ routeName: 'Home' }) ]
             })
             this.props.navigation.dispatch(resetAction)
-        }).catch(error => {
-            this.setState({ loading: false })
-            console.log('>>>', error)
-            // this.props.dispatch(handleError(error))
-            Toast.show(error.message, {
-                position: Toast.positions.CENTER,
-            })
         })
     }
 
-    componentDidMount() {
-        console.log('>>>>', this.props.navigation.state.params)
-        
+    componentDidMount() {        
         api.getSource('title')
             .then(data => {
                 this.props.dispatch(receiveTitles(data))
             })
             .catch(error => {
-                this.props.dispatch(handleError(error))
+                Toast.show(error.message, { position: Toast.positions.CENTER })
             })
 
         api.getSource('tag')
@@ -86,7 +112,7 @@ class Register2 extends React.Component {
                 this.props.dispatch(receiveTags(data))
             })
             .catch(error => {
-                this.props.dispatch(handleError(error))
+                Toast.show(error.message, { position: Toast.positions.CENTER })
             })
     }
 

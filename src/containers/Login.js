@@ -1,17 +1,19 @@
 import React from 'react'
+import { connect } from 'react-redux';
+import { NavigationActions } from 'react-navigation'
 import { Alert, Text } from 'react-native'
+import Toast from 'react-native-root-toast'
+import Spinner from 'react-native-loading-spinner-overlay';
+
 import FormContainer from '../components/FormContainer'
 import FormTextInput, { FormTextInputWithIcon, FormPassword } from '../components/FormTextInput'
 import FormButton from '../components/FormButton'
 import FormLink from '../components/FormLink'
-import Toast from 'react-native-root-toast'
 import * as api from '../api'
-import { NavigationActions } from 'react-navigation'
 import * as utils from '../utils';
 import { receiveCurrentUserInfo } from '../../actions';
-import { connect } from 'react-redux';
 import AsyncStorage from '../AsyncStorage';
-import Spinner from 'react-native-loading-spinner-overlay';
+
 
 class Login extends React.Component {
 
@@ -31,21 +33,30 @@ class Login extends React.Component {
         }
     }
 
-    handleAccountChange = (value) => {
-        this.setState({ account: value })
+    handleChange = (key, value) => {
+        this.setState({ [key]: value })
     }
 
-    handlePasswordChange = (value) => {
-        this.setState({ password: value })
+    checkFields = () => {
+        const { account, password } = this.state
+        var errMsg = null
+        if (!account) {
+            errMsg = '请输入手机号/邮箱'
+        } else if (!password) {
+            errMsg = '请输入密码'
+        }
+        return errMsg
     }
 
     handleLogin = () => {
-
-        const param = {
-            username: this.state.account,
-            password: this.state.password, 
-        };
-
+        const errMsg = this.checkFields()
+        if (errMsg) {
+            Toast.show(errMsg, { position: Toast.positions.CENTER })
+            return
+        }
+   
+        const { account, password } = this.state
+        const param = { username: account, password }
         this.setState({ loading: true });
         api.login(param)
             .then(data => {
@@ -63,11 +74,8 @@ class Login extends React.Component {
             .then(data => this.props.navigation.dispatch(NavigationActions.back()))
             .catch(error => {
                 this.setState({ loading: false });
-                console.log('===', error)
-                Toast.show(error.message)
+                Toast.show(error.message, { position: Toast.positions.CENTER })
             })
-
-
     }
 
     handleRegister = () => {
@@ -92,14 +100,14 @@ class Login extends React.Component {
                     keyboardType="email-address"
                     placeholder="请输入手机号/邮箱"
                     value={this.state.account}
-                    onChange={this.handleAccountChange}
+                    onChange={this.handleChange.bind(this, 'account')}
                 />
                 <FormPassword
                     containerStyle={{marginBottom: 30}}
                     icon={require('../images/login/Locked.png')}
                     placeholder="请输入密码"
                     value={this.state.password}
-                    onChange={this.handlePasswordChange}    
+                    onChange={this.handleChange.bind(this, 'password')}    
                 />
                 <FormButton type="primary" onPress={this.handleLogin}>登录</FormButton>
                 <FormButton onPress={this.handleRegister}>注册</FormButton>

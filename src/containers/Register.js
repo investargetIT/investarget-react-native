@@ -1,14 +1,15 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { View, Picker, Platform, asyncStorage } from 'react-native'
+import CheckBox from 'react-native-checkbox'
+import Toast from 'react-native-root-toast'
+
 import FormContainer from '../components/FormContainer'
 import FormTextInput, { FormVerificationCode, FormMobileInput } from '../components/FormTextInput'
 import FormButton from '../components/FormButton'
-import PickerIOS2 from '../components/PickerIOS2'
-import Button from '../components/Button'
 import * as api from '../api'
-import { connect } from 'react-redux'
-import { receiveContinentsAndCountries, handleError } from '../../actions'
-import CheckBox from 'react-native-checkbox'
+import { receiveContinentsAndCountries } from '../../actions'
+
 
 class Register extends React.Component {
 
@@ -23,64 +24,53 @@ class Register extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            showPicker: false,
-            showNext: false,
-            userExist: false,
+            userExist: null,
             areaCode: '86',
-            mobile: '18625089842',
-            code: '048571',
-            token: 'f87da664ec3c2c1ccf0a7f6ca382c08d',
-            email: 'xuzhiming920@gmail.com',
+            mobile: '',
+            code: '',
+            token: '',
+            email: '',
             checked: true,
         }
     }
 
-    handleAreaCodeChange = (value, index) => {
-        this.setState({ areaCode: value, showPicker: false })
+    handleChange = (key, value) => {
+        this.setState({ [key]: value })
     }
 
-    handleMobileChange = (value) => {
-        this.setState({ mobile: value })
-    }
-
-    handleShowPicker = () => {
-        this.setState({ showPicker: true })
-    }
-
-    handleCancel = () => {
-        this.setState({ showPicker: false })
-    }
-
-    handleConfirm = (value) => {
-        this.setState({ areaCode: value, showPicker: false })
+    handleCheck = (checked) => {
+        this.setState({ checked: !checked })
     }
 
     checkPhoneExist = () => {
+        if (!this.state.mobile) {
+            Toast.show('请输入手机号', { position: Toast.positions.CENTER })
+            return
+        }
         api.checkUserExist(this.state.mobile)
             .then(data => {
                 if (data.result) {
-                    this.setState({ userExist: true })
+                    this.setState({ userExist: null })
                     const { areaCode, mobile } = this.state
                     this.props.navigation.navigate('RetrievePassword', { areaCode, mobile, title: '设置密码' })
                 } else {
-                    this.setState({ showNext: true, userExist: false })
+                    this.setState({ userExist: false })
                 }
             })
             .catch(error => {
-                this.props.dispatch(handleError(error))
+                Toast.show(error.message, { position: Toast.positions.CENTER })
             })
-    }
-
-    handleCodeChange = (value) => {
-        this.setState({ code: value })
     }
 
     handleCodeSend = () => {
         const { areaCode, mobile } = this.state
+        if (!areaCode || !mobile) {
+            Toast.show('请先填写区号和手机号', { position: Toast.positions.CENTER })
+            return
+        }
         const param = { areacode: areaCode, mobile }
         api.sendSmsCode(param)
             .then(data => {
-                console.log('@@@', data)
                 const {status, smstoken: token, msg} = data
                 if (status !== 'success') {
                     throw new Error(msg)
@@ -88,22 +78,8 @@ class Register extends React.Component {
                 this.setState({ token })
             })
             .catch(error => {
-                console.log('>>>', error)
-                this.props.dispatch(handleError(error))
+                Toast.show(error.message, { position: Toast.positions.CENTER })
             })
-    }
-
-    handleEmailChange= (value) => {
-        this.setState({ email: value })
-    }
-
-    handleRegister = (userType) => {
-        const { areaCode, mobile, code, token, email, checked } = this.state
-        if (!(areaCode && mobile && code && token && email && checked)) {
-            return
-        }
-        const param = { areaCode, mobile, code, token, email, userType }
-        this.props.navigation.navigate('Register2', param)
     }
 
     handleRegisterAsTrader = () => {
@@ -114,17 +90,48 @@ class Register extends React.Component {
         this.handleRegister('investor')
     }
 
-    handleCheck = (checked) => {
-        this.setState({ checked: !checked })
+    checkEmailFormat() {
+        var re = /[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]+\.[A-Za-z0-9_\-\.]+/
+        return re.test(this.state.email)
+    }
+
+    checkFields = () => {
+        const { areaCode, mobile, code, token, email, checked } = this.state
+        var errMsg = null
+        if (!areaCode) {
+            errMsg = '请选择区号'
+        } else if (!mobile) {
+            errMsg = '请输入手机号'
+        } else if (!token) {
+            errMsg = '请发送验证码'
+        } else if (!code) {
+            errMsg = '请输入验证码'
+        } else if (!email) {
+            errMsg = '请输入邮箱'
+        } else if (!this.checkEmailFormat(email)) {
+            errMsg = '邮箱格式不正确'
+        } else if (!checked) {
+            errMsg = '请同意用户协议'
+        }
+        return errMsg
+    }
+
+    handleRegister = (userType) => {
+        const errMsg = this.checkFields()
+        if (errMsg) {
+            Toast.show(errMsg, { position: Toast.positions.CENTER })
+            return
+        }
+
+        const param = { areaCode, mobile, code, token, email, userType }
+        this.props.navigation.navigate('Register2', param)
     }
     
     componentDidMount() {
-        this.setState({ showNext: false })
-
         api.getSource('country').then(data => {
             this.props.dispatch(receiveContinentsAndCountries(data))
         }).catch(error => {
-            this.props.dispatch(handleError(error))
+            Toast.show(error.message, { position: Toast.positions.CENTER })
         })
     }
 
@@ -136,30 +143,29 @@ class Register extends React.Component {
                         containerStyle={{marginBottom: 30}}
                         areaCode={this.state.areaCode}
                         areaCodeOptions={this.props.areaCodeOptions}
-                        onAreaCodeChange={this.handleAreaCodeChange}
-                        onPick={this.handleShowPicker}
+                        onAreaCodeChange={this.handleChange.bind(this, 'areaCode')}
                         mobile={this.state.mobile}
-                        onMobileChange={this.handleMobileChange}
+                        onMobileChange={this.handleChange.bind(this, 'mobile')}
                     />
 
-                    {!this.state.showNext ? (
+                    {this.state.userExist === null ? (
                         <FormButton containerStyle={{marginBottom: 30}} onPress={this.checkPhoneExist} type="primary">下一步</FormButton>
                     ) : null}
                     
-                    {(this.state.showNext && !this.state.userExist) ? (
+                    {this.state.userExist === false ? (
                         <View>
                             <FormVerificationCode
                                 containerStyle={{marginBottom: 30}}
                                 placeholder="请输入验证码"
                                 value={this.state.code}
-                                onChange={this.handleCodeChange}
+                                onChange={this.handleChange.bind(this, 'code')}
                                 onSend={this.handleCodeSend} />
                             <FormTextInput
                                 containerStyle={{marginBottom: 30}}
                                 placeholder="请输入邮箱"
                                 keyboardType="email-address"
                                 value={this.state.email}
-                                onChange={this.handleEmailChange}
+                                onChange={this.handleChange.bind(this, 'email')}
                             />
                             <FormButton type="primary" onPress={this.handleRegisterAsTrader}>我是交易师</FormButton>
                             <FormButton type="primary" onPress={this.handleRegisterAsInvestor}>我是投资人</FormButton>

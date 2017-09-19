@@ -1,15 +1,15 @@
 import React from 'react'
 import { View, Picker, Platform, Alert } from 'react-native'
+import { connect } from 'react-redux'
+import Spinner from 'react-native-loading-spinner-overlay'
+import Toast from 'react-native-root-toast'
+
 import FormContainer from '../components/FormContainer'
 import FormTextInput, { FormVerificationCode, FormMobileInput } from '../components/FormTextInput'
 import FormButton from '../components/FormButton'
-import PickerIOS2 from '../components/PickerIOS2'
-import Button from '../components/Button'
 import * as api from '../api'
-import { connect } from 'react-redux'
-import { receiveContinentsAndCountries, handleError } from '../../actions'
+import { receiveContinentsAndCountries } from '../../actions'
 import { NavigationActions } from 'react-navigation'
-import Spinner from 'react-native-loading-spinner-overlay'
 
 
 class RetrievePassword extends React.Component {
@@ -27,37 +27,16 @@ class RetrievePassword extends React.Component {
         this.state = {
             showPicker: false,
             areaCode: '86',
-            mobile: '18625089842',
-            code: '315289',
-            token: '193a10ddd4417a258b85cdb14907e69a',
-            password: 'xzm1991',
+            mobile: '',
+            code: '',
+            token: '',
+            password: '',
             loading: false,
         }
     }
 
-
-    handleAreaCodeChange = (value, index) => {
-        this.setState({ areaCode: value, showPicker: false })
-    }
-
-    handleMobileChange = (value) => {
-        this.setState({ mobile: value })
-    }
-
-    handleShowPicker = () => {
-        this.setState({ showPicker: true })
-    }
-
-    handleCancel = () => {
-        this.setState({ showPicker: false })
-    }
-
-    handleConfirm = (value) => {
-        this.setState({ areaCode: value, showPicker: false })
-    }
-
-    handleCodeChange = (value) => {
-        this.setState({ code: value })
+    handleChange = (key, value) => {
+        this.setState({ [key]: value })
     }
 
     handleCodeSend = () => {
@@ -65,7 +44,6 @@ class RetrievePassword extends React.Component {
         const param = { areacode: areaCode, mobile }
         api.sendSmsCode(param)
             .then(data => {
-                console.log('@@@', data)
                 const {status, smstoken: token, msg} = data
                 if (status !== 'success') {
                     throw new Error(msg)
@@ -73,13 +51,8 @@ class RetrievePassword extends React.Component {
                 this.setState({ token })
             })
             .catch(error => {
-                console.log('>>>', error)
-                this.props.dispatch(handleError(error))
+                Toast.show(error.message, { position: Toast.positions.CENTER })
             })
-    }
-
-    handlePasswordChange= (value) => {
-        this.setState({ password: value })
     }
 
     goLogin = () => {
@@ -90,26 +63,44 @@ class RetrievePassword extends React.Component {
                 NavigationActions.navigate({ routeName: 'Login' }),
             ]
         })
-
         this.props.navigation.dispatch(resetAction)
     }
 
+    checkFields = () => {
+        const { areaCode, mobile, code, token, password } = this.state
+        var errMsg = null
+        if (!areaCode) {
+            errMsg = '请选择区号'
+        } else if (!mobile) {
+            errMsg = '请输入手机号'
+        } else if (!token) {
+            errMsg = '请发送验证码'
+        } else if (!code) {
+            errMsg = '请输入验证码'
+        } else if (!password) {
+            errMsg = '请输入密码'
+        }
+        return errMsg
+    }
+
     retrievePassword = () => {
+        const errMsg = this.checkFields()
+        if (errMsg) {
+            Toast.show(errMsg, { position: Toast.positions.CENTER })
+            return
+        }
+
         const { areaCode, mobile, code, token, password } = this.state
         const param = { mobile, mobileAreaCode: areaCode, mobilecode: code, mobilecodetoken: token, password }
         this.setState({ loading: true })
         api.retrievePassword(param).then(data => {
-            console.log('@@@', data)
             this.setState({ loading: false })
-
             Alert.alert('操作成功', '密码已更新,请重新登录', [
                 {text: '确定', onPress: this.goLogin}
             ], { cancelable: false })
-            
         }).catch(error => {
-            console.log('>>>', error)
             this.setState({ loading: false })
-            this.props.dispatch(handleError(error))
+            Toast.show(error.message, { position: Toast.positions.CENTER })
         })
     }
 
@@ -117,7 +108,7 @@ class RetrievePassword extends React.Component {
         api.getSource('country').then(data => {
             this.props.dispatch(receiveContinentsAndCountries(data))
         }).catch(error => {
-            this.props.dispatch(handleError(error))
+            Toast.show(error.message, { position: Toast.positions.CENTER })
         })
     }
 
@@ -129,23 +120,22 @@ class RetrievePassword extends React.Component {
                     containerStyle={{marginBottom: 30}}
                     areaCode={this.state.areaCode}
                     areaCodeOptions={this.props.areaCodeOptions}
-                    onAreaCodeChange={this.handleAreaCodeChange}
-                    onPick={this.handleShowPicker}
+                    onAreaCodeChange={this.handleChange.bind(this, 'areaCode')}
                     mobile={this.state.mobile}
-                    onMobileChange={this.handleMobileChange}
+                    onMobileChange={this.handleChange.bind(this, 'mobile')}
                 />
                 <FormVerificationCode
                     containerStyle={{marginBottom: 30}}
                     placeholder="请输入验证码"
                     value={this.state.code}
-                    onChange={this.handleCodeChange}
+                    onChange={this.handleChange.bind(this, 'code')}
                     onSend={this.handleCodeSend}
                 />
                 <FormTextInput
                     containerStyle={{marginBottom: 30}}
                     placeholder="请输入新的密码"
                     value={this.state.password}
-                    onChange={this.handlePasswordChange}
+                    onChange={this.handleChange.bind(this, 'password')}
                 />
                 <FormButton type="primary" onPress={this.retrievePassword}>确认</FormButton>
             </FormContainer>
