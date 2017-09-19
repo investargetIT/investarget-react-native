@@ -17,7 +17,7 @@ function r(url, method, body, isUploadFile) {
               "Accept": "application/json",
               "Content-Type": "application/json",
               "clienttype": "3",
-              "source": source
+              "source": source  || 1
             }
           }
         
@@ -39,7 +39,7 @@ function r(url, method, body, isUploadFile) {
             options["body"] = isUploadFile ? body : JSON.stringify(body)
           }
         
-          const lang = url.split('?').length > 1 ? `&lang=${window.LANG}` : `?lang=${window.LANG}`
+          const lang = url.split('?').length > 1 ? `&lang=cn` : `?lang=cn`
         
           return request(url + lang, options)
         })
