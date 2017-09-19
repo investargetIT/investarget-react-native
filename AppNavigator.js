@@ -21,6 +21,7 @@ import Login from './src/containers/Login'
 import Register from './src/containers/Register'
 import Register2 from './src/containers/Register2'
 import RetrievePassword from './src/containers/RetrievePassword'
+import MyTags from './src/containers/MyTags'
 
 import CustomTabBar from './src/components/CustomTabBar';
 import CustomDrawerContentComponent from './src/components/CustomDrawerContentComponent'
@@ -81,6 +82,7 @@ const CustomTabView = ({ router, navigation }) => {
       })
     },
     Events: { screen: Events },
+    MyTags: { screen: MyTags },
   })
 
   const DrawerApp = DrawerNavigator(
@@ -92,6 +94,9 @@ const CustomTabView = ({ router, navigation }) => {
       Contact: {
         path: '/sent',
         screen: Contact,
+      },
+      MyTags: {
+        screen: MyTags
       },
       Login: {
         screen: Login

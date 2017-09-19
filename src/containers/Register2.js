@@ -11,7 +11,7 @@ import FormButton from '../components/FormButton'
 import * as api from '../api'
 import * as utils from '../utils'
 import AsyncStorage from '../AsyncStorage'
-import { receiveTitles, receiveTags, receiveCurrentUserInfo, handleError } from '../../actions'
+import { receiveTitles, receiveTags, receiveCurrentUserInfo } from '../../actions'
 
 
 class Register2 extends React.Component {
