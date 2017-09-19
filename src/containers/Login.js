@@ -55,19 +55,19 @@ class Login extends React.Component {
             return
         }
    
-        const { account, password } = this.state
-        const param = { username: account, password }
+        const { account: username, password } = this.state
+        const param = { username, password }
         this.setState({ loading: true });
         api.login(param)
             .then(data => {
                 this.setState({ loading: false });
                 const { token: authToken, user_info, permissions } = data;
                 let userInfo = utils.convertUserInfo(user_info, permissions)
-                this.props.dispatch(receiveCurrentUserInfo(authToken, userInfo, this.state.username, this.state.password))
+                this.props.dispatch(receiveCurrentUserInfo(authToken, userInfo, username, password))
                 userInfo = Object.assign({}, userInfo, {
                     token: authToken,
-                    username: this.state.username,
-                    password: this.state.password
+                    username: username,
+                    password: password
                 });
                 return AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
             })

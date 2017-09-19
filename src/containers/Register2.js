@@ -71,21 +71,21 @@ class Register2 extends React.Component {
         api.register(param).then(data => {
             this.setState({ loading: false })
             Toast.show('注册成功', { position: Toast.positions.CENTER })
-            this.login()
+            this.login(mobile, password)
         }).catch(error => {
             this.setState({ loading: false })
             Toast.show(error.message, { position: Toast.positions.CENTER })
         })
     }
 
-    login = () => {
-        api.login({username: mobile, password}).then(data => {
+    login = (username, password) => {
+        api.login({username, password}).then(data => {
             const { token: authToken, user_info, permissions } = data;
             let userInfo = utils.convertUserInfo(user_info, permissions)
-            this.props.dispatch(receiveCurrentUserInfo(authToken, userInfo, mobile, password))
+            this.props.dispatch(receiveCurrentUserInfo(authToken, userInfo, username, password))
             userInfo = Object.assign({}, userInfo, {
                 token: authToken,
-                username: mobile,
+                username: username,
                 password: password
             });
             return AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
