@@ -26,6 +26,7 @@ import {
     SAVE_REDIRECT_URL,
     UPDATE_PROJECT_STRUCTURE,
   } from '../actions'
+  import AsyncStorage from '../src/AsyncStorage'
   
   const initialState = {
     isLogin: false,
@@ -162,7 +163,7 @@ import {
           filter: filter
         })
       case MODIFY_USER_INFO:
-        localStorage.setItem('userInfo', JSON.stringify(action.userInfo))
+        AsyncStorage.setItem('userInfo', JSON.stringify(action.userInfo))
         return Object.assign({}, state, {
           userInfo: action.userInfo
         })

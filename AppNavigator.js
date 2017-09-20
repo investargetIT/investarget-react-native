@@ -23,10 +23,11 @@ import Register2 from './src/containers/Register2'
 import RetrievePassword from './src/containers/RetrievePassword'
 import MyTags from './src/containers/MyTags'
 import ModifyBusinessCard from './src/containers/ModifyBusinessCard';
+import ModifyPassword from './src/containers/ModifyPassword'
+
 import CustomTabBar from './src/components/CustomTabBar';
 import CustomDrawerContentComponent from './src/components/CustomDrawerContentComponent'
 import TimelineManagement from './src/containers/TimelineManagement';
-import ModifyPassword from './src/containers/ModifyPassword';
 import MyFavoriteProject from './src/containers/MyFavoriteProject';
 
 

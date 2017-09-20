@@ -122,7 +122,7 @@ class Register extends React.Component {
             Toast.show(errMsg, { position: Toast.positions.CENTER })
             return
         }
-
+        const { areaCode, mobile, code, token, email } = this.state
         const param = { areaCode, mobile, code, token, email, userType }
         this.props.navigation.navigate('Register2', param)
     }
