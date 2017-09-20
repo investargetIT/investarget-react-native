@@ -25,6 +25,7 @@ import MyTags from './src/containers/MyTags'
 import ModifyBusinessCard from './src/containers/ModifyBusinessCard';
 import ModifyPassword from './src/containers/ModifyPassword'
 import Avatar from './src/containers/Avatar'
+import Service from './src/containers/Service'
 
 import CustomTabBar from './src/components/CustomTabBar';
 import CustomDrawerContentComponent from './src/components/CustomDrawerContentComponent'
@@ -60,7 +61,7 @@ const CustomTabView = ({ router, navigation }) => {
         }
       },
       service: {
-        screen: Posts,
+        screen: Service,
         navigationOptions: {
           header: null,
         }
@@ -99,6 +100,7 @@ const CustomTabView = ({ router, navigation }) => {
     ModifyPassword: { screen: ModifyPassword },
     MyFavoriteProject: { screen: MyFavoriteProject },
     Avatar: { screen: Avatar },
+    Service: { screen: Service },
   })
 
   const DrawerApp = DrawerNavigator(
