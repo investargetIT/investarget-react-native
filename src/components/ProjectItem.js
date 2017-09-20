@@ -25,27 +25,42 @@ function ProjectItem(props) {
                         <Image source={require('../images/tag.png')} style={{width:16,height:16}} />
                     </View>
                     <Text style={{fontSize: 15,lineHeight: 20,flex:1}}>
-                        碧溪项目：领先的水环境治理技术装备供应商
+                        {props.title}
                     </Text>
                 </View>
                 <View style={{marginTop: 8, display: 'flex', flexDirection: 'row'}}>
-                    <View style={{width: 60}}><Text style={{fontSize: 13,color:'#999'}}>中国</Text></View>
-                    <View><Text style={{fontSize: 13,color:'#999'}}>环保</Text></View>
+                    <View style={{width: 60}}><Text style={{fontSize: 13,color:'#999'}}>{props.country}</Text></View>
+                    <View><Text style={{fontSize: 13,color:'#999'}}>{props.industrys}</Text></View>
                 </View>
                 <View style={{marginTop: 8}}>
                     <Text style={{fontSize:13,color:'#666'}}>
-                        交易规模：<Text style={{color:'#ff8f40'}}>$21,230,720</Text>
+                        交易规模：<Text style={{color:'#ff8f40'}}>{props.amount > 0 ? "$" + formatNumber(props.amount) : "N/A"}</Text>
                     </Text>
                 </View>
             </View>
             <View style={{flex:0}}>
                 <Image
-                    source={{uri: 'https://o79atf82v.qnssl.com/Web-JNHB.png'}}
+                    source={{uri: props.imgUrl}}
                     style={{width: 120, height: 100}}
                 />
             </View>
         </View>
     )
 }
+
+function formatNumber(number) {
+    const reverseStrArr = (number + "").split("").reverse()
+    const arr = reverseStrArr.reduce((pre, cur) => {
+        if (pre.length > 0 && pre[pre.length - 1].length < 3) {
+            const maxIndexValue = pre[pre.length - 1]
+            pre[pre.length - 1] = maxIndexValue + cur
+        } else {
+            pre.push(cur)
+        }
+        return pre
+    }, [])
+    return arr.map(m => m.split("").reverse().join("")).reverse().join(",")
+}
+
 
 export default ProjectItem
