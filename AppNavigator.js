@@ -26,6 +26,7 @@ import ModifyBusinessCard from './src/containers/ModifyBusinessCard';
 import ModifyPassword from './src/containers/ModifyPassword'
 import Avatar from './src/containers/Avatar'
 import Service from './src/containers/Service'
+import Notification from './src/containers/Notification'
 
 import CustomTabBar from './src/components/CustomTabBar';
 import CustomDrawerContentComponent from './src/components/CustomDrawerContentComponent'
@@ -101,6 +102,7 @@ const CustomTabView = ({ router, navigation }) => {
     MyFavoriteProject: { screen: MyFavoriteProject },
     Avatar: { screen: Avatar },
     Service: { screen: Service },
+    Notification: { screen: Notification },
   })
 
   const DrawerApp = DrawerNavigator(

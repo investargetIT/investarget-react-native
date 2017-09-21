@@ -24,7 +24,7 @@ class Service extends React.Component {
     }
 
     handleClickNotification = () => {
-
+        this.props.navigation.navigate('Notification')
     }
 
     componentDidMount() {
