@@ -19,11 +19,13 @@ const styles = StyleSheet.create({
 function ProjectItem(props) {
     return (
         <View style={styles.item}>
+
+            <View style={{ marginTop: 2, marginRight: 2, flex: 0 }}>
+                <Image source={require('../images/tag.png')} style={{ width: 16, height: 16 }} />
+            </View>
+
             <View style={styles.itemLeft}>
                 <View style={{display:'flex',flexDirection:'row'}}>
-                    <View style={{marginTop: 2,marginRight:2,flex:0}}>
-                        <Image source={require('../images/tag.png')} style={{width:16,height:16}} />
-                    </View>
                     <Text style={{fontSize: 15,lineHeight: 20,flex:1}}>
                         {props.title}
                     </Text>
