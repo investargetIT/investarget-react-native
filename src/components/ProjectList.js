@@ -3,7 +3,7 @@ import { View, Text, Image, FlatList, RefreshControl, StatusBar } from 'react-na
 import ProjectItem from './ProjectItem'
 import { connect } from 'react-redux'
 import * as newApi from '../api'
-import { updateProjectStructure, receiveContents } from '../../actions';
+import { updateProjectStructure, receiveContents, appendProjects } from '../../actions';
 
 
 class ProjectList extends React.Component {
@@ -38,9 +38,11 @@ class ProjectList extends React.Component {
 
     onRefresh = () => {
         this.setState({ refreshing: true })
-        setTimeout(() => {
-            this.setState({ refreshing: false })
-        }, 2000)
+        this.getProjects((projects, dataStructure) => {
+          this.props.dispatch(updateProjectStructure(dataStructure))
+          this.props.dispatch(receiveContents('', projects))
+          this.setState({ refreshing: false })
+      })
     }
 
     convertIntToArray(start, length) {
@@ -169,6 +171,43 @@ class ProjectList extends React.Component {
         // .catch(error => this.props.dispatch(handleError(error)))
       }
 
+      getMoreProjects = callback => {
+        const intersect = this.props.projectStructure.map(item => this.intersectArray(item, this.convertIntToArray(this.props.projects.length + 1, 10)))
+        const requestArr = []
+        intersect.forEach((item, index) => {
+          if(item.length > 0) {
+            requestArr.push(this.getProjectsArray[index](item[0] - this.props.projectStructure[index][0], item.length))
+          }
+        })
+        if (requestArr.length === 0) {
+          requestArr.push(this.getClosedAndMarketPlaceProjects(10000, 10))
+        }
+        Promise.all(requestArr)
+          .then(result => {
+            const projects = result.map(item => item.data).reduce((acc, val) => acc.concat(val), []).map(item => {
+              var obj = {}
+              obj['id'] = item.id
+              obj['title'] = item.projtitle
+              obj['amount'] = item.financeAmount_USD
+              obj['country'] = item.country.country
+              obj['imgUrl'] = item.industries[0].url
+              obj['industrys'] = item.industries.map(i => i.name)
+              obj['isMarketPlace'] = item.ismarketplace
+              return obj
+            })
+            callback(projects)
+          })
+          // .catch(error => this.props.dispatch(handleError(error)))
+      }
+
+      loadMore = () => {
+        this.getMoreProjects(projects => {
+            if (projects.length > 0) {
+              this.props.dispatch(appendProjects(projects))
+            } 
+        })
+      }
+
     render() {
         return (
             <View style={{flex:1}}>
@@ -190,6 +229,8 @@ class ProjectList extends React.Component {
                     keyExtractor={(item,index)=>item.id}
                     renderItem={({item, sparators}) => <ProjectItem {...item} />}
                     overScrollMode="always"
+                    onEndReachedThreshold={0.5}
+                    onEndReached={this.loadMore}
                     refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} colors={['#10458f']} tintColor="#10458f" />}
                 />
             </View>
