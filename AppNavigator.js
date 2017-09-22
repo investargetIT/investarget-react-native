@@ -27,6 +27,7 @@ import ModifyPassword from './src/containers/ModifyPassword'
 import Avatar from './src/containers/Avatar'
 import Service from './src/containers/Service'
 import Notification from './src/containers/Notification'
+import EditTimeline from './src/containers/EditTimeline'
 
 import CustomTabBar from './src/components/CustomTabBar';
 import CustomDrawerContentComponent from './src/components/CustomDrawerContentComponent'
@@ -103,6 +104,7 @@ const CustomTabView = ({ router, navigation }) => {
     Avatar: { screen: Avatar },
     Service: { screen: Service },
     Notification: { screen: Notification },
+    EditTimeline: { screen: EditTimeline },
   })
 
   const DrawerApp = DrawerNavigator(
