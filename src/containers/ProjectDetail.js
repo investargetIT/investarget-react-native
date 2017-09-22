@@ -11,10 +11,20 @@ class ProjectDetail extends React.Component {
         headerTintColor: '#fff',
     };
 
+    constructor(props) {
+      super(props);
+      const { state } = this.props.navigation;
+      const { projectID } = state.params;
+
+      this.state = {
+        projectID
+      }
+    }
+
     render() {
         return (
             <View>
-                <Text>项目详情</Text>
+                <Text>项目详情{this.state.projectID}</Text>
             </View>
         )
     }
