@@ -1,5 +1,6 @@
 import React from 'react';
-import { Image, Text, View, StatusBar } from 'react-native';
+import { Image, Text, View, StatusBar, WebView } from 'react-native';
+import * as api from '../api';
 
 class ProjectDetail extends React.Component {
     
@@ -13,20 +14,20 @@ class ProjectDetail extends React.Component {
 
     constructor(props) {
       super(props);
-      const { state } = this.props.navigation;
-      const { projectID } = state.params;
-
+      this.id = this.props.navigation.state.params.projectID;
       this.state = {
-        projectID
+        url: null
       }
     }
 
+    componentDidMount() {
+      api.getShareToken(this.id)
+      .then(token => this.setState({ url: `http://localhost:3000/project/${this.id}?token=${token}` }))
+    }
+
     render() {
-        return (
-            <View>
-                <Text>项目详情{this.state.projectID}</Text>
-            </View>
-        )
+      if (!this.state.url) return null;
+      return <WebView source={{ uri: this.state.url }} />
     }
 }
 
