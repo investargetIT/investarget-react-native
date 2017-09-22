@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, Text, View, StatusBar, WebView } from 'react-native';
+import { Image, Text, View, StatusBar, WebView, Platform } from 'react-native';
 import * as api from '../api';
 
 class ProjectDetail extends React.Component {
@@ -7,7 +7,8 @@ class ProjectDetail extends React.Component {
     static navigationOptions = {
         title: '项目详情',
         headerStyle: {
-            backgroundColor: '#10458f',
+            backgroundColor: '#10458F',
+            marginTop: Platform.OS === 'android' ? 24 : 0,
         },
         headerTintColor: '#fff',
     };
