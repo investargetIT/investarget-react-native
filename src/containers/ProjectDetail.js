@@ -22,7 +22,7 @@ class ProjectDetail extends React.Component {
 
     componentDidMount() {
       api.getShareToken(this.id)
-      .then(token => this.setState({ url: `http://localhost:3000/project/${this.id}?token=${token}` }))
+      .then(token => this.setState({ url: `http://192.168.1.113:3000/project_for_rn/${this.id}?token=${token}` }))
     }
 
     render() {
