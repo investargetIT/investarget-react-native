@@ -38,9 +38,7 @@ class Notification extends React.Component {
     handlePress = (id, isRead) => {
         if (!isRead) {
             api.readMsg(data.id).then(() => {
-                // 强制刷新 readList 和 unreadList
-                this.readList.getData()
-                this.unreadList.getData()
+                //
             }).catch(error => {
                 Toast.show(error.message, Toast.positions.CENTER)
             })
@@ -63,21 +61,8 @@ class Notification extends React.Component {
                     </View>
                 </View>
 
-                {/* { this.state.isRead ? <MessageList isRead={true} /> : null }
-                { !this.state.isRead ? <MessageList isRead={false} /> : null } */}
-
-                <MessageList
-                    isRead={true}
-                    onPress={this.handlePress}
-                    ref={(inst) => this.readList = inst}
-                    style={{display: this.state.isRead ? 'flex' : 'none'}}
-                />
-                <MessageList
-                    isRead={false}
-                    onPress={this.handlePress}
-                    ref={(inst) => this.unreadList = inst}
-                    style={{display: !this.state.isRead ? 'flex' : 'none'}}
-                />
+                { this.state.isRead ? <MessageList isRead={true} onPress={this.handlePress} /> : null }
+                { !this.state.isRead ? <MessageList isRead={false} onPress={this.handlePress} /> : null }
                 
             </View>
         )
@@ -97,17 +82,14 @@ class MessageList extends React.Component {
     }
 
     getData = () => {
-        console.log('get Data ', this.props.isRead)
         const param = { page_size: 10, page_index: 1, isRead: this.props.isRead }
-        return api.getMsg(param).then(data => {
-            this.setState({ list: data.data })
-        })
+        return api.getMsg(param)
     }
 
     onRefresh = () => {
         this.setState({ refreshing: true })
-        this.getData().then(() => {
-            this.setState({ refreshing: false })
+        this.getData().then((data) => {
+            this.setState({ refreshing: false, list: data.data })
         }).catch(error => {
             this.setState({ refreshing: false })
             Toast.show(error.message, Toast.positions.CENTER)
@@ -115,7 +97,9 @@ class MessageList extends React.Component {
     }
 
     componentDidMount() {
-        this.getData().catch(error => {
+        this.getData().then(data => {
+            this.setState({ list: data.data })
+        }).catch(error => {
             Toast.show(error.message, Toast.positions.CENTER)
         })
     }
