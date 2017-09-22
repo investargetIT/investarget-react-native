@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Text, Image } from 'react-native'
+import { StyleSheet, View, Text, Image, TouchableWithoutFeedback } from 'react-native'
 
 const styles = StyleSheet.create({
     item: {
@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
 
 function ProjectItem(props) {
     return (
+        <TouchableWithoutFeedback onPress={props.onPress.bind(this, props.id)}>
         <View style={styles.item}>
 
             <View style={{ marginTop: 2, marginRight: 2, flex: 0 }}>
@@ -47,6 +48,7 @@ function ProjectItem(props) {
                 />
             </View>
         </View>
+        </TouchableWithoutFeedback>
     )
 }
 

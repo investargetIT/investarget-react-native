@@ -208,6 +208,10 @@ class ProjectList extends React.Component {
         })
       }
 
+      projectOnPress = id => {
+        this.props.navigation.navigate('ProjectDetail');
+      }
+
     render() {
         return (
             <View style={{flex:1}}>
@@ -227,7 +231,7 @@ class ProjectList extends React.Component {
                     style={{backgroundColor: '#f4f4f4'}}
                     data={this.props.projects}
                     keyExtractor={(item,index)=>item.id}
-                    renderItem={({item, sparators}) => <ProjectItem {...item} />}
+                    renderItem={({item, sparators}) => <ProjectItem {...item} onPress={this.projectOnPress} />}
                     overScrollMode="always"
                     onEndReachedThreshold={0.5}
                     onEndReached={this.loadMore}

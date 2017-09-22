@@ -28,7 +28,7 @@ import Avatar from './src/containers/Avatar'
 import Service from './src/containers/Service'
 import Notification from './src/containers/Notification'
 import EditTimeline from './src/containers/EditTimeline'
-
+import ProjectDetail from './src/containers/ProjectDetail';
 import CustomTabBar from './src/components/CustomTabBar';
 import CustomDrawerContentComponent from './src/components/CustomDrawerContentComponent'
 import TimelineManagement from './src/containers/TimelineManagement';
@@ -105,6 +105,7 @@ const CustomTabView = ({ router, navigation }) => {
     Service: { screen: Service },
     Notification: { screen: Notification },
     EditTimeline: { screen: EditTimeline },
+    ProjectDetail: { screen: ProjectDetail },
   })
 
   const DrawerApp = DrawerNavigator(
