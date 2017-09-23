@@ -51,8 +51,8 @@ class MyPartner extends React.Component {
         }
     }
 
-    handleClickPartner = (id) => {
-        console.log('@@', id)
+    handleClickPartner = (id, name) => {
+        this.props.navigation.navigate('Chat', { targetUserId: id, targetUserName: name })
     }
 
     getPartners = () => {
@@ -90,7 +90,7 @@ class MyPartner extends React.Component {
                             photoUrl={item.photoUrl}
                             orgName={item.orgname}
                             userName={item.username}
-                            onPress={this.handleClickPartner.bind(this, item.id)} />
+                            onPress={this.handleClickPartner.bind(this, item.id, item.username)} />
                     ))}                
                 </View>
             </ScrollView>    

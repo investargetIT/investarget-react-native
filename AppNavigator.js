@@ -32,6 +32,7 @@ import ProjectDetail from './src/containers/ProjectDetail';
 import UserInfo from './src/containers/UserInfo'
 import OrganizationInfo from './src/containers/OrganizationInfo'
 import MyPartner from './src/containers/MyPartner'
+import Chat from './src/containers/Chat'
 
 import CustomTabBar from './src/components/CustomTabBar';
 import CustomDrawerContentComponent from './src/components/CustomDrawerContentComponent'
@@ -113,6 +114,7 @@ const CustomTabView = ({ router, navigation }) => {
     UserInfo: { screen: UserInfo },
     OrganizationInfo: { screen: OrganizationInfo },
     MyPartner: { screen: MyPartner },
+    Chat: { screen: Chat },
   })
 
   const DrawerApp = DrawerNavigator(

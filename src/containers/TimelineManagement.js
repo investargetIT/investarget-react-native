@@ -31,22 +31,22 @@ class TimelineManagement extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            total: 0,
             list: [],
         }
     }
 
     handleClickProject = (id) => {
-        console.log('proj>>',id)
+        this.props.navigation.navigate('ProjectDetail', { projectID: id })
     }
     handleClickOrganizaiton = (id) => {
-        console.log('org>>',id)
         this.props.navigation.navigate('OrganizationInfo', { orgId: id })
     }
-    handleClickUser = (id) => {
+    handleClickUser = (id, name) => {
         if (id == this.props.userId) {
             this.props.navigation.navigate('UserInfo', { userId: id })
         } else {
-            // go to chat
+            this.props.navigation.navigate('Chat', { targetUserId: id, targetUserName: name })
         }
     }
     handleClickTimeline = (id) => {
@@ -63,19 +63,18 @@ class TimelineManagement extends React.Component {
             param['trader'] = userId
         }
         api.getTimeline(param).then(data => {
-
-            const timelines = data.data
-            const investorIds = timelines.map(item => item.investor.id)
-            const ids = timelines.map(item => item.id)
+            const { count: total, data: list } = data
+            const investorIds = list.map(item => item.investor.id)
+            const ids = list.map(item => item.id)
 
             Promise.all([this.getInvestorOrganization(investorIds), this.getLatestRemark(ids)])
                 .then(data => {
                     const [orgs, remarks] = data
-                    timelines.forEach((item, index) => {
+                    list.forEach((item, index) => {
                         item['org'] = orgs[index]
                         item['remark'] = remarks[index]
                     })
-                    this.setState({ list: timelines })
+                    this.setState({ total, list: list })
                 })
 
         }).catch(error => {
@@ -111,20 +110,26 @@ class TimelineManagement extends React.Component {
             <View style={{flex: 1}}>
                 <ImageBackground style={{flex: 1}} source={require('../images/timeline/timeLineBG.png')}>
                     <View style={titleStyle}>
-                        <Text style={{color: '#333', textAlign: 'center', fontSize: 16, fontWeight:'bold'}}>时间轴总数：1个</Text>
+                        <Text style={{color: '#333', textAlign: 'center', fontSize: 16, fontWeight:'bold'}}>时间轴总数：{this.state.total}个</Text>
                     </View>
 
                     <FlatList
                         data={this.state.list}
                         keyExtractor={(item, index) => item.id}
-                        renderItem={(item) => (
-                            <Card
-                                {...item}
-                                onClickProject={this.handleClickProject}
-                                onClickOrganizaiton={this.handleClickOrganizaiton}
-                                onClickUser={this.handleClickUser}
-                                onClickTimeline={this.handleClickTimeline} />
-                        )}
+                        renderItem={(item) => {
+                            const timeline = item.item
+                            console.log('@@@@', timeline)
+                            const { proj, org, investor, trader, id } = timeline
+                            return (
+                                <Card
+                                    {...timeline}
+                                    onClickProject={this.handleClickProject.bind(this, proj.id)}
+                                    onClickOrganizaiton={this.handleClickOrganizaiton.bind(this, org.id)}
+                                    onClickInvestor={this.handleClickUser.bind(this, investor.id, investor.username)}
+                                    onClickTrader={this.handleClickUser.bind(this, trader.id, trader.username)}
+                                    onClickTimeline={this.handleClickTimeline.bind(this, id)} />
+                            )
+                        }}
                     />
                 </ImageBackground>
             </View>
@@ -172,7 +177,7 @@ const textStyle = {
 class Card extends React.Component {
 
     render() {
-        const { id, isClose, proj, investor, org, trader, transationStatu, remark } = this.props.item
+        const { id, isClose, proj, investor, org, trader, transationStatu, remark } = this.props
 
         var remainingAlertDay = parseFloat(transationStatu.remainingAlertDay)
         remainingAlertDay = remainingAlertDay > 0 ? Math.ceil(remainingAlertDay) : 0
@@ -180,29 +185,29 @@ class Card extends React.Component {
         return (
             <View style={cardStyle}>
                 <View style={{flexDirection:'row'}}>
-                    <TouchableOpacity style={projStyle} onPress={this.props.onClickProject.bind(this, proj.id)}>
+                    <TouchableOpacity style={projStyle} onPress={this.props.onClickProject}>
                         <Text style={{fontSize: 15,color: '#fff'}}>{proj.projtitle}</Text>
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={itemStyle} onPress={this.props.onClickUser.bind(this, investor.id)}>
+                <TouchableOpacity style={itemStyle} onPress={this.props.onClickInvestor}>
                     <Text style={textStyle}>投资人：{investor.username}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={itemStyle} onPress={this.props.onClickOrganizaiton.bind(this, org.id)}>
+                <TouchableOpacity style={itemStyle} onPress={this.props.onClickOrganizaiton}>
                     <Text style={textStyle}>投资人所属机构：{org.orgname}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={itemStyle} onPress={this.props.onClickUser.bind(this, trader.id)}>
+                <TouchableOpacity style={itemStyle} onPress={this.props.onClickTrader}>
                     <Text style={textStyle}>交易师：{trader.username}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={itemStyle} onPress={this.props.onClickTimeline.bind(this, id)}>
+                <TouchableOpacity style={itemStyle} onPress={this.props.onClickTimeline}>
                     <Text style={textStyle}>当前状态：{transationStatu.transationStatus.name}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={itemStyle}>
                     <Text style={textStyle}>是否结束：{isClose ? '已结束' : '未结束'}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={itemStyle} onPress={this.props.onClickTimeline.bind(this, id)}>
+                <TouchableOpacity style={itemStyle} onPress={this.props.onClickTimeline}>
                     <Text style={textStyle}>剩余天数：{remainingAlertDay}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{...itemStyle, borderBottomWidth: 0}} onPress={this.props.onClickTimeline.bind(this, id)}>
+                <TouchableOpacity style={{...itemStyle, borderBottomWidth: 0}} onPress={this.props.onClickTimeline}>
                     <Text numberOfLines={1} style={textStyle}>最新备注：{remark}</Text>
                 </TouchableOpacity>
             </View>

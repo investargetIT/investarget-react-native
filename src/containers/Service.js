@@ -16,8 +16,8 @@ class Service extends React.Component {
         }
     }
 
-    handleClickPartner = (id) => {
-
+    handleClickPartner = (id, name) => {
+        this.props.navigation.navigate('Chat', { targetUserId: id, targetUserName: name })
     }
 
     handleClickAll = () => {
@@ -66,7 +66,7 @@ class Service extends React.Component {
                                         photoUrl={item.photoUrl}
                                         orgName={item.orgname}
                                         userName={item.username}
-                                        onPress={this.handleClickPartner.bind(this, item.id)} />
+                                        onPress={this.handleClickPartner.bind(this, item.id, item.username)} />
                                 ))
                             }                      
                         </View>
