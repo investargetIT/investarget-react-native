@@ -36,13 +36,18 @@ class TimelineManagement extends React.Component {
     }
 
     handleClickProject = (id) => {
-
+        console.log('proj>>',id)
     }
     handleClickOrganizaiton = (id) => {
-
+        console.log('org>>',id)
+        this.props.navigation.navigate('OrganizationInfo', { orgId: id })
     }
     handleClickUser = (id) => {
-
+        if (id == this.props.userId) {
+            this.props.navigation.navigate('UserInfo', { userId: id })
+        } else {
+            // go to chat
+        }
     }
     handleClickTimeline = (id) => {
         this.props.navigation.navigate('EditTimeline', { id })
@@ -58,11 +63,44 @@ class TimelineManagement extends React.Component {
             param['trader'] = userId
         }
         api.getTimeline(param).then(data => {
-            this.setState({ list: data.data })
+
+            const timelines = data.data
+            const investorIds = timelines.map(item => item.investor.id)
+            const ids = timelines.map(item => item.id)
+
+            Promise.all([this.getInvestorOrganization(investorIds), this.getLatestRemark(ids)])
+                .then(data => {
+                    const [orgs, remarks] = data
+                    timelines.forEach((item, index) => {
+                        item['org'] = orgs[index]
+                        item['remark'] = remarks[index]
+                    })
+                    this.setState({ list: timelines })
+                })
+
         }).catch(error => {
             Toast.show(error.message, {position: Toast.positions.CENTER})
         })
     }
+
+    getInvestorOrganization = (investorIds) => {
+        const q = investorIds.map(id => {
+            return api.getUserDetailLang(id).then(user => user.org)
+        })
+        return Promise.all(q)
+    }
+
+    getLatestRemark = (timelineIds) => {
+        const q = timelineIds.map(id => {
+            const param = { timeline: id, createuser: this.props.userId }
+            return api.getTimelineRemark(param).then(result => {
+                const { count, data } = result
+                return count > 0 ? data[0].remark : ''
+            })
+        })
+        return Promise.all(q)
+    }
+
 
     componentDidMount() {
         this.getData()
@@ -134,41 +172,38 @@ const textStyle = {
 class Card extends React.Component {
 
     render() {
-        const { isClose, proj, investor, trader, transationStatu, id } = this.props.item
-        const projName = proj.projtitle
-        const investorName = investor.username
-        const traderName = trader.userame
-        const statusName = transationStatu.transationStatus.name
-        var day = parseFloat(transationStatu.remainingAlertDay)
-        day = day > 0 ? Math.ceil(day) : 0
+        const { id, isClose, proj, investor, org, trader, transationStatu, remark } = this.props.item
+
+        var remainingAlertDay = parseFloat(transationStatu.remainingAlertDay)
+        remainingAlertDay = remainingAlertDay > 0 ? Math.ceil(remainingAlertDay) : 0
 
         return (
             <View style={cardStyle}>
                 <View style={{flexDirection:'row'}}>
                     <TouchableOpacity style={projStyle} onPress={this.props.onClickProject.bind(this, proj.id)}>
-                        <Text style={{fontSize: 15,color: '#fff'}}>{projName}</Text>
+                        <Text style={{fontSize: 15,color: '#fff'}}>{proj.projtitle}</Text>
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={itemStyle} onPress={this.props.onClickUser.bind(this, investor.id)}>
-                    <Text style={textStyle}>投资人：{investorName}</Text>
+                    <Text style={textStyle}>投资人：{investor.username}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={itemStyle} onPress={this.props.onClickOrganizaiton}>
-                    <Text style={textStyle}>投资人所属机构：多维海拓</Text>
+                <TouchableOpacity style={itemStyle} onPress={this.props.onClickOrganizaiton.bind(this, org.id)}>
+                    <Text style={textStyle}>投资人所属机构：{org.orgname}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={itemStyle} onPress={this.props.onClickUser.bind(this, trader.id)}>
-                    <Text style={textStyle}>交易师：{traderName}</Text>
+                    <Text style={textStyle}>交易师：{trader.username}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={itemStyle} onPress={this.props.onClickTimeline.bind(this, id)}>
-                    <Text style={textStyle}>当前状态：{statusName}</Text>
+                    <Text style={textStyle}>当前状态：{transationStatu.transationStatus.name}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={itemStyle}>
                     <Text style={textStyle}>是否结束：{isClose ? '已结束' : '未结束'}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={itemStyle} onPress={this.props.onClickTimeline.bind(this, id)}>
-                    <Text style={textStyle}>剩余天数：{day}</Text>
+                    <Text style={textStyle}>剩余天数：{remainingAlertDay}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{...itemStyle, borderBottomWidth: 0}} onPress={this.props.onClickTimeline.bind(this, id)}>
-                    <Text style={textStyle}>最新备注：是不是因为下雨</Text>
+                    <Text numberOfLines={1} style={textStyle}>最新备注：{remark}</Text>
                 </TouchableOpacity>
             </View>
         )
