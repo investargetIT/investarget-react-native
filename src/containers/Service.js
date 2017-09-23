@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import Toast from 'react-native-root-toast'
 
 import * as api from '../api'
+import PartnerCard from '../components/PartnerCard'
 
 
 class Service extends React.Component {
@@ -20,7 +21,7 @@ class Service extends React.Component {
     }
 
     handleClickAll = () => {
-
+        this.props.navigation.navigate('MyPartner', { userType: this.props.userType })
     }
 
     handleClickNotification = () => {
@@ -49,7 +50,7 @@ class Service extends React.Component {
                 <View style={{padding: 16, backgroundColor: '#fff', marginBottom: 16}}>
                     <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
                         <Text style={{fontSize: 15, color: '#666'}}>
-                            { this.props.userType == 1 ? '我的投资人' : '我的交易师' }
+                            { this.props.userType == 1 ? '我的交易师' : '我的投资人' }
                         </Text>
                         <TouchableOpacity onPress={this.handleClickAll}>
                             <Text style={{fontSize: 15, color: '#10458f'}}>ALL</Text>
@@ -59,13 +60,13 @@ class Service extends React.Component {
                         <View style={{flexDirection:'row',marginTop: 24}}>
                             {
                                 this.state.partners.map(item => (
-                                    <TouchableOpacity key={item.id} style={{width:72,marginRight: 16}} onPress={this.handleClickPartner.bind(this, item.id)}>
-                                        <Image source={ item.photoUrl ? { uri: item.photoUrl } : require('../images/userCenter/defaultAvatar.png')} style={{width: 72, height: 72, marginBottom: 8,borderRadius: 36}} />
-                                        <View style={{ borderLeftColor: '#10458f', borderLeftWidth: 2, marginBottom: 8 }}>
-                                            <Text numberOfLines={1} style={{paddingLeft: 4-2, paddingRight: 4, fontSize: 13, color: '#666', textAlign: 'center'}}>{item.orgname}</Text>
-                                        </View>
-                                        <Text numberOfLines={1} style={{fontSize: 12, color: '#999', textAlign: 'center'}}>{item.username}</Text>
-                                    </TouchableOpacity>
+                                    <PartnerCard
+                                        key={item.id}
+                                        style={{marginRight: 16}}
+                                        photoUrl={item.photoUrl}
+                                        orgName={item.orgname}
+                                        userName={item.username}
+                                        onPress={this.handleClickPartner.bind(this, item.id)} />
                                 ))
                             }                      
                         </View>
