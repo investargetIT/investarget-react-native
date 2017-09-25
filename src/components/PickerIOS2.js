@@ -1,5 +1,16 @@
 import React from 'react'
-import { View, PickerIOS, Text } from 'react-native'
+import { View, PickerIOS, Text, TouchableOpacity } from 'react-native'
+
+
+const titleStyle = {
+    display:'flex',
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'space-between',
+    height:30,
+    borderBottomWidth:1,
+    borderBottomColor:'#eee',
+}
 
 
 class PickerIOS2 extends React.Component {
@@ -31,12 +42,21 @@ class PickerIOS2 extends React.Component {
     render() {
         return (
             <View>
-                <View style={{display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'space-between',height:30,borderBottomWidth:1,borderBottomColor:'#eee'}}>
-                    <Text onPress={this.handleCancel} style={{marginLeft: 16}}>取消</Text>
-                    <Text>{this.props.title || '选择'}</Text>
-                    <Text onPress={this.handleConfirm} style={{marginRight: 16}}>确定</Text>
+                <View style={titleStyle}>
+                    <TouchableOpacity onPress={this.handleCancel} style={{marginLeft: 16}}>
+                        <Text>取消</Text>
+                    </TouchableOpacity>
+                    <Text>{this.props.title}</Text>
+                    <TouchableOpacity onPress={this.handleConfirm} style={{marginRight: 16}}>
+                        <Text>确定</Text>
+                    </TouchableOpacity>
                 </View>
-                <PickerIOS style={{height: 200}} selectedValue={this.state.value} onValueChange={this.handleValueChange}>
+                <PickerIOS
+                    style={{height: 200}}
+                    itemStyle={{fontSize: 16}}
+                    selectedValue={this.state.value}
+                    onValueChange={this.handleValueChange}
+                >
                     {
                         this.props.options.map(option => 
                             <PickerIOS.Item key={option.value} label={option.label} value={option.value} />

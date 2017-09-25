@@ -2,6 +2,19 @@ import React from 'react'
 import { View, Text, Image, TextInput, Picker, Modal, Platform, TouchableOpacity } from 'react-native'
 import PickerIOS2 from './PickerIOS2'
 
+
+const pickerContainerStyle = {
+    display: 'flex',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: '100%',
+    backgroundColor: '#fff',
+    borderTopWidth:1,
+    borderTopColor:'#ddd'
+}
+
+
 class Picker2 extends React.Component {
 
     constructor(props) {
@@ -25,6 +38,9 @@ class Picker2 extends React.Component {
     }
 
     render() {
+
+        const selectedItem = this.props.options.filter(item => item.value == this.props.value)[0]
+        const selectedLabel = selectedItem ? selectedItem.label : ''
         
         if (Platform.OS == 'android') {
             return (
@@ -44,15 +60,21 @@ class Picker2 extends React.Component {
                         placeholderTextColor="#999"
                         placeholder={this.props.placeholder}
                         style={{flex: 1, height: 30, fontSize: 15, marginLeft: 8}}
-                        value={'+' + this.props.value}
+                        value={selectedLabel}
                     />
                     <Image
                         source={require('../images/home/filterDown.png')}
                         style={{flex: 0, width: 8,marginLeft: 8,marginRight: 16}}
                     />
                     <Modal visible={this.state.visible} animationType="slide" transparent={true}>
-                        <View style={{ display: 'flex', position: 'absolute',bottom: 0,left: 0, width: '100%',backgroundColor: '#fff',borderTopWidth:1,borderTopColor:'#ddd'}}>
-                            <PickerIOS2 value={this.props.value} options={this.props.options} onCancel={this.handleCancel} onConfirm={this.handleConfirm} title={this.props.title || ''} />
+                        <View style={pickerContainerStyle}>
+                            <PickerIOS2
+                                value={this.props.value}
+                                options={this.props.options}
+                                onCancel={this.handleCancel}
+                                onConfirm={this.handleConfirm}
+                                title={this.props.title || '选择'}
+                            />
                         </View>
                     </Modal>
                 </View>

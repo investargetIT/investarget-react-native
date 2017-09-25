@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Picker, Platform, Alert } from 'react-native'
+import { Alert } from 'react-native'
 import { connect } from 'react-redux'
 import Spinner from 'react-native-loading-spinner-overlay'
 import Toast from 'react-native-root-toast'
@@ -25,7 +25,6 @@ class RetrievePassword extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            showPicker: false,
             areaCode: '86',
             mobile: '',
             code: '',

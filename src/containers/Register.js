@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Picker, Platform, asyncStorage } from 'react-native'
+import { View } from 'react-native'
 import CheckBox from 'react-native-checkbox'
 import Toast from 'react-native-root-toast'
 

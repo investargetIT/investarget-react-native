@@ -1,5 +1,4 @@
 import React from 'react'
-import { View, Picker, TextInput, Image, Platform, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
 import Toast from 'react-native-root-toast'
