@@ -149,6 +149,9 @@ class MyFavoriteProject extends React.Component {
                     ListFooterComponent={() => {
                         return this.state.loading && this.state.total >= PAGE_SIZE ? (<Text style={loadingBottomStyle}>加载中...</Text>) : null
                     }}
+                    ItemSeparatorComponent={() => (
+                        <View style={{height:1,backgroundColor:'#f4f4f4'}}></View>
+                    )}
                 />
                 {this.state.selecting ? (
                     <View style={{height:40,backgroundColor:'#10458f',flexDirection:'row',alignItems:'center'}}>

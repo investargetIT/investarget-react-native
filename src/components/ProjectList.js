@@ -236,6 +236,9 @@ class ProjectList extends React.Component {
                     onEndReachedThreshold={0.5}
                     onEndReached={this.loadMore}
                     refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} colors={['#10458f']} tintColor="#10458f" />}
+                    ItemSeparatorComponent={() => (
+                        <View style={{height:1,backgroundColor:'#f4f4f4'}}></View>
+                    )}
                 />
             </View>
         )
