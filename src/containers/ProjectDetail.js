@@ -59,13 +59,14 @@ class ProjectDetail extends React.Component {
               </TouchableOpacity>
             </View>
 
-            <View style={{ position: 'absolute', left: 0, right: 0, bottom: 16, alignItems: 'center' }}>
+
+          </View>
+
+          <View style={{ position: 'absolute', left: 0, right: 0, bottom: 16, alignItems: 'center' }}>
               <TouchableOpacity onPress={this.handleSavePress}>
                 <Image source={require('../images/home/projNoCollect.png')} style={{ width: 42, height: 42 }} />
               </TouchableOpacity>
             </View>
-          </View>
-
         </View>
       )
     }
