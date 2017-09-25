@@ -31,15 +31,15 @@ const activeTabTextStyle = {
 class Chat extends React.Component {
 
     static navigationOptions = ({ navigation }) => {
-        const { targetUserName, onPress } = navigation.state.params
+        const { params } = navigation.state
         return {
-            title: targetUserName || '聊天',
+            title: params.targetUserName || '聊天',
             headerTintColor: '#fff',
             headerStyle: {
                 height: 48,
                 backgroundColor: '#10458F',
             },
-            headerRight: (<TouchableOpacity style={headerRightStyle} onPress={() => { onPress && onPress() }}>
+            headerRight: (<TouchableOpacity style={headerRightStyle} onPress={() => { params.onPress && params.onPress() }}>
                             <Image source={require('../images/delete.png')} style={{width:24,height:24}} />
                         </TouchableOpacity>)
         }

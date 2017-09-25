@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
 
 function ProjectItem(props) {
     return (
-        <TouchableWithoutFeedback onPress={props.onPress.bind(this, props.id)}>
+        <TouchableWithoutFeedback onPress={props.onPress}>
         <View style={styles.item}>
 
             <View style={{ marginTop: 2, marginRight: 2, flex: 0 }}>

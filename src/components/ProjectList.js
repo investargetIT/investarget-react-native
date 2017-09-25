@@ -231,7 +231,7 @@ class ProjectList extends React.Component {
                     style={{backgroundColor: '#f4f4f4'}}
                     data={this.props.projects}
                     keyExtractor={(item,index)=>item.id}
-                    renderItem={({item, sparators}) => <ProjectItem {...item} onPress={this.projectOnPress} />}
+                    renderItem={({item, sparators}) => <ProjectItem {...item} onPress={this.projectOnPress.bind(this, item.id)} />}
                     overScrollMode="always"
                     onEndReachedThreshold={0.5}
                     onEndReached={this.loadMore}
