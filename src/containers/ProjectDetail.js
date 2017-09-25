@@ -11,6 +11,7 @@ class ProjectDetail extends React.Component {
             marginTop: Platform.OS === 'android' ? 24 : 0,
         },
         headerTintColor: '#fff',
+        headerBackTitle: null,
     };
 
     constructor(props) {
@@ -27,7 +28,7 @@ class ProjectDetail extends React.Component {
     }
 
     handleTimelinePress() {
-      console.log('Timeline press')
+      this.props.navigation.navigate('Timeline');
     }
 
     handleFavoritePress() {
@@ -47,7 +48,7 @@ class ProjectDetail extends React.Component {
 
           <View style={{ height: 42, backgroundColor: '#10458F', flexDirection: 'row' }}>
             <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center' }}>
-              <TouchableOpacity onPress={this.handleTimelinePress}>
+              <TouchableOpacity onPress={this.handleTimelinePress.bind(this)}>
                 <Text style={{ color: 'white', fontSize: 16 }} >时间轴</Text>
               </TouchableOpacity>
             </View>

@@ -38,6 +38,7 @@ import CustomTabBar from './src/components/CustomTabBar';
 import CustomDrawerContentComponent from './src/components/CustomDrawerContentComponent'
 import TimelineManagement from './src/containers/TimelineManagement';
 import MyFavoriteProject from './src/containers/MyFavoriteProject';
+import Timeline from './src/containers/Timeline';
 
 
 
@@ -88,6 +89,7 @@ const CustomTabView = ({ router, navigation }) => {
       navigationOptions: ({navigation}) => ({
         title: '首页',
         headerBackTitle: null,
+        headerTintColor: '#fff',
       }),
     },
     Contact: { screen: Contact },
@@ -115,6 +117,7 @@ const CustomTabView = ({ router, navigation }) => {
     OrganizationInfo: { screen: OrganizationInfo },
     MyPartner: { screen: MyPartner },
     Chat: { screen: Chat },
+    Timeline: { screen: Timeline },
   })
 
   const DrawerApp = DrawerNavigator(
