@@ -1,7 +1,9 @@
 import React from 'react'
 import { View, ScrollView, Text, TouchableOpacity, Image } from 'react-native'
+import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view'
+import { connect } from 'react-redux'
 
-
+import FavoriteProjectList from '../components/FavoriteProjectList'
 
 const headerRightStyle = {
     marginRight: 16,
@@ -58,47 +60,43 @@ class Chat extends React.Component {
         //
     }
 
-    setActiveTab = (tab) => {
-        this.setState({ activeTab: tab })
-    }
-
     componentDidMount() {
         this.props.navigation.setParams({ onPress: this.handleDelete })
     }
 
     render() {
-        const { activeTab } = this.state
+        const { userType, userId, navigation } = this.props
+        const { targetUserId } = this.props.navigation.state.params
+        const isInvestor = userType == 1
 
         return (
             <View style={{flex:1}}>
-                <View style={{width:'100%',height: 48}}>
-                    <ScrollView
-                        contentContainerStyle={{flexDirection:'row',alignItems:'center',backgroundColor:'#fff'}}
-                        horizontal={true}
-                    >
-                        <TouchableOpacity style={tabStyle} onPress={this.setActiveTab.bind(this, 'chat')}>
-                            <Text style={activeTab == 'chat' ? activeTabTextStyle : tabTextStyle}>聊天</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={tabStyle} onPress={this.setActiveTab.bind(this, 'interest')}>
-                            <Text style={activeTab == 'interest' ? activeTabTextStyle : tabTextStyle}>Ta感兴趣</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={tabStyle} onPress={this.setActiveTab.bind(this, 'favorite')}>
-                            <Text style={activeTab == 'favorite' ? activeTabTextStyle : tabTextStyle}>Ta的收藏</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={tabStyle} onPress={this.setActiveTab.bind(this, 'recommend')}>
-                            <Text style={activeTab == 'recommend' ? activeTabTextStyle : tabTextStyle}>推荐Ta的</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={tabStyle} onPress={this.setActiveTab.bind(this, 'system')}>
-                            <Text style={activeTab == 'system' ? activeTabTextStyle : tabTextStyle}>系统推荐</Text>
-                        </TouchableOpacity>
-                    </ScrollView>
-                </View>
-                <View style={{flex:1}}>
-                    <Text>TODO:// 内容区具体怎么实现呢？</Text>
-                </View>
+                <ScrollableTabView
+                    renderTabBar={() => <DefaultTabBar style={{borderBottomColor: '#f4f4f4'}} tabStyle={{paddingBottom: 0}} />}
+                    tabBarUnderlineStyle={{height:0}}
+                    tabBarTextStyle={{fontSize:14}}
+                    tabBarBackgroundColor="#fff"
+                    tabBarActiveTextColor="#10458f"
+                    tabBarInactiveTextColor="#666"
+                >
+                    <View tabLabel="聊天" style={{flex:1,backgroundColor:'#fff'}}></View>
+                    <FavoriteProjectList tabLabel={isInvestor ? "感兴趣" : "Ta感兴趣"} navigation={navigation} favoritetype={5} userType={userType} userId={userId} targetUserId={targetUserId} />
+                    <FavoriteProjectList tabLabel={isInvestor ? "我的收藏" : "Ta的收藏"} navigation={navigation} favoritetype={4} userType={userType} userId={userId} targetUserId={targetUserId} />
+                    <FavoriteProjectList tabLabel={isInvestor ? "交易师推荐" : "推荐Ta的"} navigation={navigation} favoritetype={3} userType={userType} userId={userId} targetUserId={targetUserId} />
+                    <FavoriteProjectList tabLabel="系统推荐" navigation={navigation} favoritetype={1} userType={userType} userId={userId} targetUserId={targetUserId} />
+                </ScrollableTabView>
             </View>
         )
     }
 }
 
-export default Chat
+
+
+
+
+function mapStateToProps(state) {
+    const { id, userType } = state.app.userInfo
+    return { userId: id, userType }
+}
+
+export default connect(mapStateToProps)(Chat)
