@@ -16,7 +16,8 @@ class ProjectDetail extends React.Component {
 
     constructor(props) {
       super(props);
-      this.id = this.props.navigation.state.params.projectID;
+      this.id = props.navigation.state.params.projectID;
+      this.title = props.navigation.state.params.projectTitle;
       this.state = {
         url: null
       }
@@ -28,7 +29,7 @@ class ProjectDetail extends React.Component {
     }
 
     handleTimelinePress() {
-      this.props.navigation.navigate('Timeline');
+      this.props.navigation.navigate('Timeline', { entireTitle: this.title, id: this.id });
     }
 
     handleFavoritePress() {

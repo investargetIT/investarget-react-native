@@ -208,8 +208,8 @@ class ProjectList extends React.Component {
         })
       }
 
-      projectOnPress = id => {
-        this.props.navigation.navigate('ProjectDetail', { projectID: id });
+      projectOnPress = item => {
+        this.props.navigation.navigate('ProjectDetail', { projectID: item.id, projectTitle: item.title });
       }
 
     render() {
@@ -231,7 +231,7 @@ class ProjectList extends React.Component {
                     style={{backgroundColor: '#f4f4f4'}}
                     data={this.props.projects}
                     keyExtractor={(item,index)=>item.id}
-                    renderItem={({item, sparators}) => <ProjectItem {...item} onPress={this.projectOnPress.bind(this, item.id)} />}
+                    renderItem={({item, sparators}) => <ProjectItem {...item} onPress={this.projectOnPress.bind(this, item)} />}
                     overScrollMode="always"
                     onEndReachedThreshold={0.5}
                     onEndReached={this.loadMore}
