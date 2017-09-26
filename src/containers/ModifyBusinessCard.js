@@ -2,7 +2,12 @@ import React from 'react';
 import { Image, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { connect } from 'react-redux'
 import FitImage from 'react-native-fit-image'
-import ImagePicker from 'react-native-image-picker'
+import { ImagePicker } from 'expo'
+import Toast from 'react-native-root-toast'
+import Spinner from 'react-native-loading-spinner-overlay'
+
+import { modifyUserInfo } from '../../actions'
+import * as api from '../api'
 
 
 const containerStyle = {
@@ -39,8 +44,43 @@ class ModifyBusinessCard extends React.Component {
         headerTintColor: '#fff',
     };
 
+    constructor(props) {
+        super(props)
+        this.state = {
+            loading: false,
+        }
+    }
+
     handleClickImage = () => {
-        Alert.alert('TODO', '如何打开相册')
+        ImagePicker.launchImageLibraryAsync({
+        }).then(result => {
+            if (!result.cancelled) {
+                return result.uri
+            } else {
+                throw new Error('已取消')
+            }
+        })
+        .then((uri) => {
+            this.setState({ loading: true })
+            let file = { uri, type: 'application/octet-stream', name: 'avatar.jpg' }
+            return api.qiniuUpload('image', file)
+        })
+        .then(result => {
+            console.log('@@@@', result)
+            const { userId, userInfo } = this.props
+            const { key: cardKey, url: cardUrl } = result.data
+            return api.editUser([userId], { cardKey, cardUrl }).then(data => {
+                const newUserInfo = { ...userInfo, cardKey, cardUrl }
+                this.props.dispatch(modifyUserInfo(newUserInfo))
+                this.setState({ loading: false })
+            }).catch(error => {
+                throw error
+            })
+        })
+        .catch(error => {
+            this.setState({ loading: false })
+            Toast.show(error.message, {position: Toast.positions.CENTER})
+        })
     }
 
     render() {
@@ -48,6 +88,7 @@ class ModifyBusinessCard extends React.Component {
 
         return (
             <View style={containerStyle}>
+                <Spinner visible={this.state.loading} />
                 <View>
                     <Cell label="姓名" content={name} />
                     <Cell label="公司" content={orgName} />
@@ -84,10 +125,11 @@ class Cell extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { name, org, title, emailAddress, cardUrl } = state.app.userInfo
+    const { userInfo } = state.app
+    const { name, org, title, emailAddress, cardUrl, id } = userInfo
     const orgName = org ? org.name : ''
     const titleName = title ? title.titleName : ''
-    return { name, orgName, titleName, emailAddress, cardUrl }
+    return { name, orgName, titleName, emailAddress, cardUrl, userId: id, userInfo }
 }
 
 export default connect(mapStateToProps)(ModifyBusinessCard)

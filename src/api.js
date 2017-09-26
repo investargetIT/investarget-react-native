@@ -83,9 +83,12 @@ function r2(url, method, body) {
             return request(url, options)
         })
       
+    }, error => {
+      throw new ApiError(1299, 'data source missing')
     })
     .catch(error => {
-      throw new ApiError(1299, 'data source missing')
+      console.log('###', error)
+      throw error
     })
 }
 
@@ -270,6 +273,7 @@ export function qiniuUpload(bucket, file) {
             "clienttype": "3",
             "source": source,
             "x-requested-with": "XMLHttpRequest",
+            // "Content-Type": "multipart/form-data",
           }
           const user = userStr ? JSON.parse(userStr) : null
           
@@ -290,9 +294,12 @@ export function qiniuUpload(bucket, file) {
             return { data: data.result }
           })
         })
+    }, error => {
+      throw new ApiError(1299, 'data source missing')
     })
     .catch(error => {
-      throw new ApiError(1299, 'data source missing')
+      console.log('###', error)
+      throw error
     })
 }
 
