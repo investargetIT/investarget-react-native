@@ -66,7 +66,7 @@ class MyPartner extends React.Component {
             })
             this.setState({ partners })
         }).catch(error => {
-            Toast.show(error.message, Toast.positions.CENTER)
+            Toast.show(error.message, {position: Toast.positions.CENTER})
         })
     }
 

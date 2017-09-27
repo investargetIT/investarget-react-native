@@ -43,7 +43,7 @@ class UserInfo extends React.Component {
             console.log('@@@',data)
             this.setState({ user: data })
         }).catch(error => {
-            Toast.show(error.message, Toast.positions.CENTER)
+            Toast.show(error.message, {position: Toast.positions.CENTER})
         })
     }
 

@@ -40,7 +40,7 @@ class Notification extends React.Component {
             api.readMsg(data.id).then(() => {
                 //
             }).catch(error => {
-                Toast.show(error.message, Toast.positions.CENTER)
+                Toast.show(error.message, {position: Toast.positions.CENTER})
             })
         }
         // TODO: 跳转到消息详情
@@ -92,7 +92,7 @@ class MessageList extends React.Component {
             this.setState({ refreshing: false, list: data.data })
         }).catch(error => {
             this.setState({ refreshing: false })
-            Toast.show(error.message, Toast.positions.CENTER)
+            Toast.show(error.message, {position: Toast.positions.CENTER})
         })
     }
 
@@ -100,7 +100,7 @@ class MessageList extends React.Component {
         this.getData().then(data => {
             this.setState({ list: data.data })
         }).catch(error => {
-            Toast.show(error.message, Toast.positions.CENTER)
+            Toast.show(error.message, {position: Toast.positions.CENTER})
         })
     }
 

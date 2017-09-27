@@ -1,6 +1,5 @@
 import React from 'react'
 import { View, ScrollView, Text, TextInput, TouchableOpacity, Modal, Image, Alert } from 'react-native'
-import Swipeout from 'react-native-swipeout'
 import { connect } from 'react-redux'
 import Toast from 'react-native-root-toast'
 
