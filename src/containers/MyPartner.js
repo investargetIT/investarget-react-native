@@ -26,6 +26,7 @@ const cardStyle = {
     paddingRight: 24,
 }
 
+const PAGE_SIZE = 20
 
 class MyPartner extends React.Component {
 
@@ -47,7 +48,10 @@ class MyPartner extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            partners: []
+            partners: [],
+            total: 0,
+            page: 1,
+            loading: false,
         }
     }
 
@@ -55,28 +59,54 @@ class MyPartner extends React.Component {
         this.props.navigation.navigate('Chat', { targetUserId: id, targetUserName: name })
     }
 
-    getPartners = () => {
-        const userId = this.props.userId
-        const param = this.props.userType == 1 ? { investoruser: userId } : { traderuser: userId }
-        api.getUserRelation(param).then(data => {
-            const partners = data.data.map(item => {
-                const user = this.props.userType == 1 ? item.traderuser : item.investoruser
+    getPartners = (page) => {
+        const { userId, userType } = this.props
+        var param = { page_size: PAGE_SIZE, page_index: page }
+        if (userType == 1) {
+            param['investoruser'] = userId
+        } else {
+            param['traderuser'] = userId
+        }
+        return api.getUserRelation(param).then(data => {
+            var { count: total, data: list } = data
+            list = list.map(item => {
+                const user = userType == 1 ? item.traderuser : item.investoruser
                 const { id, username, org, photourl } = user
                 return { id, username, orgname: org ? org.orgname : '', photoUrl: photourl }
             })
-            this.setState({ partners })
+            return { total, list }
+        })
+    }
+
+    loadMore = () => {
+        const { page, total, partners } = this.state
+        if (page * PAGE_SIZE >= total) return // 已全部加载完毕
+        
+        let nextPage = page + 1
+        this.setState({ loading: true, page: nextPage })
+        this.getPartners(nextPage).then(({ total, list }) => {
+            this.setState({
+                loading: false,
+                total: total,
+                list: [...partners, ...list],
+            })
         }).catch(error => {
+            this.setState({ loading: false })
             Toast.show(error.message, {position: Toast.positions.CENTER})
         })
     }
 
     addInvestor = () => {
-
+        // todo
     }
 
     componentDidMount() {
         this.props.navigation.setParams({ onPress: this.addInvestor })
-        this.getPartners()
+        this.getPartners(1).then(({ total, list }) => {
+            this.setState({ total, partners: list })
+        }).catch(error => {
+            Toast.show(error.message, {position: Toast.positions.CENTER})
+        })
     }
 
     render() {

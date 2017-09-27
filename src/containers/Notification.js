@@ -61,8 +61,8 @@ class Notification extends React.Component {
                     </View>
                 </View>
 
-                { this.state.isRead ? <MessageList isRead={true} onPress={this.handlePress} /> : null }
-                { !this.state.isRead ? <MessageList isRead={false} onPress={this.handlePress} /> : null }
+                { this.state.isRead ? <MessageList style={{flex:1}} isRead={true} onPress={this.handlePress} /> : null }
+                { !this.state.isRead ? <MessageList style={{flex:1}} isRead={false} onPress={this.handlePress} /> : null }
                 
             </View>
         )
@@ -70,6 +70,7 @@ class Notification extends React.Component {
 }
 
 
+const PAGE_SIZE = 10
 
 class MessageList extends React.Component {
 
@@ -78,27 +79,51 @@ class MessageList extends React.Component {
         this.state = {
             refreshing: false,
             list: [],
+            loading: false,
+            total: 0,
+            page: 1,
         }
     }
 
-    getData = () => {
-        const param = { page_size: 10, page_index: 1, isRead: this.props.isRead }
-        return api.getMsg(param)
+    getData = (page) => {
+        const param = { page_size: PAGE_SIZE, page_index: page, isRead: this.props.isRead }
+        return api.getMsg(param).then(data => {
+            const { count: total, data: list } = data
+            return { total, list }
+        })
     }
 
     onRefresh = () => {
         this.setState({ refreshing: true })
-        this.getData().then((data) => {
-            this.setState({ refreshing: false, list: data.data })
+        this.getData().then(({ total, list }) => {
+            this.setState({ refreshing: false, list, total, page: 1 })
         }).catch(error => {
             this.setState({ refreshing: false })
             Toast.show(error.message, {position: Toast.positions.CENTER})
         })
     }
 
+    loadMore = () => {
+        const { page, total } = this.state
+        if (page * PAGE_SIZE >= total) return // 已全部加载完毕
+        
+        let nextPage = page + 1
+        this.setState({ loading: true, page: nextPage })
+        this.getData(nextPage).then(({ total, list }) => {
+            this.setState({
+                loading: false,
+                total: total,
+                list: [...this.state.list, ...list],
+            })
+        }).catch(error => {
+            this.setState({ loading: false })
+            Toast.show(error.message, {position: Toast.positions.CENTER})
+        })
+    }
+
     componentDidMount() {
-        this.getData().then(data => {
-            this.setState({ list: data.data })
+        this.getData(1).then(({ total, list }) => {
+            this.setState({ total, list })
         }).catch(error => {
             Toast.show(error.message, {position: Toast.positions.CENTER})
         })
@@ -107,18 +132,25 @@ class MessageList extends React.Component {
     render() {
         return (
             <View style={this.props.style}>
-                {this.state.list.length > 0 ? (
-                    <FlatList
-                        data={this.state.list}
-                        keyExtractor={(item, index) => item.id}
-                        renderItem={(item) => <Message {...item} onPress={this.props.onPress} />}
-                        refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.props.onRefresh} colors={['#10458f']} tintColor="#10458f" />}
-                    />
-                ) : (
-                    <Text style={{marginTop:80,textAlign:'center',color:'#999',fontSize:13}}>
-                        { this.props.isRead ? '暂无已读消息' : '暂无未读消息' }
-                    </Text>
-                )}
+                <FlatList
+                    data={this.state.list}
+                    keyExtractor={(item, index) => item.id}
+                    renderItem={({item}) => <Message {...item} onPress={this.props.onPress} />}
+                    refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} colors={['#10458f']} tintColor="#10458f" />}
+                    overScrollMode="always"
+                    onEndReachedThreshold={0.5}
+                    onEndReached={this.loadMore}
+                    ListFooterComponent={() => {
+                        return this.state.loading && this.state.total >= PAGE_SIZE ? (<Text style={loadingBottomStyle}>加载中...</Text>) : null
+                    }}
+                    ListEmptyComponent={() => (
+                        <View style={{flex:1,alignItems:'center',paddingTop: 80}}>
+                            <Text style={{textAlign:'center',color:'#999',fontSize:13}}>
+                                { this.props.isRead ? '暂无已读消息' : '暂无未读消息' }
+                            </Text>
+                        </View>
+                    )}
+                />
             </View>
         )
     }
@@ -140,7 +172,7 @@ const msgContentStyle = {fontSize:13,color:'#999'}
 class Message extends React.Component {
     
     render() {
-        var { id, isRead, messagetitle, created, content } = this.props.item
+        var { id, isRead, messagetitle, created, content } = this.props
         created = created.slice(0, 19).replace('T', ' ')
 
         return (
