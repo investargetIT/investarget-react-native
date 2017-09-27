@@ -1,3 +1,5 @@
+修改`node_modules/react-native-root-siblings/lib/AppRegistryInjection.js`文件，将`import EventEmitter from 'react-native/Libraries/EventEmitter/EventEmitter';`改为`import EventEmitter from 'react-native/Libraries/vendor/emitter/EventEmitter';`
+
 This project was bootstrapped with [Create React Native App](https://github.com/react-community/create-react-native-app).
 
 Below you'll find information about performing common tasks. The most recent version of this guide is available [here](https://github.com/react-community/create-react-native-app/blob/master/react-native-scripts/template/README.md).
