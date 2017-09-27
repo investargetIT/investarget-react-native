@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, Image, TouchableOpacity, FlatList } from 'react-native'
 import { connect } from 'react-redux'
+import Toast from 'react-native-root-toast'
 
 import * as api from '../api'
 
@@ -71,7 +72,7 @@ class SelectUser extends React.Component {
             this.setState({ users: [ ...users, ...list ], loading: false })
         }).catch(error => {
             this.setState({ loading: false })
-            Toast.show(error.message, Toast.positions.CENTER)
+            Toast.show(error.message, {position: Toast.positions.CENTER})
         })
     }
 
@@ -81,7 +82,24 @@ class SelectUser extends React.Component {
     }
 
     confirmSelect = () => {
-        //
+        const { favoritetype, projects } = this.props.navigation.state.params
+        const { selected } = this.state
+        const { userId } = this.props
+        var param
+        var successMessage
+        if (favoritetype == 3) {
+            param = { user: selected, projs: projects, favoritetype, trader: userId }
+            successMessage = '推荐成功'
+        } else if (favoritetype == 5) {
+            param = { user: userId, projs: projects, favoritetype, trader: selected }
+            successMessage = '感兴趣成功'
+        }
+        api.projFavorite(param).then(() => {
+            Toast.show(successMessage, {position: Toast.positions.CENTER})
+        }).catch(error => {
+            console.log('###', error)
+            Toast.show(error.message, {position: Toast.positions.CENTER})
+        })
     }
 
     componentDidMount() {
@@ -93,7 +111,7 @@ class SelectUser extends React.Component {
         this.getUsers(1).then(({total, list}) => {
             this.setState({ total, users: list })
         }).catch(error => {
-            Toast.show(error.message, Toast.positions.CENTER)
+            Toast.show(error.message, {position: Toast.positions.CENTER})
         })
     }
 

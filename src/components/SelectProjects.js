@@ -2,7 +2,6 @@ import React from 'react';
 import { Image, Text, View, FlatList, RefreshControl, TouchableOpacity, Alert } from 'react-native';
 import { connect } from 'react-redux'
 import Toast from 'react-native-root-toast'
-import Swipeout from 'react-native-swipeout'
 
 import ProjectItem from '../components/ProjectItem'
 import * as api from '../api'
@@ -81,31 +80,6 @@ class MyFavoriteProject extends React.Component {
         })
     }
 
-    projectOnPress = (id) => {
-        this.props.navigation.navigate('ProjectDetail', { projectID: id })
-    }
-
-    projectOnRemove = (id, favorId) => {
-        Alert.alert(
-            '提示',
-            '你确定从收藏中移除该项目吗？',
-            [
-                {text:'取消', onPress:()=>{}},
-                {text:'确定',onPress:()=>{this.cancelFavorite(id, favorId)}}
-            ]
-        )
-    }
-
-    cancelFavorite = (id, favorId) => {
-        const { projects } = this.state
-        const param = { favoriteids: [favorId] }
-        api.projCancelFavorite(param).then(data => {
-            this.setState({ projects: projects.filter(item => item.id !== id) })
-        }).catch(error => {
-            Toast.show(error.message, {position: Toast.positions.CENTER})
-        })
-    }
-
     toggleSelect = (id) => {
         const { selected } = this.state
         if (selected.includes(id)) {
@@ -121,12 +95,15 @@ class MyFavoriteProject extends React.Component {
     }
 
     confirmSelect = () => {
+        const { investorId } = this.props.navigation.state.params
         const { selected } = this.state
-        if (selected) {
-            this.props.navigation.navigate('SelectUser', { title: '我的投资人', favoritetype: 3, projects: selected })
-        } else {
-            //
-        }
+        const { userId } = this.props
+        const param = { user: investorId, projs: selected, favoritetype: 3, trader: userId }
+        api.projFavorite(param).then(() => {
+            Toast.show('推荐成功', {position: Toast.positions.CENTER})
+        }).catch(error => {
+            Toast.show(error.message, {position: Toast.positions.CENTER})
+        })
     }
 
     handleRecommend = () => {
@@ -169,11 +146,9 @@ class MyFavoriteProject extends React.Component {
                     renderItem={({item, sparators}) => (
                         <_ProjectItem
                             {...t(item)}
-                            onPress={this.projectOnPress.bind(this, item.id)}
                             selecting={this.state.selecting}
                             selected={this.state.selected.includes(item.id)}
                             onToggleSelect={this.toggleSelect.bind(this, item.id)}
-                            onRemove={this.projectOnRemove.bind(this, item.id, item.favorId)}
                         />)}
                     overScrollMode="always"
                     onEndReachedThreshold={0.5}
@@ -222,12 +197,7 @@ class _ProjectItem extends React.Component {
             )
         } else {
             return (
-                <Swipeout
-                    autoClose={true}
-                    right={[{text: '删除',type:'delete',onPress: onRemove}]}
-                >
-                    <ProjectItem {...extraProps} onPress={onPress} />
-                </Swipeout>
+                <ProjectItem {...extraProps} onPress={onPress} />
             )
         }
     }

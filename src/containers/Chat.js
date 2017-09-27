@@ -8,32 +8,21 @@ import FavoriteProjectList from '../components/FavoriteProjectList'
 const headerRightStyle = {
     marginRight: 16,
 }
-const tabContainerStyle = {
-    height:48,
-    flexDirection:'row',
-    alignItems:'center',
-    backgroundColor:'#fff',
-    paddingLeft: 8,
-    paddingRight: 8,
-}
+
 const tabStyle = {
     paddingLeft: 10,
     paddingRight: 10,
 }
-const tabTextStyle = {
-    fontSize:16,
-    color:'#666',
-}
-const activeTabTextStyle = {
-    ...tabTextStyle,
-    color: '#10458f',
-}
+
 
 
 class Chat extends React.Component {
 
     static navigationOptions = ({ navigation }) => {
         const { params } = navigation.state
+        const isChat = 'isChat' in params ? params.isChat : true
+        const userType = 'userType' in params ? params.userType : 1
+        
         return {
             title: params.targetUserName || '聊天',
             headerTintColor: '#fff',
@@ -41,9 +30,17 @@ class Chat extends React.Component {
                 height: 48,
                 backgroundColor: '#10458F',
             },
-            headerRight: (<TouchableOpacity style={headerRightStyle} onPress={() => { params.onPress && params.onPress() }}>
-                            <Image source={require('../images/delete.png')} style={{width:24,height:24}} />
-                        </TouchableOpacity>)
+            headerRight: isChat ? (
+                    <TouchableOpacity style={headerRightStyle} onPress={() => { params.onPress && params.onPress() }}>
+                        <Image source={require('../images/delete.png')} style={{width:24,height:24}} />
+                    </TouchableOpacity>
+                ) : (
+                    userType == 3 ? (
+                        <TouchableOpacity style={headerRightStyle} onPress={() => { params.onPress2 && params.onPress2() }}>
+                            <Image source={require('../images/plus.png')} style={{width:24,height:24}} />
+                        </TouchableOpacity>
+                    ) : null
+                )
         }
     }
 
@@ -52,16 +49,29 @@ class Chat extends React.Component {
         const { targetUserId } = props.navigation.state.params
         this.state = {
             targetUserId: targetUserId,
-            activeTab: 'chat'
         }
     }
 
     handleDelete = () => {
-        //
+        // todo 删除聊天记录
+    }
+
+    handleRecommend = () => {
+        this.props.navigation.navigate('SelectProjects', { investorId: this.state.targetUserId })
+    }
+
+    handleChangeTab = (i) => {
+        const isChat = i == 0
+        this.props.navigation.setParams({ isChat })
     }
 
     componentDidMount() {
-        this.props.navigation.setParams({ onPress: this.handleDelete })
+        this.props.navigation.setParams({
+            isChat: true,
+            userType: this.props.userType,
+            onPress: this.handleDelete,
+            onPress2: this.handleRecommend,
+        })
     }
 
     render() {
@@ -78,6 +88,7 @@ class Chat extends React.Component {
                     tabBarBackgroundColor="#fff"
                     tabBarActiveTextColor="#10458f"
                     tabBarInactiveTextColor="#666"
+                    onChangeTab={({ i, ref }) => { this.handleChangeTab(i) }}
                 >
                     <View tabLabel="聊天" style={{flex:1,backgroundColor:'#fff'}}></View>
                     <FavoriteProjectList tabLabel={isInvestor ? "感兴趣" : "Ta感兴趣"} navigation={navigation} favoritetype={5} userType={userType} userId={userId} targetUserId={targetUserId} />
