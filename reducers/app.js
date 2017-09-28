@@ -49,7 +49,17 @@ import {
     },
     showToast: false,
     toastMessage: '',
-    redirectUrl: null
+    redirectUrl: null,
+    
+	im: [],
+	// 数据实体
+	entities: {
+		message: {
+      byId: {},
+      chat: {},
+		}
+  }
+  
   }
   
   export default function (state = initialState, action) {

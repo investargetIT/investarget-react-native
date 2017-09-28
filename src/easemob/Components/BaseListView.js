@@ -144,7 +144,6 @@ class BaseListView extends Component {
           dataSource={this.state.dataSource}
           renderRow={renderRow || this._renderRow.bind(this)}
           renderSeparator={renderSeparator || this._renderSeparator.bind(this)}
-          renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
           onLayout={(event) => {
             this.setState({
               listHeight: event.nativeEvent.layout.height

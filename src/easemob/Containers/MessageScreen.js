@@ -16,7 +16,6 @@ import {
 } from 'react-native'
 
 // custom
-import I18n from 'react-native-i18n'
 import Styles from './Styles/MessageScreenStyle'
 import {Images, Colors, Metrics} from '../Themes'
 import MessageActions from '../Redux/MessageRedux'
@@ -393,7 +392,7 @@ class MessageScreen extends React.Component {
 
     return focused ? (
         <TouchableOpacity style={Styles.searchExtra} onPress={this.handleSend.bind(this)}>
-          <Text style={Styles.sendText}>{I18n.t('send')}</Text>
+          <Text style={Styles.sendText}>发送</Text>
         </TouchableOpacity>
       ) : null
   }
@@ -480,7 +479,7 @@ class MessageScreen extends React.Component {
           </Swiper>
           <View style={Styles.sendRow}>
             <TouchableOpacity style={Styles.send} onPress={this.handleSend.bind(this)}>
-              <Text style={Styles.sendText}>{I18n.t('send')}</Text>
+              <Text style={Styles.sendText}>发送</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -520,7 +519,7 @@ class MessageScreen extends React.Component {
               }}
               underlineColorAndroid='transparent'
               onSubmitEditing={() => this.refs.search.focus()}
-              placeholder={I18n.t('sendMessage')}
+              placeholder="发送消息"
             />
           </View>
           {this._renderSendButton()}
@@ -589,7 +588,7 @@ MessageScreen.propTypes = {
 const mapStateToProps = (state) => {
   return {
     // TODO: 如何过滤无用的请求 、普通聊天和群里拆离 or 判断props？
-    message: state.entities.message,
+    message: state.app.entities.message,
     // chatType: 'chat',
     // id: 'lwz3'
   }
