@@ -24,7 +24,10 @@ import ImagePicker from 'react-native-image-picker'
 import Emoji from 'react-native-emoji'
 import Swiper from 'react-native-swiper'
 import WebIM from '../Lib/WebIM'
+import WebIMConfig from '../Lib/WebIMConfig'
 import debounce from 'lodash.debounce'
+import AsyncStorage from '../../AsyncStorage'
+import md5 from '../../md5'
 
 const {width, height} = Dimensions.get('window')
 
@@ -77,6 +80,126 @@ class MessageScreen extends React.Component {
   // ------------ lifecycle ------------
   componentDidMount() {
     this.updateList(this.props)
+
+    this.conn = new WebIM.connection({
+      https: WebIMConfig.https,
+      url: WebIMConfig.xmppURL,
+      isAutoLogin: WebIMConfig.isAutoLogin,
+      isMultiLoginSessions: WebIMConfig.isMultiLoginSessions
+    });
+
+    this.conn.listen({
+      // xmpp连接成功
+      onOpened: (msg) => {
+        console.log('onOpened')
+        // 出席后才能接受推送消息
+        // WebIM.conn.setPresence();
+        // // 获取好友信息
+        // store.dispatch(RosterActions.getContacts())
+        // // 通知登陆成功
+        // store.dispatch(LoginActions.loginSuccess(msg))
+        // // 获取黑名单列表
+        // store.dispatch(BlacklistActions.getBlacklist())
+        // // 获取群组列表
+        // store.dispatch(GroupActions.getGroups())
+    
+        // NavigationActions.contacts()
+      },
+      // 出席消息
+      onPresence: (msg) => {
+        console.debug('onPresence', msg, store.getState())
+        // switch (msg.type) {
+        //   case 'subscribe':
+    
+    
+        //     // 加好友时双向订阅过程，所以当对方同意添加好友的时候
+        //     // 会有一步对方自动订阅本人的操作，这步操作是自动发起
+        //     // 不需要通知提示，所以此处通过state=[resp:true]标示
+        //     if (msg.status === '[resp:true]') {
+        //       return
+        //     }
+    
+        //     store.dispatch(SubscribeActions.addSubscribe(msg))
+        //     break;
+        //   case 'subscribed':
+        //     store.dispatch(RosterActions.getContacts())
+        //     Alert.alert(msg.from + ' ' + I18n.t('subscribed'))
+        //     break;
+        //   case 'unsubscribe':
+        //     // TODO: 局部刷新
+        //     store.dispatch(RosterActions.getContacts())
+        //     break;
+        //   case 'unsubscribed':
+        //     // 好友退订消息
+        //     store.dispatch(RosterActions.getContacts())
+        //     Alert.alert(msg.from + ' ' + I18n.t('unsubscribed'))
+        //     break;
+        // }
+      },
+      // 各种异常
+      onError: (error) => {
+        console.log(error)
+        // // 16: server-side close the websocket connection
+        // if (error.type == WebIM.statusCode.WEBIM_CONNCTION_DISCONNECTED) {
+        //   console.log('WEBIM_CONNCTION_DISCONNECTED', WebIM.conn.autoReconnectNumTotal, WebIM.conn.autoReconnectNumMax);
+        //   if (WebIM.conn.autoReconnectNumTotal < WebIM.conn.autoReconnectNumMax) {
+        //     return;
+        //   }
+        //   Alert.alert('Error', 'server-side close the websocket connection')
+        //   NavigationActions.login()
+        //   return;
+        // }
+        // // 8: offline by multi login
+        // if (error.type == WebIM.statusCode.WEBIM_CONNCTION_SERVER_ERROR) {
+        //   console.log('WEBIM_CONNCTION_SERVER_ERROR');
+        //   Alert.alert('Error', 'offline by multi login')
+        //   NavigationActions.login()
+        //   return;
+        // }
+        // if (error.type == 1) {
+        //   let data = error.data ? error.data.data : ''
+        //   data && Alert.alert('Error', data)
+        //   store.dispatch(LoginActions.loginFailure(error))
+        // }
+      },
+      // 连接断开
+      onClosed: (msg) => {
+        console.log('onClosed')
+      },
+      // 更新黑名单
+      onBlacklistUpdate: (list) => {
+        // store.dispatch(BlacklistActions.updateBlacklist(list))
+      },
+      // 文本信息
+      onTextMessage: (message) => {
+        console.log('onTextMessage', message)
+        // store.dispatch(MessageActions.addMessage(message, 'txt'))
+      },
+      onPictureMessage: (message) => {
+        console.log('onPictureMessage', message)
+        // store.dispatch(MessageActions.addMessage(message, 'img'))
+      }
+    })
+
+    AsyncStorage.getItem('userInfo')
+    .then(userInfoStr => {
+      const userInfo = JSON.parse(userInfoStr);
+      console.log('getUserInfo', userInfo);
+      var options = {
+        apiUrl: WebIMConfig.apiURL,
+        user: '' + userInfo.id,
+        pwd: md5('' + userInfo.id),
+        appKey: WebIMConfig.appkey,
+        success: function (token) {
+          console.log('loginSuccess', token)
+          var accessToken = token.access_token;
+          // localStorage.setItem('easemob_access_token', accessToken)
+        }
+      };
+      this.conn.open(options);
+    })
+
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -214,26 +337,28 @@ class MessageScreen extends React.Component {
     }
   
     const pMessage = parseFromLocal(chatType, chatId, message, 'txt')
-    // const {body, id, to} =  pMessage
-    // const {type, msg} = body
-    // const msgObj = new WebIM.message(type, id);
-    // msgObj.set({
-    //   //TODO: cate type == 'chatrooms'
-    //   msg, to, roomType: false,
-    //   success: function () {
-    //     dispatch(Creators.updateMessageStatus(pMessage, 'sent'))
-    //   },
-    //   fail: function () {
-    //     dispatch(Creators.updateMessageStatus(pMessage, 'fail'))
-    //   }
-    // });
+    const {body, id, to} =  pMessage
+    const {type, msg} = body
+    const msgObj = new WebIM.message(type, id);
+    msgObj.set({
+      //TODO: cate type == 'chatrooms'
+      msg, to: '102', roomType: false,
+      success: function () {
+        // dispatch(Creators.updateMessageStatus(pMessage, 'sent'))
+        console.log('success');
+      },
+      fail: function (e) {
+        dispatch(Creators.updateMessageStatus(pMessage, 'fail'))
+        console.log('failure', e);
+      }
+    });
 
     // TODO: 群组聊天需要梳理此参数的逻辑
     // if (type !== 'chat') {
     //   msgObj.setGroup('groupchat');
     // }
-
-    // WebIM.conn.send(msgObj.body);
+    console.log('ready to send msg: ' + msgObj);
+    this.conn.send(msgObj.body);
     this.props.addMessage(pMessage, chatType);
   }
 
