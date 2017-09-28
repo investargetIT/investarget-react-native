@@ -65,16 +65,16 @@ class MessageScreen extends React.Component {
 
   // ------------ logic  ---------------
   updateList(props) {
-    const {message, chatType, id} = props
-    const {byId} = message
-    const chatTypeData = message[chatType] || {}
-    const chatData = chatTypeData[id] || []
-    // console.log(chatType, id, message, chatTypeData, chatData)
+    const byId = props.message.byId;
+    const messagesArr = [];
+    for (var key in byId) {
+      messagesArr.push(key);
+    }
     this.setState({
       messages: {
-        messages: chatData
+        messages: messagesArr
       }
-    })
+    });
   }
 
   // ------------ lifecycle ------------
@@ -88,6 +88,7 @@ class MessageScreen extends React.Component {
       isMultiLoginSessions: WebIMConfig.isMultiLoginSessions
     });
 
+    const RN = this;
     this.conn.listen({
       // xmpp连接成功
       onOpened: (msg) => {
@@ -172,8 +173,7 @@ class MessageScreen extends React.Component {
       },
       // 文本信息
       onTextMessage: (message) => {
-        console.log('onTextMessage', message)
-        // store.dispatch(MessageActions.addMessage(message, 'txt'))
+        RN.props.addMessage(message, 'txt');
       },
       onPictureMessage: (message) => {
         console.log('onPictureMessage', message)
