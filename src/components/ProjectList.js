@@ -3,7 +3,7 @@ import { View, Text, Image, FlatList, RefreshControl, StatusBar, TouchableOpacit
 import ProjectItem from './ProjectItem'
 import { connect } from 'react-redux'
 import * as newApi from '../api'
-import { updateProjectStructure, receiveContents, appendProjects } from '../../actions';
+import { updateProjectStructure, receiveContents, appendProjects, SET_NEED_REFRESH_FALSE } from '../../actions';
 
 
 class ProjectList extends React.Component {
@@ -23,6 +23,14 @@ class ProjectList extends React.Component {
             refreshing: false,
             projects: []
         }
+    }
+
+    componentWillReceiveProps(nextProps) {
+      const { needRefresh } = nextProps
+      if (needRefresh) {
+        this.onRefresh()
+        this.props.dispatch({ type: SET_NEED_REFRESH_FALSE })
+      }
     }
 
     componentDidMount() {

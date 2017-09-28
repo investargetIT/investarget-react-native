@@ -3,7 +3,9 @@ import { View, ScrollView, Text, TouchableOpacity, Image, TextInput } from 'reac
 import { connect } from 'react-redux'
 
 import Cascader from '../components/Cascader'
-import { receiveContinentsAndCountries, receiveIndustries, receiveTags } from '../../actions'
+import {
+    receiveContinentsAndCountries, receiveIndustries, receiveTags,
+    toggleFilter, searchProject, clearFilter, cloneTrueFilter } from '../../actions'
 import * as api from '../api'
 
 
@@ -11,6 +13,8 @@ const tabStyle = {flex:1,justifyContent:'center',alignItems:'center',backgroundC
 const tabTextStyle = {fontSize:16,color:'#333'}
 const activeTabTextStyle = {...tabTextStyle,color:'#10458f'}
 const imgStyle = {width:9,height:5,marginLeft:7}
+
+const CATEGORY_1 = 'area', CATEGORY_2 = 'industry', CATEGORY_3 = 'tag'
 
 
 class Filter extends React.Component {
@@ -46,9 +50,6 @@ class Filter extends React.Component {
         super(props)
         this.state = {
             activeTab: 0,
-            selectedCountries: [],
-            selectedIndustries: [],
-            selectedTags: [],
             search: '',
         }
     }
@@ -57,8 +58,13 @@ class Filter extends React.Component {
         this.setState({ activeTab: tab })
     }
 
-    handleChange = (key, value) => {
-        this.setState({ [key]: value })
+    handleItemClick = (type, item) => {
+        this.props.dispatch(toggleFilter({
+            ...item,
+            type,
+            id: item.value,
+            name: item.label,
+        }))
     }
 
     handleChangeSearch = (value) => {
@@ -72,14 +78,19 @@ class Filter extends React.Component {
             selectedIndustries: [],
             selectedTags: [],
         })
-    }
 
+        this.props.dispatch(clearFilter())
+    }
+    
     submit = () => {
-        // todo
+        this.props.dispatch(searchProject(this.state.search))
+        this.props.navigation.goBack()
     }
 
     componentDidMount() {
         // todo 从 redux 读取 filter 数据
+        this.props.dispatch(cloneTrueFilter())
+        
         api.getSource('country').then(data => {
             this.props.dispatch(receiveContinentsAndCountries(data))
         })
@@ -94,30 +105,8 @@ class Filter extends React.Component {
     }
 
     render() {
-        const { countryOptions, industryOptions, tagOptions } = this.props
+        const { countryOptions, industryOptions, tagOptions, filter } = this.props
         const { activeTab, selectedCountries, selectedIndustries, selectedTags } = this.state
-
-        const selectedValue = []
-        countryOptions.forEach(pItem => {
-            pItem.children.forEach(item => {
-                if (selectedCountries.includes(item.value)) {
-                    selectedValue.push(item.label)
-                }
-            })
-        })
-        industryOptions.forEach(pItem => {
-            pItem.children.forEach(item => {
-                if (selectedIndustries.includes(item.value)) {
-                    selectedValue.push(item.label)
-                }
-            })
-        })
-        tagOptions.forEach(item => {
-            if (selectedTags.includes(item.value)) {
-                selectedValue.push(item.label)
-            }
-        })
-        const selectedValueText = selectedValue.join('，')
 
         const filterDown = require('../images/home/filterDown.png')
         const filterUp = require('../images/home/filterUp.png')
@@ -145,18 +134,27 @@ class Filter extends React.Component {
                     </TouchableOpacity>
                 </View>
                 {activeTab == 0 ? (
-                    <Cascader value={selectedCountries} onChange={this.handleChange.bind(this, 'selectedCountries')} options={countryOptions} />
+                    <Cascader
+                        chosenItem={filter.filter(item => item.type === CATEGORY_1).map(item => item.value)} 
+                        onItemClick={this.handleItemClick.bind(this, CATEGORY_1)} 
+                        options={countryOptions} />
                 ) : null}
                 {activeTab == 1 ? (
-                    <Cascader value={selectedIndustries} onChange={this.handleChange.bind(this, 'selectedIndustries')} options={industryOptions} />
+                    <Cascader
+                        chosenItem={filter.filter(item => item.type === CATEGORY_2).map(item => item.value)}
+                        onItemClick={this.handleItemClick.bind(this, CATEGORY_2)}
+                        options={industryOptions} />
                 ) : null}
                 {activeTab == 2 ? (
-                    <TagList value={selectedTags} onChange={this.handleChange.bind(this, 'selectedTags')} options={tagOptions} />
+                    <TagList
+                        chosenItem={filter.filter(item => item.type === CATEGORY_3).map(item => item.value)}
+                        onItemClick={this.handleItemClick.bind(this, CATEGORY_3)}
+                        options={tagOptions} />
                 ) : null}
                 <View style={{height:60,backgroundColor:'#fff',paddingLeft:6,paddingRight:6,paddingTop:4,paddingBottom:4}}>
                     <Text style={{fontSize:14,color:'#333'}}>已选条件:</Text>
                     <Text numberOfLines={2} style={{fontSize:13,color:'#666',lineHeight:18}}>
-                        {selectedValueText}
+                        {filter.map(item => item.label).join('，')}
                     </Text>
                 </View>
                 <View style={{flexDirection:'row',height:48}}>
@@ -178,19 +176,7 @@ const activeTagStyle = {...tagStyle, backgroundColor:'#10458f',borderColor:'#104
 const tagTextStyle = {textAlign:'center',fontSize:14,color:'#555'}
 const activeTagTextStyle = {...tagTextStyle, color:'#fff'}
 
-function TagList(props) {
-    const { value, onChange, options } = props
-
-    function handlePress(val) {
-        const index = value.indexOf(val)
-        var newValue
-        if (index > -1) {
-            newValue = [...value.slice(0,index), ...value.slice(index+1)]
-        } else {
-            newValue = [...value, val]
-        }
-        onChange(newValue)
-    }
+function TagList({ chosenItem, onItemClick, options }) {
     return (
         <View style={{flex:1,width:'100%'}}>
             <ScrollView>
@@ -198,12 +184,12 @@ function TagList(props) {
                 {options.map(item => (
                     <TouchableOpacity
                         key={item.value}
-                        style={value.includes(item.value) ? activeTagStyle : tagStyle}
-                        onPress={() => { handlePress(item.value) }}
+                        style={chosenItem.includes(item.value) ? activeTagStyle : tagStyle}
+                        onPress={() => { onItemClick(item) }}
                     >
                         <Text
                             numberOfLines={1}
-                            style={value.includes(item.value) ? activeTagTextStyle : tagTextStyle}>
+                            style={chosenItem.includes(item.value) ? activeTagTextStyle : tagTextStyle}>
                             {item.label}
                         </Text>
                     </TouchableOpacity>
@@ -217,7 +203,7 @@ function TagList(props) {
 
 
 function mapStateToProps(state) {
-    const { continentsAndCountries, industries, tags } = state.app
+    const { continentsAndCountries, industries, tags, filter } = state.app
     
     var countryOptions = continentsAndCountries.filter(item => item.parent == null)
         .map(item => ({ value: item.id, label: item.country }))
@@ -235,7 +221,7 @@ function mapStateToProps(state) {
 
     var tagOptions = tags.map(item => ({ value: item.id, label: item.name }))
 
-    return { continentsAndCountries, industries, tags, countryOptions, industryOptions, tagOptions }
+    return { continentsAndCountries, industries, tags, filter, countryOptions, industryOptions, tagOptions }
 }
 
 export default connect(mapStateToProps)(Filter)

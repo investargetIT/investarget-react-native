@@ -17,6 +17,7 @@ import {
     SEARCH_PROJECT,
     CLEAR_FILTER,
     CLONE_TRUE_FILTER,
+    SET_NEED_REFRESH_FALSE,
     MODIFY_USER_INFO,
     SET_RECOMMEND_INVESTORS,
     SET_RECOMMEND_PROJECTS,
@@ -171,6 +172,10 @@ import {
         return Object.assign({}, state, {
           trueFilter: filter,
           filter: filter
+        })
+      case SET_NEED_REFRESH_FALSE:
+        return Object.assign({}, state, {
+          needRefresh: false,
         })
       case MODIFY_USER_INFO:
         AsyncStorage.setItem('userInfo', JSON.stringify(action.userInfo))

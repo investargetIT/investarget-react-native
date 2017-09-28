@@ -23,21 +23,10 @@ class Cascader extends React.Component {
     handlePressPItem = (index) => {
         this.setState({ activeIndex: index })
     }
-
-    handlePressItem = (val) => {
-        var { value } = this.props
-        const index = value.indexOf(val)
-        if (index > -1) {
-            value = [...value.slice(0,index), ...value.slice(index+1)]
-        } else {
-            value = [...value, val]
-        }
-        this.props.onChange(value)
-    }
     
     render() {
         const { activeIndex } = this.state
-        const { value, onChange, options } = this.props
+        const { chosenItem, onItemClick, options } = this.props
         
         const pItem = options[activeIndex]
         const subOptions = pItem ? pItem.children : []
@@ -63,11 +52,11 @@ class Cascader extends React.Component {
                             <TouchableOpacity
                                 key={item.value}
                                 style={{flexDirection:'row',height:40,alignItems:'center'}}
-                                onPress={this.handlePressItem.bind(this, item.value)}>
+                                onPress={() => onItemClick(item)}>
                                 <View
-                                    style={value.includes(item.value) ? activeCellStyle : cellStyle}
+                                    style={chosenItem.includes(item.value) ? activeCellStyle : cellStyle}
                                 >
-                                    <Text numberOfLines={2} style={value.includes(item.value) ? activeTextStyle : textStyle}>{item.label}</Text>
+                                    <Text numberOfLines={2} style={chosenItem.includes(item.value) ? activeTextStyle : textStyle}>{item.label}</Text>
                                 </View>
                             </TouchableOpacity>
                         ))}
