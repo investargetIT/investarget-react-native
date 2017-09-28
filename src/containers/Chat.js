@@ -28,7 +28,6 @@ class Chat extends React.Component {
             title: params.targetUserName || '聊天',
             headerTintColor: '#fff',
             headerStyle: {
-                height: 48,
                 backgroundColor: '#10458F',
             },
             headerRight: isChat ? (
