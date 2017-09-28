@@ -56,6 +56,8 @@ class MessageScreen extends React.Component {
       visibleHeight: Metrics.screenHeight,
       isEmoji: false,
     }
+
+    this.sendTxtMessage = this.sendTxtMessage.bind(this);
   }
 
   // ------------ logic  ---------------
@@ -140,13 +142,99 @@ class MessageScreen extends React.Component {
 
   handleSend() {
     if (!this.state.value || !this.state.value.trim()) return
-    // this.props.sendTxtMessage(this.props.chatType, this.props.id, {
-    //   msg: this.state.value.trim()
-    // })
+    this.sendTxtMessage(this.props.chatType, this.props.id, {
+      msg: this.state.value.trim()
+    })
     this.setState({
       value: '',
       height: 34
     })
+  }
+
+  sendTxtMessage(chatType, chatId, message = {}) {
+
+    const msgTpl = {
+      base: {
+        error: false,
+        errorCode: '',
+        errorText: '',
+        // status 为空将被当做服务端的数据处理，处理成sent
+        status: 'sending', // [sending, sent ,fail, read]
+        id: '',
+        // from 不能删除，决定了房间id
+        from: '',
+        to: '',
+        toJid: '',
+        time: '',
+        type: '', // chat / groupchat
+        body: {},
+        ext: {},
+        bySelf: false,
+      },
+      txt: {
+        type: 'txt',
+        msg: ''
+      },
+      img: {
+        type: 'img',
+        file_length: 0,
+        filename: '',
+        filetype: '',
+        length: 0,
+        secret: '',
+        width: 0,
+        height: 0,
+        url: '',
+        thumb: '',
+        thumb_secret: ''
+      }
+    }
+
+    function copy(message, tpl) {
+      let obj = {}
+      Object.keys(tpl).forEach((v) => {
+        obj[v] = message[v] || tpl[v]
+      })
+      return obj
+    }
+
+    function parseFromLocal(type, to, message = {}, bodyType) {
+      let ext = message.ext || {}
+      let obj = copy(message, msgTpl.base)
+      let body = copy(message, msgTpl[bodyType])
+      return {
+        ...obj,
+        type,
+        to,
+        id: WebIM.conn.getUniqueId(),
+        body: {
+          ...body, ...ext, type: bodyType
+        }
+      }
+    }
+  
+    const pMessage = parseFromLocal(chatType, chatId, message, 'txt')
+    // const {body, id, to} =  pMessage
+    // const {type, msg} = body
+    // const msgObj = new WebIM.message(type, id);
+    // msgObj.set({
+    //   //TODO: cate type == 'chatrooms'
+    //   msg, to, roomType: false,
+    //   success: function () {
+    //     dispatch(Creators.updateMessageStatus(pMessage, 'sent'))
+    //   },
+    //   fail: function () {
+    //     dispatch(Creators.updateMessageStatus(pMessage, 'fail'))
+    //   }
+    // });
+
+    // TODO: 群组聊天需要梳理此参数的逻辑
+    // if (type !== 'chat') {
+    //   msgObj.setGroup('groupchat');
+    // }
+
+    // WebIM.conn.send(msgObj.body);
+    this.props.addMessage(pMessage, chatType);
   }
 
   handleChangeText(v) {
@@ -586,9 +674,10 @@ MessageScreen.propTypes = {
 
 // ------------ redux -------------
 const mapStateToProps = (state) => {
+  console.log('state', state);
   return {
     // TODO: 如何过滤无用的请求 、普通聊天和群里拆离 or 判断props？
-    message: state.app.entities.message,
+    message: state.easemob,
     // chatType: 'chat',
     // id: 'lwz3'
   }
@@ -596,7 +685,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    sendTxtMessage: (chatType, id, message) => dispatch(MessageActions.sendTxtMessage(chatType, id, message)),
+    addMessage: (message, chatType) => dispatch({ type: 'addMessage', message, bodyType: chatType}),
     sendImgMessage: (chatType, id, message, source) => dispatch(MessageActions.sendImgMessage(chatType, id, message, source))
   }
 }
