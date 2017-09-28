@@ -65,14 +65,12 @@ class MessageScreen extends React.Component {
 
   // ------------ logic  ---------------
   updateList(props) {
-    const byId = props.message.byId;
-    const messagesArr = [];
-    for (var key in byId) {
-      messagesArr.push(key);
-    }
+    const {message, chatType, id} = props
+    const chatTypeData = message[chatType] || {}
+    const chatData = chatTypeData[id] || []
     this.setState({
       messages: {
-        messages: messagesArr
+        messages: chatData
       }
     });
   }
@@ -342,7 +340,7 @@ class MessageScreen extends React.Component {
     const msgObj = new WebIM.message(type, id);
     msgObj.set({
       //TODO: cate type == 'chatrooms'
-      msg, to: '102', roomType: false,
+      msg, to, roomType: false,
       success: function () {
         // dispatch(Creators.updateMessageStatus(pMessage, 'sent'))
         console.log('success');
