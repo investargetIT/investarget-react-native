@@ -35,6 +35,7 @@ import MyPartner from './src/containers/MyPartner'
 import Chat from './src/containers/Chat'
 import SelectUser from './src/components/SelectUser'
 import SelectProjects from './src/components/SelectProjects'
+import Filter from './src/containers/Filter'
 
 import CustomTabBar from './src/components/CustomTabBar';
 import CustomDrawerContentComponent from './src/components/CustomDrawerContentComponent'
@@ -122,6 +123,7 @@ const CustomTabView = ({ router, navigation }) => {
     Timeline: { screen: Timeline },
     SelectUser: { screen: SelectUser },
     SelectProjects: { screen: SelectProjects },
+    Filter: { screen: Filter },
   })
 
   const DrawerApp = DrawerNavigator(

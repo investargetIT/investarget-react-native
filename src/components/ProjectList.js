@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, Image, FlatList, RefreshControl, StatusBar } from 'react-native'
+import { View, Text, Image, FlatList, RefreshControl, StatusBar, TouchableOpacity } from 'react-native'
 import ProjectItem from './ProjectItem'
 import { connect } from 'react-redux'
 import * as newApi from '../api'
@@ -222,10 +222,10 @@ class ProjectList extends React.Component {
                     <View style={{marginLeft:8,borderLeftWidth:2,borderLeftColor:'#10458f',paddingLeft:8}}>
                         <Text>项目推荐</Text>
                     </View>
-                    <View style={{marginRight:8, display:'flex',flexDirection:'row',alignItems:'center'}}>
+                    <TouchableOpacity onPress={()=>{this.props.navigation.navigate('Filter')}} style={{marginRight:8, display:'flex',flexDirection:'row',alignItems:'center'}}>
                         <Image source={require('../images/home/filter.png')} style={{width:14,height:15,marginRight:7}} />
                         <Text>筛选</Text>
-                    </View>
+                    </TouchableOpacity>
                 </View>
                 <FlatList
                     style={{backgroundColor: '#f4f4f4'}}
