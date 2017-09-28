@@ -140,9 +140,9 @@ class MessageScreen extends React.Component {
 
   handleSend() {
     if (!this.state.value || !this.state.value.trim()) return
-    this.props.sendTxtMessage(this.props.chatType, this.props.id, {
-      msg: this.state.value.trim()
-    })
+    // this.props.sendTxtMessage(this.props.chatType, this.props.id, {
+    //   msg: this.state.value.trim()
+    // })
     this.setState({
       value: '',
       height: 34
@@ -390,11 +390,11 @@ class MessageScreen extends React.Component {
   _renderSendButton() {
     const {focused} = this.state
 
-    return focused ? (
+    return (
         <TouchableOpacity style={Styles.searchExtra} onPress={this.handleSend.bind(this)}>
           <Text style={Styles.sendText}>发送</Text>
         </TouchableOpacity>
-      ) : null
+      ) 
   }
 
   _renderTxt(txt) {
@@ -506,10 +506,10 @@ class MessageScreen extends React.Component {
               onChange={(event) => {
                 this.setState({
                   value: event.nativeEvent.text,
-                  // 5 for padding
-                  height: event.nativeEvent.contentSize.height + 5,
+                  // 5 for paddingf
                 });
               }}
+              onContentSizeChange={event => this.setState({height: event.nativeEvent.contentSize.height + 5})}
               onFocus={this.handleFocusSearch.bind(this)}
               onBlur={this.handleBlurSearch.bind(this)}
               onChangeText={this.handleChangeText.bind(this)}
