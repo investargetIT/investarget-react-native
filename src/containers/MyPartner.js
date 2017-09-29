@@ -2,7 +2,8 @@ import React from 'react'
 import { ScrollView, View, Text, Image, TouchableOpacity } from 'react-native'
 import Toast from 'react-native-root-toast'
 import { connect } from 'react-redux'
-
+import { ImagePicker } from 'expo'
+ 
 import * as api from '../api'
 import PartnerCard from '../components/PartnerCard'
 
@@ -40,7 +41,7 @@ class MyPartner extends React.Component {
             },
             headerTintColor: '#fff',
             headerRight: userType == 1 ? null : (
-                <TouchableOpacity style={{marginRight:12}} onPress={params.onPress && params.onPress()}><Image source={require('../images/plus.png')} style={{width: 24, height: 24}} /></TouchableOpacity>
+                <TouchableOpacity style={{marginRight:12}} onPress={ () => {params.onPress && params.onPress()} }><Image source={require('../images/plus.png')} style={{width: 24, height: 24}} /></TouchableOpacity>
             ),
             headerBackTitle: null,
         }
@@ -98,7 +99,63 @@ class MyPartner extends React.Component {
     }
 
     addInvestor = () => {
-        // todo
+        var _file = null
+        ImagePicker.launchImageLibraryAsync({
+            //
+        }).then(result => {
+            if (!result.cancelled) {
+                return result.uri
+            } else {
+                throw new Error('已取消')
+            }
+        })
+        .then((uri) => {
+            const file = { uri, type: 'application/octet-stream', name: 'businessCard.jpg' }
+            _file = file
+            var formData = new FormData()
+            formData.append('file', file)
+            return api.ccUpload(formData).then(data => {
+                try {
+                    data = JSON.parse(data)
+                } catch (e) {
+                    this.props.navigation.navigate('AddInvestor', {file: _file})
+                    return
+                }
+                const parsedData = this.parseData(data)
+                this.props.navigation.navigate('AddInvestor', {...parsedData, file: _file})
+            }, error => {
+                this.props.navigation.navigate('AddInvestor', {file: _file})
+            })
+        })
+        .catch(error => {
+            this.setState({ loading: false })
+            Toast.show(error.message, {position: Toast.positions.CENTER})
+        })
+    }
+
+    parseData(data) {
+        const name = data.formatted_name ? data.formatted_name[0].item : null
+        const email = data.email ? data.email[0].item : null
+        let title
+        if (data.title) {
+          const index = this.props.titles.map(item => item.titleName).indexOf(data.title[0].item)
+          if (index > -1) {
+            title = this.props.titles[index].id
+          }
+        }
+        let mobile
+        if (data.telephone) {
+          const mobileArr = data.telephone.filter(f => /1[34578]\d{9}/.exec(f.item.number))
+          if (mobileArr.length > 0) {
+            mobile = /1[34578]\d{9}/.exec(mobileArr[0].item.number)[0]
+          }
+        }
+        let company = null
+        if (data.organization) {
+          const companyObj = data.organization[0].item
+          company = companyObj.name || companyObj.positional || companyObj.unit
+        }
+        return { name, email, title, mobile, company }
     }
 
     componentDidMount() {
