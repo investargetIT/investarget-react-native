@@ -22,7 +22,7 @@ window.DOMParser = xmldom.DOMParser
 let document = window.document = new DOMParser().parseFromString("<?xml version='1.0'?>\n", 'text/xml')
 
 if (WebIM.config.isDebug) {
-  function ts() {
+  let ts = function() {
     var d = new Date()
     var Hours = d.getHours() // 获取当前小时数(0-23)
     var Minutes = d.getMinutes() // 获取当前分钟数(0-59)
