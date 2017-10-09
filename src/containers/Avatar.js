@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Image, Text, TouchableOpacity } from 'react-native'
 import FitImage from 'react-native-fit-image'
 import { connect } from 'react-redux'
-import { ImagePicker } from 'expo'
+// import { ImagePicker } from 'expo'
 import Toast from 'react-native-root-toast'
 import Spinner from 'react-native-loading-spinner-overlay'
 
@@ -44,37 +44,38 @@ class Avatar extends React.Component {
     }
 
     handleUpload = () => {
-        ImagePicker.launchImageLibraryAsync({
-            allowsEditing: true,
-            aspect: [1, 1],
-        }).then(result => {
-            if (!result.cancelled) {
-                return result.uri
-            } else {
-                throw new Error('已取消')
-            }
-        })
-        .then((uri) => {
-            this.setState({ loading: true })
-            let file = { uri, type: 'application/octet-stream', name: 'avatar.jpg' }
-            return api.qiniuUpload('image', file)
-        })
-        .then(result => {
-            console.log('@@@@', result)
-            const { userId, userInfo } = this.props
-            const { key: photoKey, url: photoUrl } = result.data
-            return api.editUser([userId], { photoKey, photoUrl }).then(data => {
-                const newUserInfo = { ...userInfo, photoKey, photoUrl }
-                this.props.dispatch(modifyUserInfo(newUserInfo))
-                this.setState({ loading: false })
-            }).catch(error => {
-                throw error
-            })
-        })
-        .catch(error => {
-            this.setState({ loading: false })
-            Toast.show(error.message, {position: Toast.positions.CENTER})
-        })
+        console.log('handleupload');
+        // ImagePicker.launchImageLibraryAsync({
+        //     allowsEditing: true,
+        //     aspect: [1, 1],
+        // }).then(result => {
+        //     if (!result.cancelled) {
+        //         return result.uri
+        //     } else {
+        //         throw new Error('已取消')
+        //     }
+        // })
+        // .then((uri) => {
+        //     this.setState({ loading: true })
+        //     let file = { uri, type: 'application/octet-stream', name: 'avatar.jpg' }
+        //     return api.qiniuUpload('image', file)
+        // })
+        // .then(result => {
+        //     console.log('@@@@', result)
+        //     const { userId, userInfo } = this.props
+        //     const { key: photoKey, url: photoUrl } = result.data
+        //     return api.editUser([userId], { photoKey, photoUrl }).then(data => {
+        //         const newUserInfo = { ...userInfo, photoKey, photoUrl }
+        //         this.props.dispatch(modifyUserInfo(newUserInfo))
+        //         this.setState({ loading: false })
+        //     }).catch(error => {
+        //         throw error
+        //     })
+        // })
+        // .catch(error => {
+        //     this.setState({ loading: false })
+        //     Toast.show(error.message, {position: Toast.positions.CENTER})
+        // })
     }
 
     componentDidMount() {

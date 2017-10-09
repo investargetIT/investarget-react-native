@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View, Platform } from 'react-native'
 import { connect } from 'react-redux'
 import {
     TabNavigator, 
@@ -53,7 +53,9 @@ const CustomTabView = ({ router, navigation }) => {
     const ActiveScreen = router.getComponentForRouteName(routes[index].routeName);
     return (
       <View style={{ flex: 1 }}>
+        { Platform.OS === 'ios' ? 
         <View style={{ height: 24, backgroundColor: '#10458F' }} />
+        : null }
         <CustomTabBar navigation={navigation} />
         <ActiveScreen
           navigation={addNavigationHelpers({

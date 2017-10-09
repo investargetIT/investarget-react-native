@@ -2,7 +2,7 @@ import React from 'react';
 import { Image, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { connect } from 'react-redux'
 import FitImage from 'react-native-fit-image'
-import { ImagePicker } from 'expo'
+// import { ImagePicker } from 'expo'
 import Toast from 'react-native-root-toast'
 import Spinner from 'react-native-loading-spinner-overlay'
 
@@ -52,40 +52,41 @@ class ModifyBusinessCard extends React.Component {
     }
 
     handleClickImage = () => {
-        ImagePicker.launchImageLibraryAsync({
-        }).then(result => {
-            if (!result.cancelled) {
-                return result.uri
-            } else {
-                throw new Error('已取消')
-            }
-        })
-        .then((uri) => {
-            this.setState({ loading: true })
-            let file = { uri, type: 'application/octet-stream', name: 'avatar.jpg' }
-            return api.qiniuUpload('image', file)
-        })
-        .then(result => {
-            console.log('@@@@', result)
-            const { userId, userInfo } = this.props
-            const { key: cardKey, url: cardUrl } = result.data
-            return api.editUser([userId], { cardKey, cardUrl }).then(data => {
-                const newUserInfo = { ...userInfo, cardKey, cardUrl }
-                this.props.dispatch(modifyUserInfo(newUserInfo))
-                this.setState({ loading: false })
-            }).catch(error => {
-                throw error
-            })
-        })
-        .catch(error => {
-            this.setState({ loading: false })
-            Toast.show(error.message, {position: Toast.positions.CENTER})
-        })
+        console.log('handleClickImage');
+        // ImagePicker.launchImageLibraryAsync({
+        // }).then(result => {
+        //     if (!result.cancelled) {
+        //         return result.uri
+        //     } else {
+        //         throw new Error('已取消')
+        //     }
+        // })
+        // .then((uri) => {
+        //     this.setState({ loading: true })
+        //     let file = { uri, type: 'application/octet-stream', name: 'avatar.jpg' }
+        //     return api.qiniuUpload('image', file)
+        // })
+        // .then(result => {
+        //     console.log('@@@@', result)
+        //     const { userId, userInfo } = this.props
+        //     const { key: cardKey, url: cardUrl } = result.data
+        //     return api.editUser([userId], { cardKey, cardUrl }).then(data => {
+        //         const newUserInfo = { ...userInfo, cardKey, cardUrl }
+        //         this.props.dispatch(modifyUserInfo(newUserInfo))
+        //         this.setState({ loading: false })
+        //     }).catch(error => {
+        //         throw error
+        //     })
+        // })
+        // .catch(error => {
+        //     this.setState({ loading: false })
+        //     Toast.show(error.message, {position: Toast.positions.CENTER})
+        // })
     }
 
     render() {
         const { name, orgName, titleName, emailAddress, cardUrl } = this.props
-
+console.log('cardUrl', cardUrl)
         return (
             <View style={containerStyle}>
                 <Spinner visible={this.state.loading} />
@@ -99,7 +100,9 @@ class ModifyBusinessCard extends React.Component {
                     <Text style={{ fontSize: 13, color: '#333', marginBottom: 8 }}>我的名片<Text style={{color: 'red'}}>:(名片请横向放置)</Text></Text>
                     <TouchableOpacity style={{width: '100%'}} activeOpacity={0.8} onPress={this.handleClickImage}>
                         {
-                            cardUrl ? <FitImage source={{ uri: cardUrl }} /> 
+                            cardUrl ? 
+                            <Image source={{uri: cardUrl}}
+       style={{width: '100%', height: 200}} />
                                     : <Image source={require('../images/userCenter/emptyCardImage.png')} />
                         }
                     </TouchableOpacity>

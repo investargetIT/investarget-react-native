@@ -11,7 +11,8 @@ class ProjectDetail extends React.Component {
         title: '项目详情',
         headerStyle: {
             backgroundColor: '#10458F',
-            marginTop: Platform.OS === 'android' ? 24 : 0,
+            // marginTop: Platform.OS === 'android' ? 24 : 0,
+            
         },
         headerTintColor: '#fff',
         headerBackTitle: null,

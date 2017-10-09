@@ -1,0 +1,94 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:1:1-32:12
+	package
+		ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:2:5-36
+		INJECTED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml
+	android:versionName
+		ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:4:5-30
+		INJECTED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml
+	android:versionCode
+		ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:3:5-28
+		INJECTED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:1:11-69
+uses-permission#android.permission.INTERNET
+ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:6:5-67
+	android:name
+		ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:6:22-64
+uses-permission#android.permission.SYSTEM_ALERT_WINDOW
+ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:7:5-77
+MERGED from [com.facebook.react:react-native:0.48.4] /Users/movier/.android/build-cache/372ed9998dd6dcf8e4323a3160031f0c0481e3fc/output/AndroidManifest.xml:11:5-78
+	android:name
+		ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:7:22-75
+uses-sdk
+ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:9:5-11:41
+MERGED from [com.facebook.react:react-native:0.48.4] /Users/movier/.android/build-cache/372ed9998dd6dcf8e4323a3160031f0c0481e3fc/output/AndroidManifest.xml:7:5-9:41
+MERGED from [com.android.support:appcompat-v7:23.0.1] /Users/movier/.android/build-cache/215a0daec9b9dc6f9624e3f4ec131f5119c3351f/output/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:23.0.1] /Users/movier/.android/build-cache/2d7ac795c56fefa23a4af88bc893c915dad467c2/output/AndroidManifest.xml:20:5-43
+MERGED from [com.facebook.fbui.textlayoutbuilder:textlayoutbuilder:1.0.0] /Users/movier/.android/build-cache/61f38fec41774d1c1e8fb5db45a69a56192a0099/output/AndroidManifest.xml:14:5-16:41
+MERGED from [com.facebook.fresco:fresco:1.3.0] /Users/movier/.android/build-cache/ce4c869568eaf5a52c98046a52381604a382f15e/output/AndroidManifest.xml:5:5-7:41
+MERGED from [com.facebook.fresco:drawee:1.3.0] /Users/movier/.android/build-cache/9b3376f7cf66505f93dc6c09a8594243dcd936ec/output/AndroidManifest.xml:5:5-7:41
+MERGED from [com.facebook.fresco:imagepipeline-okhttp3:1.3.0] /Users/movier/.android/build-cache/fd9870cbaf97fe375d56d91df2a982e62f739601/output/AndroidManifest.xml:5:5-7:41
+MERGED from [com.facebook.fresco:imagepipeline:1.3.0] /Users/movier/.android/build-cache/8fb860ef94b8a52b8392a3a3161ecfd7293206ae/output/AndroidManifest.xml:5:5-7:41
+MERGED from [com.facebook.fresco:imagepipeline-base:1.3.0] /Users/movier/.android/build-cache/3d928a66635cfa3e330404e4747c1bf216387ff7/output/AndroidManifest.xml:5:5-7:41
+MERGED from [com.facebook.fresco:fbcore:1.3.0] /Users/movier/.android/build-cache/1d285330803998dc714ded8941a8d73ab3932f08/output/AndroidManifest.xml:5:5-7:41
+MERGED from [com.facebook.soloader:soloader:0.1.0] /Users/movier/.android/build-cache/35d1069d57ccfa2f75a49d056ab1f6a39bf61865/output/AndroidManifest.xml:2:3-70
+	android:targetSdkVersion
+		ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:11:9-38
+		INJECTED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:10:9-35
+		INJECTED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml
+application
+ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:13:5-30:19
+MERGED from [com.facebook.react:react-native:0.48.4] /Users/movier/.android/build-cache/372ed9998dd6dcf8e4323a3160031f0c0481e3fc/output/AndroidManifest.xml:13:5-20
+MERGED from [com.android.support:appcompat-v7:23.0.1] /Users/movier/.android/build-cache/215a0daec9b9dc6f9624e3f4ec131f5119c3351f/output/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:23.0.1] /Users/movier/.android/build-cache/2d7ac795c56fefa23a4af88bc893c915dad467c2/output/AndroidManifest.xml:22:5-20
+MERGED from [com.facebook.soloader:soloader:0.1.0] /Users/movier/.android/build-cache/35d1069d57ccfa2f75a49d056ab1f6a39bf61865/output/AndroidManifest.xml:3:3-17
+MERGED from [org.webkit:android-jsc:r174650] /Users/movier/.android/build-cache/08bd45bf122c4df2c6dc80107d6a62be4c05fadc/output/AndroidManifest.xml:2:3-17
+	android:label
+		ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:16:7-39
+	android:allowBackup
+		ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:15:7-33
+	android:icon
+		ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:17:7-41
+	android:theme
+		ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:18:7-38
+	android:name
+		ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:14:7-38
+activity#com.investargetnative.MainActivity
+ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:19:7-28:18
+	android:label
+		ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:21:9-41
+	android:windowSoftInputMode
+		ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:23:9-51
+	android:configChanges
+		ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:22:9-79
+	android:name
+		ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:20:9-37
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:24:9-27:25
+action#android.intent.action.MAIN
+ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:25:13-65
+	android:name
+		ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:25:21-62
+category#android.intent.category.LAUNCHER
+ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:26:13-73
+	android:name
+		ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:26:23-70
+activity#com.facebook.react.devsupport.DevSettingsActivity
+ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:29:7-84
+	android:name
+		ADDED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:29:17-81
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+IMPLIED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:1:1-32:12 reason: org.webkit.android_jsc has a targetSdkVersion < 4
+uses-permission#android.permission.READ_PHONE_STATE
+IMPLIED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:1:1-32:12 reason: org.webkit.android_jsc has a targetSdkVersion < 4
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+IMPLIED from /Users/movier/code/investarget-react-native/android/app/src/main/AndroidManifest.xml:1:1-32:12 reason: org.webkit.android_jsc requested WRITE_EXTERNAL_STORAGE

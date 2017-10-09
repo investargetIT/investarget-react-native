@@ -43,7 +43,8 @@ class Timeline extends React.Component {
     title: '项目进程',
     headerStyle: {
       backgroundColor: '#10458f',
-      marginTop: Platform.OS === 'android' ? 24 : 0,
+      // marginTop: Platform.OS === 'android' ? 24 : 0,
+      
     },
     headerTintColor: '#fff',
     headerBackTitle: null,

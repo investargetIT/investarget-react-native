@@ -1,0 +1,7 @@
+#Mon Oct 09 17:16:11 CST 2017
+base.0=/Users/movier/code/investarget-react-native/android/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_ffa7b0e46aa6c99cac16189169dd69f469e06fc8
+renamed.1=classes.dex
+renamed.0=classes2.dex
+file.1=/Users/movier/code/investarget-react-native/android/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_cc1e091e601d3b36d2048d56da30b7c2407ba8b0/classes.dex
+base.1=/Users/movier/code/investarget-react-native/android/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_cc1e091e601d3b36d2048d56da30b7c2407ba8b0
+file.0=/Users/movier/code/investarget-react-native/android/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_ffa7b0e46aa6c99cac16189169dd69f469e06fc8/classes.dex

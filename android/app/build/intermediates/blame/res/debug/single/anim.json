@@ -1,0 +1,66 @@
+[
+    {
+        "merged": "/Users/movier/code/investarget-react-native/android/app/build/intermediates/res/merged/debug/anim/abc_grow_fade_in_from_bottom.xml",
+        "source": "/Users/movier/.android/build-cache/215a0daec9b9dc6f9624e3f4ec131f5119c3351f/output/res/anim/abc_grow_fade_in_from_bottom.xml"
+    },
+    {
+        "merged": "/Users/movier/code/investarget-react-native/android/app/build/intermediates/res/merged/debug/anim/abc_fade_in.xml",
+        "source": "/Users/movier/.android/build-cache/215a0daec9b9dc6f9624e3f4ec131f5119c3351f/output/res/anim/abc_fade_in.xml"
+    },
+    {
+        "merged": "/Users/movier/code/investarget-react-native/android/app/build/intermediates/res/merged/debug/anim/abc_fade_out.xml",
+        "source": "/Users/movier/.android/build-cache/215a0daec9b9dc6f9624e3f4ec131f5119c3351f/output/res/anim/abc_fade_out.xml"
+    },
+    {
+        "merged": "/Users/movier/code/investarget-react-native/android/app/build/intermediates/res/merged/debug/anim/abc_slide_out_bottom.xml",
+        "source": "/Users/movier/.android/build-cache/215a0daec9b9dc6f9624e3f4ec131f5119c3351f/output/res/anim/abc_slide_out_bottom.xml"
+    },
+    {
+        "merged": "/Users/movier/code/investarget-react-native/android/app/build/intermediates/res/merged/debug/anim/abc_slide_in_top.xml",
+        "source": "/Users/movier/.android/build-cache/215a0daec9b9dc6f9624e3f4ec131f5119c3351f/output/res/anim/abc_slide_in_top.xml"
+    },
+    {
+        "merged": "/Users/movier/code/investarget-react-native/android/app/build/intermediates/res/merged/debug/anim/slide_down.xml",
+        "source": "/Users/movier/.android/build-cache/372ed9998dd6dcf8e4323a3160031f0c0481e3fc/output/res/anim/slide_down.xml"
+    },
+    {
+        "merged": "/Users/movier/code/investarget-react-native/android/app/build/intermediates/res/merged/debug/anim/catalyst_push_up_in.xml",
+        "source": "/Users/movier/.android/build-cache/372ed9998dd6dcf8e4323a3160031f0c0481e3fc/output/res/anim/catalyst_push_up_in.xml"
+    },
+    {
+        "merged": "/Users/movier/code/investarget-react-native/android/app/build/intermediates/res/merged/debug/anim/slide_up.xml",
+        "source": "/Users/movier/.android/build-cache/372ed9998dd6dcf8e4323a3160031f0c0481e3fc/output/res/anim/slide_up.xml"
+    },
+    {
+        "merged": "/Users/movier/code/investarget-react-native/android/app/build/intermediates/res/merged/debug/anim/abc_popup_exit.xml",
+        "source": "/Users/movier/.android/build-cache/215a0daec9b9dc6f9624e3f4ec131f5119c3351f/output/res/anim/abc_popup_exit.xml"
+    },
+    {
+        "merged": "/Users/movier/code/investarget-react-native/android/app/build/intermediates/res/merged/debug/anim/catalyst_push_up_out.xml",
+        "source": "/Users/movier/.android/build-cache/372ed9998dd6dcf8e4323a3160031f0c0481e3fc/output/res/anim/catalyst_push_up_out.xml"
+    },
+    {
+        "merged": "/Users/movier/code/investarget-react-native/android/app/build/intermediates/res/merged/debug/anim/abc_popup_enter.xml",
+        "source": "/Users/movier/.android/build-cache/215a0daec9b9dc6f9624e3f4ec131f5119c3351f/output/res/anim/abc_popup_enter.xml"
+    },
+    {
+        "merged": "/Users/movier/code/investarget-react-native/android/app/build/intermediates/res/merged/debug/anim/fade_in.xml",
+        "source": "/Users/movier/.android/build-cache/372ed9998dd6dcf8e4323a3160031f0c0481e3fc/output/res/anim/fade_in.xml"
+    },
+    {
+        "merged": "/Users/movier/code/investarget-react-native/android/app/build/intermediates/res/merged/debug/anim/fade_out.xml",
+        "source": "/Users/movier/.android/build-cache/372ed9998dd6dcf8e4323a3160031f0c0481e3fc/output/res/anim/fade_out.xml"
+    },
+    {
+        "merged": "/Users/movier/code/investarget-react-native/android/app/build/intermediates/res/merged/debug/anim/abc_shrink_fade_out_from_bottom.xml",
+        "source": "/Users/movier/.android/build-cache/215a0daec9b9dc6f9624e3f4ec131f5119c3351f/output/res/anim/abc_shrink_fade_out_from_bottom.xml"
+    },
+    {
+        "merged": "/Users/movier/code/investarget-react-native/android/app/build/intermediates/res/merged/debug/anim/abc_slide_out_top.xml",
+        "source": "/Users/movier/.android/build-cache/215a0daec9b9dc6f9624e3f4ec131f5119c3351f/output/res/anim/abc_slide_out_top.xml"
+    },
+    {
+        "merged": "/Users/movier/code/investarget-react-native/android/app/build/intermediates/res/merged/debug/anim/abc_slide_in_bottom.xml",
+        "source": "/Users/movier/.android/build-cache/215a0daec9b9dc6f9624e3f4ec131f5119c3351f/output/res/anim/abc_slide_in_bottom.xml"
+    }
+]
