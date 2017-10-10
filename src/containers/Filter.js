@@ -30,7 +30,7 @@ class Filter extends React.Component {
                             underlineColorAndroid="transparent"
                             selectionColor="#2269d4"
                             placeholderTextColor="#999"
-                            style={{width:120,fontSize:15}}
+                            style={{width:120,fontSize:15,padding:0}}
                             placeholder="搜索项目标题"
                             value={params.value}
                             onChangeText={(value) => { params.onChange && params.onChange(value) }}

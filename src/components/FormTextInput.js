@@ -22,6 +22,7 @@ const _style = {
     flex: 1,
     fontSize:15,
     height: 30,
+    padding: 0,
     color: '#333',
 }
 
@@ -200,7 +201,7 @@ class FormMobileInput extends React.Component {
                     selectionColor="#2269d4"
                     placeholderTextColor="#999"
                     placeholder="请输入手机号"
-                    style={{flex: 1,fontSize:15,height: 30,color: '#333'}}
+                    style={{flex: 1,fontSize:15,height: 30,padding:0,color: '#333'}}
                     value={this.props.mobile}
                     onChangeText={this.props.onMobileChange}
                 />
