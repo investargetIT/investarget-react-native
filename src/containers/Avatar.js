@@ -1,8 +1,7 @@
 import React from 'react'
-import { View, Image, Text, TouchableOpacity } from 'react-native'
-import FitImage from 'react-native-fit-image'
+import { View, Image, Text, TouchableOpacity, Dimensions } from 'react-native'
 import { connect } from 'react-redux'
-// import { ImagePicker } from 'expo'
+import ImagePicker from 'react-native-image-picker'
 import Toast from 'react-native-root-toast'
 import Spinner from 'react-native-loading-spinner-overlay'
 
@@ -15,6 +14,9 @@ const headerRightStyle = {
     color: '#fff',
     fontSize: 15
 }
+
+const {height, width} = Dimensions.get('window')
+const SCREEN_WIDTH = width
 
 
 class Avatar extends React.Component {
@@ -44,38 +46,35 @@ class Avatar extends React.Component {
     }
 
     handleUpload = () => {
-        console.log('handleupload');
-        // ImagePicker.launchImageLibraryAsync({
-        //     allowsEditing: true,
-        //     aspect: [1, 1],
-        // }).then(result => {
-        //     if (!result.cancelled) {
-        //         return result.uri
-        //     } else {
-        //         throw new Error('已取消')
-        //     }
-        // })
-        // .then((uri) => {
-        //     this.setState({ loading: true })
-        //     let file = { uri, type: 'application/octet-stream', name: 'avatar.jpg' }
-        //     return api.qiniuUpload('image', file)
-        // })
-        // .then(result => {
-        //     console.log('@@@@', result)
-        //     const { userId, userInfo } = this.props
-        //     const { key: photoKey, url: photoUrl } = result.data
-        //     return api.editUser([userId], { photoKey, photoUrl }).then(data => {
-        //         const newUserInfo = { ...userInfo, photoKey, photoUrl }
-        //         this.props.dispatch(modifyUserInfo(newUserInfo))
-        //         this.setState({ loading: false })
-        //     }).catch(error => {
-        //         throw error
-        //     })
-        // })
-        // .catch(error => {
-        //     this.setState({ loading: false })
-        //     Toast.show(error.message, {position: Toast.positions.CENTER})
-        // })
+        const options = {
+            title: '选择头像',
+            cancelButtonTitle: '取消',
+            mediaType: 'photo',
+            allowsEditing: true,
+            maxWidth: 200,
+            maxHeight: 200,
+        }
+        ImagePicker.showImagePicker(options, (response) => {
+            if (response.didCancel) {
+                Toast.show('已取消', {position: Toast.positions.CENTER})
+            } else if (response.error) {
+                Toast.show(response.error, {position: Toast.positions.CENTER})
+            } else {
+                let file = { uri: response.uri, type: 'application/octet-stream', name: 'avatar.jpg'}
+                api.qiniuUpload('image', file).then((result) => {
+                    const { userId, userInfo } = this.props
+                    const { key: photoKey, url: photoUrl } = result.data
+                    return api.editUser([userId], { photoKey, photoUrl }).then(data => {
+                        const newUserInfo = { ...userInfo, photoKey, photoUrl }
+                        this.props.dispatch(modifyUserInfo(newUserInfo))
+                        this.setState({ loading: false })
+                    })
+                }).catch(error => {
+                    this.setState({ loading: false })
+                    Toast.show(error.message, {position: Toast.positions.CENTER})
+                })
+            }
+        })
     }
 
     componentDidMount() {
@@ -85,11 +84,11 @@ class Avatar extends React.Component {
     render() {
         const { photoUrl } = this.props
         return (
-            <View style={{marginTop: 16}}>
+            <View style={{flex: 1,marginTop: 16}}>
                 <Spinner visible={this.state.loading} />
                 {photoUrl ? (
-                    <TouchableOpacity onPress={this.handleUpload}>
-                        <FitImage source={{ uri: photoUrl }} />
+                    <TouchableOpacity style={{width:SCREEN_WIDTH,backgroundColor:'#fff'}} onPress={this.handleUpload}>
+                        <Image style={{width:SCREEN_WIDTH,height:SCREEN_WIDTH}} resizeMode="contain" source={{ uri: photoUrl }} />
                     </TouchableOpacity>
                 ) : <Text>暂无头像</Text>}
             </View>

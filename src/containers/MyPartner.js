@@ -2,7 +2,7 @@ import React from 'react'
 import { ScrollView, View, Text, Image, TouchableOpacity } from 'react-native'
 import Toast from 'react-native-root-toast'
 import { connect } from 'react-redux'
-// import { ImagePicker } from 'expo'
+import ImagePicker from 'react-native-image-picker'
  
 import * as api from '../api'
 import PartnerCard from '../components/PartnerCard'
@@ -100,38 +100,37 @@ class MyPartner extends React.Component {
 
     addInvestor = () => {
         var _file = null
-        console.log('addInvestor');
-        // ImagePicker.launchImageLibraryAsync({
-        //     //
-        // }).then(result => {
-        //     if (!result.cancelled) {
-        //         return result.uri
-        //     } else {
-        //         throw new Error('已取消')
-        //     }
-        // })
-        // .then((uri) => {
-        //     const file = { uri, type: 'application/octet-stream', name: 'businessCard.jpg' }
-        //     _file = file
-        //     var formData = new FormData()
-        //     formData.append('file', file)
-        //     return api.ccUpload(formData).then(data => {
-        //         try {
-        //             data = JSON.parse(data)
-        //         } catch (e) {
-        //             this.props.navigation.navigate('AddInvestor', {file: _file})
-        //             return
-        //         }
-        //         const parsedData = this.parseData(data)
-        //         this.props.navigation.navigate('AddInvestor', {...parsedData, file: _file})
-        //     }, error => {
-        //         this.props.navigation.navigate('AddInvestor', {file: _file})
-        //     })
-        // })
-        // .catch(error => {
-        //     this.setState({ loading: false })
-        //     Toast.show(error.message, {position: Toast.positions.CENTER})
-        // })
+
+        const options = {
+            title: '选择名片',
+            cancelButtonTitle: '取消',
+            mediaType: 'photo',
+        }
+        ImagePicker.showImagePicker(options, (response) => {
+            if (response.didCancel) {
+                Toast.show('已取消', {position: Toast.positions.CENTER})
+            } else if (response.error) {
+                Toast.show(response.error, {position: Toast.positions.CENTER})
+            } else {
+                let file = { uri: response.uri, type: 'application/octet-stream', name: 'businessCard.jpg' }
+                _file = file
+                var formData = new FormData()
+                formData.append('file', file)
+
+                api.ccUpload(formData).then(data => {
+                    try {
+                        data = JSON.parse(data)
+                    } catch (e) {
+                        this.props.navigation.navigate('AddInvestor', {file: _file})
+                        return
+                    }
+                    const parsedData = this.parseData(data)
+                    this.props.navigation.navigate('AddInvestor', {...parsedData, file: _file})
+                }, error => {
+                    this.props.navigation.navigate('AddInvestor', {file: _file})
+                })
+            }
+        })
     }
 
     parseData(data) {
