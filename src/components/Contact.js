@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity, Linking } from 'react-native'
 
 
 const containerStyle = {
@@ -20,7 +20,6 @@ const cellLabelStyle = {
     color: '#333'
 }
 const cellContentStyle = {
-    flex: 1,
     fontSize: 13
 }
 
@@ -46,8 +45,8 @@ class Contact extends React.Component {
     render() {
         return (
             <View style={containerStyle}>
-                <Cell label="客服电话：" content="021-31776196" />
-                <Cell label="客服邮箱：" content="customer@investarget.com" />
+                <Cell label="客服电话：" content="021-31776196" onPress={()=>{ Linking.openURL('tel:01231776196')}} />
+                <Cell label="客服邮箱：" content="customer@investarget.com" onPress={()=>{ Linking.openURL('mailto:customer@investarget.com') }} />
                 <Cell label="联系地址：" content="中国上海市徐汇区虹桥路777号17楼7单元" />
             </View>
         )
@@ -57,11 +56,13 @@ class Contact extends React.Component {
 class Cell extends React.Component {
 
     render() {
-        const { label, content } = this.props
+        const { label, content, onPress } = this.props
         return (
             <View style={cellStyle}>
                 <Text style={cellLabelStyle}>{label}</Text>
-                <Text style={cellContentStyle}>{content}</Text>
+                <TouchableOpacity onPress={onPress} style={{flex: 1,justifyContent: 'center'}}>
+                    <Text style={cellContentStyle}>{content}</Text>
+                </TouchableOpacity>
             </View>
         )
     }
