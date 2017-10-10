@@ -18,11 +18,12 @@ import AsyncStorage from '../AsyncStorage';
 class Login extends React.Component {
 
     static navigationOptions = {
-        title: '登录',
-        headerStyle: {
-            height: 48,
-            backgroundColor: '#fff',
-        },
+        header: null,
+        // title: '登录',
+        // headerStyle: {
+        //     height: 48,
+        //     backgroundColor: '#fff',
+        // },
     }
 
     constructor(props) {
@@ -83,7 +84,8 @@ class Login extends React.Component {
     }
 
     handleForget = () => {
-        this.props.navigation.navigate('RetrievePassword')
+        // this.props.navigation.navigate('RetrievePassword', {title: '找回密码'})
+        this.props.navigation.navigate('Register2')
     }
 
     componentDidMount() {
@@ -92,7 +94,7 @@ class Login extends React.Component {
 
     render() {
         return (
-            <FormContainer>
+            <FormContainer onBack={()=>{this.props.navigation.goBack()}} title="登录">
                 <Spinner visible={this.state.loading} />
                 <FormTextInputWithIcon
                     containerStyle={{marginBottom: 30}}

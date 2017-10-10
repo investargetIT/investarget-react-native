@@ -19,6 +19,7 @@ import UserCenter from './src/components/UserCenter'
 import Contact from './src/components/Contact'
 import Login from './src/containers/Login'
 import Register from './src/containers/Register'
+import Agreement from './src/containers/Agreement'
 import Register2 from './src/containers/Register2'
 import RetrievePassword from './src/containers/RetrievePassword'
 import MyTags from './src/containers/MyTags'
@@ -102,6 +103,7 @@ const CustomTabView = ({ router, navigation }) => {
     Contact: { screen: Contact },
     Login: { screen: Login },
     Register: { screen: Register },
+    Agreement: { screen: Agreement },
     Register2: { screen: Register2 },
     RetrievePassword: {
       screen: RetrievePassword,

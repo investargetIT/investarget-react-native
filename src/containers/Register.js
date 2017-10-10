@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { View } from 'react-native'
+import { View, TouchableOpacity, Text } from 'react-native'
 import CheckBox from 'react-native-checkbox'
 import Toast from 'react-native-root-toast'
 
@@ -14,11 +14,7 @@ import { receiveContinentsAndCountries } from '../../actions'
 class Register extends React.Component {
 
     static navigationOptions = {
-        title: '注册',
-        headerStyle: {
-            height: 48,
-            backgroundColor: '#fff',
-        },
+        header: null,
     }
 
     constructor(props) {
@@ -137,46 +133,47 @@ class Register extends React.Component {
 
     render() {
         return (
-            <View style={{flex: 1}}>
-                <FormContainer>
-                    <FormMobileInput
-                        containerStyle={{marginBottom: 30}}
-                        areaCode={this.state.areaCode}
-                        areaCodeOptions={this.props.areaCodeOptions}
-                        onAreaCodeChange={this.handleChange.bind(this, 'areaCode')}
-                        mobile={this.state.mobile}
-                        onMobileChange={this.handleChange.bind(this, 'mobile')}
-                    />
+            <FormContainer onBack={()=>{this.props.navigation.goBack()}} title="注册">
+                <FormMobileInput
+                    containerStyle={{marginBottom: 30}}
+                    areaCode={this.state.areaCode}
+                    areaCodeOptions={this.props.areaCodeOptions}
+                    onAreaCodeChange={this.handleChange.bind(this, 'areaCode')}
+                    mobile={this.state.mobile}
+                    onMobileChange={this.handleChange.bind(this, 'mobile')}
+                />
 
-                    {this.state.userExist === null ? (
-                        <FormButton containerStyle={{marginBottom: 30}} onPress={this.checkPhoneExist} type="primary">下一步</FormButton>
-                    ) : null}
-                    
-                    {this.state.userExist === false ? (
-                        <View>
-                            <FormVerificationCode
-                                containerStyle={{marginBottom: 30}}
-                                placeholder="请输入验证码"
-                                value={this.state.code}
-                                onChange={this.handleChange.bind(this, 'code')}
-                                onSend={this.handleCodeSend} />
-                            <FormTextInput
-                                containerStyle={{marginBottom: 30}}
-                                placeholder="请输入邮箱"
-                                keyboardType="email-address"
-                                value={this.state.email}
-                                onChange={this.handleChange.bind(this, 'email')}
-                            />
-                            <FormButton type="primary" onPress={this.handleRegisterAsTrader}>我是交易师</FormButton>
-                            <FormButton type="primary" onPress={this.handleRegisterAsInvestor}>我是投资人</FormButton>
+                {this.state.userExist === null ? (
+                    <FormButton containerStyle={{marginBottom: 30}} onPress={this.checkPhoneExist} type="primary">下一步</FormButton>
+                ) : null}
+                
+                {this.state.userExist === false ? (
+                    <View>
+                        <FormVerificationCode
+                            containerStyle={{marginBottom: 30}}
+                            placeholder="请输入验证码"
+                            value={this.state.code}
+                            onChange={this.handleChange.bind(this, 'code')}
+                            onSend={this.handleCodeSend} />
+                        <FormTextInput
+                            containerStyle={{marginBottom: 30}}
+                            placeholder="请输入邮箱"
+                            keyboardType="email-address"
+                            value={this.state.email}
+                            onChange={this.handleChange.bind(this, 'email')}
+                        />
+                        <FormButton type="primary" onPress={this.handleRegisterAsTrader}>我是交易师</FormButton>
+                        <FormButton type="primary" onPress={this.handleRegisterAsInvestor}>我是投资人</FormButton>
 
-                            <View style={{display:'flex', flexDirection: 'row', justifyContent: 'center', marginTop: 30}}>
-                                <CheckBox checkboxStyle={{width: 16, height: 16}} labelStyle={{fontSize:13,color:'#999'}} label="用户协议" checked={this.state.checked} onChange={this.handleCheck} />
-                            </View>
+                        <View style={{display:'flex', flexDirection: 'row', justifyContent: 'center',alignItems:'center', marginTop: 30}}>
+                            <CheckBox labelBefore containerStyle={{width:16,height:16,marginRight:8}} checkboxStyle={{width: 16, height: 16}} labelStyle={{fontSize:13,color:'#999'}} label="" checked={this.state.checked} onChange={this.handleCheck} />
+                            <TouchableOpacity onPress={()=>{this.props.navigation.navigate('Agreement')}}>
+                                <Text style={{fontSize:13,color:'#999',backgroundColor:'transparent'}}>用户协议</Text>
+                            </TouchableOpacity>
                         </View>
-                    ) : null}
-                </FormContainer>
-            </View>
+                    </View>
+                ) : null}
+            </FormContainer>
         )
     }
 }

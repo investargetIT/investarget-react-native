@@ -3,6 +3,7 @@ import { View, TouchableOpacity, Text, Image, TextInput } from 'react-native'
 import Toast from 'react-native-root-toast'
 import { connect } from 'react-redux'
 import FitImage from 'react-native-fit-image'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import * as api from '../api'
 import Select from '../components/Select'
@@ -209,7 +210,7 @@ class AddInvestor extends React.Component {
             placeholderTextColor: "#999",
         }
         return (
-            <View style={{flex:1}}>
+            <KeyboardAwareScrollView style={{flex:1}}>
                 <View style={{flex: 0}}>
                 {file ? <FitImage source={file} /> : <Image source={require('../images/userCenter/emptyCardImage.png')} style={{width:'100%'}} />}
                 </View>
@@ -244,7 +245,7 @@ class AddInvestor extends React.Component {
                     <TextInput style={rightStyle} {...textInputProps} value={company} onChangeText={this.handleChange.bind(this, 'company')} />
                 </View>
                 </View>
-            </View>
+            </KeyboardAwareScrollView>
         )
     }
 }

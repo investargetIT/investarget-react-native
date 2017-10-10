@@ -49,7 +49,7 @@ class Select extends React.Component {
                     selectionColor="#2269d4"
                     placeholderTextColor="#999"
                     placeholder={this.props.placeholder}
-                    style={{ height: '100%', ...this.props.style }}
+                    style={{ height: '100%',padding: 0, ...this.props.style }}
                     value={valueStr}
                 />
                 <Modal visible={this.state.visible} animationType="slide" transparent={true} onRequestClose={()=>{}}>

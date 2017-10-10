@@ -15,11 +15,7 @@ import { NavigationActions } from 'react-navigation'
 class RetrievePassword extends React.Component {
 
     static navigationOptions = {
-        title: '找回密码',
-        headerStyle: {
-            height: 48,
-            backgroundColor: '#fff',
-        },
+        header: null,
     }
 
     constructor(props) {
@@ -112,8 +108,9 @@ class RetrievePassword extends React.Component {
     }
 
     render() {
+        const title = this.props.navigation.state.params.title
         return (
-            <FormContainer>
+            <FormContainer onBack={()=>{this.props.navigation.goBack()}} title={title}>
                 <Spinner visible={this.state.loading} />
                 <FormMobileInput
                     containerStyle={{marginBottom: 30}}

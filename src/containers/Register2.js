@@ -16,11 +16,7 @@ import { receiveTitles, receiveTags, receiveCurrentUserInfo } from '../../action
 class Register2 extends React.Component {
 
     static navigationOptions = {
-        title: '个人信息',
-        headerStyle: {
-            height: 48,
-            backgroundColor: '#fff',
-        },
+        header: null,
     }
 
     constructor(props) {
@@ -117,7 +113,7 @@ class Register2 extends React.Component {
 
     render() {
         return (
-            <FormContainer>
+            <FormContainer  onBack={()=>{this.props.navigation.goBack()}} title="个人信息">
                 <Spinner visible={this.state.loading} />
                 <FormTextInput
                     containerStyle={{marginBottom: 30}}
