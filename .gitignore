@@ -10,6 +10,7 @@ ios/*.xcodeproj/*
 
 android/build
 android/app/build
+android/app/*.keystore
 android/local.properties
 android/.gradle
 android/.idea
