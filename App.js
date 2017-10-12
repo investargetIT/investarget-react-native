@@ -1,8 +1,10 @@
 import React from 'react'
-import { StatusBar } from 'react-native'
+import { StatusBar, Platform, Alert, AppState } from 'react-native'
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import Toast from 'react-native-root-toast'
+import JPushModule from 'jpush-react-native'
+import { NavigationActions } from 'react-navigation'
 
 import AsyncStorage from './src/AsyncStorage'
 import rootReducer from './reducers'
@@ -15,6 +17,8 @@ AsyncStorage.setItem('source', '1')
 window.LANG = 'cn'
 StatusBar.setBarStyle('light-content');
 const store = createStore(rootReducer)
+
+let msgReceiveTime = 0
 
 AsyncStorage.getItem('userInfo').then(data => {
   if (!data) { return }
@@ -33,11 +37,38 @@ AsyncStorage.getItem('userInfo').then(data => {
         password: password
     })
     AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+    
+    // 登录后接收推送
+    JPushModule.getRegistrationID((registrationId) => {})
+    if (Platform.OS == 'android') {
+      JPushModule.notifyJSDidLoad((resultCode) => {
+        if (resultCode === 0) {}
+      });
+    }
+    JPushModule.setAlias(String(userInfo.id), ()=>{})
+    JPushModule.addReceiveNotificationListener((map) => {
+      onNotification(map.alertContent)
+    })
+    JPushModule.addReceiveOpenNotificationListener((message) => {
+      // todo?
+    })
+    // iOS Only 监听：应用没有启动的状态点击推送打开应用
+    JPushModule.addOpenNotificationLaunchAppListener(() => {
+      // todo？
+    })
   }).catch(error => {
     Toast.show(error.message, { position: Toast.positions.CENTER })
   })
-}) // 没有 userInfo 便是初次使用 App
+})
 
+function onNotification(msg) {
+  Alert.alert('通知', msg, [
+    {text: '取消', onPress: () => {}},
+    {text: '确定', onPress: () => {
+       store.dispatch(NavigationActions.navigate({routeName: 'Notification'}))        
+    }}
+  ])
+}
 
 export default () => (
   <Provider store={store}>
