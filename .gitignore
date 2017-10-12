@@ -9,3 +9,4 @@ android/app/build
 android/local.properties
 android/.gradle
 android/.idea
+android/app/app.iml
