@@ -3,7 +3,11 @@ node_modules/
 .vscode
 npm-debug.*
 .DS_Store
+
 ios/build
+ios/*.xcodeproj/*
+!ios/*.xcodeproj/project.pbxproj
+
 android/build
 android/app/build
 android/local.properties
