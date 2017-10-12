@@ -36,7 +36,6 @@ class ProjectDetail extends React.Component {
         Toast.show(error.message, {position: Toast.positions.CENTER})
       })
       
-      const { userId } = this.props
       const param = { favoritetype: 4, proj: this.id }
       api.getFavoriteProj(param).then(data => {
         const favorData = data.data
@@ -54,7 +53,7 @@ class ProjectDetail extends React.Component {
     }
 
     handleFavoritePress = () => {
-      const { userType } = this.props
+      const { userType } = this.props.userInfo
       const favoritetype = userType == 1 ? 5 : 3
       this.props.navigation.navigate('SelectUser', { favoritetype, projects: [this.id] })
     }
@@ -69,8 +68,7 @@ class ProjectDetail extends React.Component {
     }
 
     favorProject = (id) => {
-      const { userId } = this.props
-      const param = { favoritetype: 4, user: userId, projs: [this.id] }
+      const param = { favoritetype: 4, user: this.props.userInfo.id, projs: [this.id] }
       api.projFavorite(param).then(data => {
         const favorId = data[0].id
         this.setState({ isFavorite: true, favorId })
@@ -110,7 +108,7 @@ class ProjectDetail extends React.Component {
             <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center' }}>
               <TouchableOpacity onPress={this.handleFavoritePress}>
                 <Text style={{ color: 'white', fontSize: 16 }}>
-                  {this.props.userType == 1 ? '感兴趣' : '推荐'}
+                  {this.props.userInfo.userType == 1 ? '感兴趣' : '推荐'}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -129,8 +127,8 @@ class ProjectDetail extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { userType, id } = state.app.userInfo
-  return { userType, userId: id }
+  const { userInfo } = state.app
+  return { userInfo }
 }
 
 export default connect(mapStateToProps)(ProjectDetail)
