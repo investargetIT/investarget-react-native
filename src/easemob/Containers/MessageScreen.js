@@ -61,6 +61,7 @@ class MessageScreen extends React.Component {
     }
 
     this.sendTxtMessage = this.sendTxtMessage.bind(this);
+    this.sendImgMessage = this.sendImgMessage.bind(this);
   }
 
   // ------------ logic  ---------------
@@ -176,6 +177,7 @@ class MessageScreen extends React.Component {
       onPictureMessage: (message) => {
         console.log('onPictureMessage', message)
         // store.dispatch(MessageActions.addMessage(message, 'img'))
+        RN.props.addMessage(message, 'img');
       }
     })
 
@@ -360,6 +362,110 @@ class MessageScreen extends React.Component {
     this.props.addMessage(pMessage, chatType);
   }
 
+  sendImgMessage(chatType, chatId, message = {}, source = {}) {
+    const msgTpl = {
+      base: {
+        error: false,
+        errorCode: '',
+        errorText: '',
+        // status 为空将被当做服务端的数据处理，处理成sent
+        status: 'sending', // [sending, sent ,fail, read]
+        id: '',
+        // from 不能删除，决定了房间id
+        from: '',
+        to: '',
+        toJid: '',
+        time: '',
+        type: '', // chat / groupchat
+        body: {},
+        ext: {},
+        bySelf: false,
+      },
+      txt: {
+        type: 'txt',
+        msg: ''
+      },
+      img: {
+        type: 'img',
+        file_length: 0,
+        filename: '',
+        filetype: '',
+        length: 0,
+        secret: '',
+        width: 0,
+        height: 0,
+        url: '',
+        thumb: '',
+        thumb_secret: ''
+      }
+    }
+
+    function copy(message, tpl) {
+      let obj = {}
+      Object.keys(tpl).forEach((v) => {
+        obj[v] = message[v] || tpl[v]
+      })
+      return obj
+    }
+
+    function parseFromLocal(type, to, message = {}, bodyType) {
+      let ext = message.ext || {}
+      let obj = copy(message, msgTpl.base)
+      let body = copy(message, msgTpl[bodyType])
+      return {
+        ...obj,
+        type,
+        to,
+        id: WebIM.conn.getUniqueId(),
+        body: {
+          ...body, ...ext, type: bodyType
+        }
+      }
+    }
+
+    let pMessage = null
+    const id = WebIM.conn.getUniqueId()
+    const type = 'img'
+    const to = chatId
+    const msgObj = new WebIM.message(type, id);
+    msgObj.set({
+      apiUrl: WebIM.config.apiURL,
+      ext: {
+        file_length: source.fileSize,
+        filename: source.fileName || '',
+        filetype: source.fileName && (source.fileName.split('.')).pop(),
+        width: source.width,
+        height: source.height,
+      },
+      file: {
+        data: {
+          uri: source.uri, type: 'application/octet-stream', name: source.fileName
+        }
+      },
+      to, roomType: '',
+      onFileUploadError: function (error) {
+        console.log(error)
+        // dispatch(Creators.updateMessageStatus(pMessage, 'fail'))
+      },
+      onFileUploadComplete: function (data) {
+        console.log(data)
+        url = data.uri + '/' + data.entities[0].uuid;
+        // dispatch(Creators.updateMessageStatus(pMessage, 'sent'))
+      },
+      success: function (id) {
+        console.log(id)
+      },
+    });
+
+    this.conn.send(msgObj.body);
+    pMessage = parseFromLocal(chatType, chatId, msgObj.body, 'img')
+    // uri只记录在本地
+    pMessage.body.uri = source.uri
+    // console.log('pMessage', pMessage, pMessage.body.uri)
+    this.props.addMessage(pMessage, type);
+  }
+  
+
   handleChangeText(v) {
     // 场景1：正常+ -
     // 场景2：从中间位置+ - -> 如果删除一个字符后字符串匹配，则非中间位置
@@ -403,7 +509,7 @@ class MessageScreen extends React.Component {
 
           response.uri = source.uri
           const {chatType, id} = this.props
-          this.props.sendImgMessage(chatType, id, {}, response)
+          this.sendImgMessage(chatType, id, {}, response)
         }
       }
     )
@@ -574,7 +680,7 @@ class MessageScreen extends React.Component {
     const loading = rowData.status == 'sending' ? (
         <ActivityIndicator style={{margin: 5}}/>
       ) : null
-
+      
     return (
       <View style={Styles.row}>
         <Image source={Images.default} resizeMode='cover' style={Styles.rowLogo}/>
@@ -582,7 +688,7 @@ class MessageScreen extends React.Component {
           <Text style={Styles.nameText}>{rowData.from}</Text>
           <View style={[Styles.message, Styles.messageImage]}>
             <Image source={{uri: body.uri || body.url}}
-                   style={[Styles.rowImage, {width, height}]}/>
+            style={[Styles.rowImage, {width, height}]}/>
           </View>
           <Text style={Styles.timeText}>{this._renderDate(rowData.time)}</Text>
         </View>

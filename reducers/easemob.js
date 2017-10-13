@@ -6,7 +6,7 @@ const msgTpl = {
       errorCode: '',
       errorText: '',
       // status 为空将被当做服务端的数据处理，处理成sent
-      status: 'sending', // [sending, sent ,fail, read]
+      status: 'sent', // [sending, sent ,fail, read]
       id: '',
       // from 不能删除，决定了房间id
       from: '',
@@ -98,7 +98,7 @@ const easemob = (state = initialState, action) => {
               ...message,
               bySelf,
               time: +new Date(),
-              status: status,
+              status: 'sent',
             })
             const chatData = state[type] && state[type][chatId] ? state[type][chatId].asMutable() : []
             chatData.push(id)
