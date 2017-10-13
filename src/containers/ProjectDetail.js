@@ -1,5 +1,15 @@
 import React from 'react';
-import { Image, Text, View, StatusBar, WebView, Platform, TouchableOpacity, Alert } from 'react-native';
+import { 
+  Image, 
+  Text, 
+  View, 
+  StatusBar, 
+  WebView, 
+  Platform, 
+  TouchableOpacity, 
+  Alert,
+  Share,
+} from 'react-native';
 import { connect } from 'react-redux'
 import Toast from 'react-native-root-toast'
 
@@ -7,7 +17,9 @@ import * as api from '../api';
 
 class ProjectDetail extends React.Component {
     
-    static navigationOptions = {
+    static navigationOptions = ({ navigation }) => {
+      const { params } = navigation.state
+      return { 
         title: '项目详情',
         headerStyle: {
             backgroundColor: '#10458F',
@@ -16,6 +28,10 @@ class ProjectDetail extends React.Component {
         },
         headerTintColor: '#fff',
         headerBackTitle: null,
+        headerRight: <TouchableOpacity style={{ marginRight: 12 }} onPress={params.onPress}>
+          <Image source={require('../images/share.png')} style={{ width: 24, height: 24 }} />
+        </TouchableOpacity>
+      }
     };
 
     constructor(props) {
@@ -30,6 +46,7 @@ class ProjectDetail extends React.Component {
     }
 
     componentDidMount() {
+      this.props.navigation.setParams({ onPress: this.handleShareIconPressed })
       api.getShareToken(this.id)
       .then(token => this.setState({ url: `http://192.168.1.113:3000/project_for_rn/${this.id}?token=${token}` }))
       .catch(error => {
@@ -88,6 +105,13 @@ class ProjectDetail extends React.Component {
       })
     }
     
+    handleShareIconPressed = () => {
+      Share.share({
+        message: Platform.OS === 'ios' ? this.title : `${this.title} ${this.state.url}`,
+        url: this.state.url, // Only work on iOS
+      })
+    }
+
     render() {
       if (!this.state.url) return null;
 
