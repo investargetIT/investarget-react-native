@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Alert, ImageBackground, Image, TouchableOpacity } from 'react-native';
+import { ScrollView, Text, Alert, ImageBackground, Image, TouchableOpacity } from 'react-native';
 import { DrawerItems } from 'react-navigation';
 import { connect } from 'react-redux';
 import { logout } from '../../actions';
@@ -29,7 +29,7 @@ const CustomDrawerContentComponent = (props) => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1 }}>
       <ImageBackground
         source={require('../images/userCenter/ht-usercenterheaderbg.png')}
         style={{ width: '100%', height: 200, alignItems: 'center', justifyContent: 'center' }}
@@ -44,9 +44,8 @@ const CustomDrawerContentComponent = (props) => {
         <Text style={{ backgroundColor: 'transparent', color: 'white', marginTop: 10 }}>{props.userInfo && props.userInfo.name}       {props.userInfo&&props.userInfo.title&&props.userInfo.title.titleName}</Text>
       </ImageBackground>
       <DrawerItems {...props} />
-      <Text style={{ marginLeft: 15, marginTop: 10 }} onPress={confirm}>清除缓存</Text>
-      <Text style={{ marginLeft: 15, marginTop: 28 }} onPress={confirm}>退出登录</Text>
-    </View>
+      <Text style={{ marginLeft: 15, marginTop: 10, marginBottom: 28, color: 'black', fontWeight: 'bold' }} onPress={confirm}>退出登录</Text>
+    </ScrollView>
   );
 };
 

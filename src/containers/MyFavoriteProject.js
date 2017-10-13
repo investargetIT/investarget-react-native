@@ -24,7 +24,7 @@ class MyFavoriteProject extends React.Component {
     static navigationOptions = ({navigation}) => {
         const { params } = navigation.state
         return {
-            title: '我收藏的项目',
+            title: '收藏的项目',
             headerStyle: {
                 backgroundColor: '#10458f',
             },
