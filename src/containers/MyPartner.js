@@ -188,7 +188,8 @@ class MyPartner extends React.Component {
 
 function mapStateToProps(state) {
     const { userType, id } = state.app.userInfo
-    return { userType, userId: id }
+    const { titles } = state.app
+    return { userType, userId: id, titles }
 }
 
 export default connect(mapStateToProps)(MyPartner)
