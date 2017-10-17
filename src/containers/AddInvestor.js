@@ -48,6 +48,7 @@ class AddInvestor extends React.Component {
             email: '',
             company: '',
             file: null,
+            imageData: null,
         }
     }
 
@@ -189,8 +190,8 @@ class AddInvestor extends React.Component {
     }
 
     componentDidMount() {
-        const { name, title, mobile, email, company, file } = this.props.navigation.state.params
-        this.setState({ name, title, mobile, email, company, file })
+        const { name, title, mobile, email, company, file, imageData } = this.props.navigation.state.params
+        this.setState({ name, title, mobile, email, company, file, imageData })
         this.props.navigation.setParams({ onPress: this.handleSubmit })
         
         api.getSource('title').then(data => {
@@ -201,7 +202,7 @@ class AddInvestor extends React.Component {
     }
 
     render() {
-        const { name, title, mobile, email, company, file } = this.state
+        const { name, title, mobile, email, company, file, imageData } = this.state
         const textInputProps = {
             autoCapitalize: "none",
             spellCheck: false,
@@ -212,7 +213,7 @@ class AddInvestor extends React.Component {
         return (
             <KeyboardAwareScrollView style={{flex:1}}>
                 <View style={{flex: 0}}>
-                {file ? <FitImage source={file} /> : <Image source={require('../images/userCenter/emptyCardImage.png')} style={{width:'100%'}} />}
+                {file ? <FitImage source={{uri: 'data:image/png;base64, ' + imageData}} /> : <Image source={require('../images/userCenter/emptyCardImage.png')} style={{width:'100%'}} />}
                 </View>
                 <View style={{flex: 1}}>
                 <View style={cellStyle}>
