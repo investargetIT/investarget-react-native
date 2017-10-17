@@ -217,7 +217,7 @@ class ProjectList extends React.Component {
       }
 
       projectOnPress = item => {
-        this.props.navigation.navigate('ProjectDetail', { projectID: item.id, projectTitle: item.title });
+        this.props.navigation.navigate('ProjectDetail', { project: item });
       }
 
     render() {

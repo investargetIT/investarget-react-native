@@ -37,8 +37,9 @@ class ProjectDetail extends React.Component {
 
     constructor(props) {
       super(props);
-      this.id = props.navigation.state.params.projectID;
-      this.title = props.navigation.state.params.projectTitle;
+      this.project = props.navigation.state.params.project;
+      this.id = this.project.id;
+      this.title = this.project.title;
       this.state = {
         url: null,
         isFavorite: false,
@@ -114,10 +115,16 @@ class ProjectDetail extends React.Component {
       WeChat.shareToSession({
           type: 'news', 
           title: this.title,
-          description: '测试的内通',
+          description: '地区:' + this.project.country + ' 行业:' + this.project.industrys + ' 交易规模:$' + formatNumber(this.project.amount),
           webpageUrl: this.state.url,
-          thumbImage: 'http://news.xinhuanet.com/politics/2017-10/14/1121803301_15079856371461n.jpg?1508151611653',
+          thumbImage: this.project.imgUrl,
         });
+      // WeChat.shareToSession({
+      //     type: 'imageFile', 
+      //     title: this.title,
+      //     description: '地区:' + this.project.country + ' 行业:' + this.project.industrys + ' 交易规模:$' + formatNumber(this.project.amount),
+      //     imageUrl: '../images/home/projCollected.png',
+      //   });
         
     }
 
@@ -162,6 +169,20 @@ class ProjectDetail extends React.Component {
 function mapStateToProps(state) {
   const { userInfo } = state.app
   return { userInfo }
+}
+
+function formatNumber(number) {
+  const reverseStrArr = (number + "").split("").reverse()
+  const arr = reverseStrArr.reduce((pre, cur) => {
+      if (pre.length > 0 && pre[pre.length - 1].length < 3) {
+          const maxIndexValue = pre[pre.length - 1]
+          pre[pre.length - 1] = maxIndexValue + cur
+      } else {
+          pre.push(cur)
+      }
+      return pre
+  }, [])
+  return arr.map(m => m.split("").reverse().join("")).reverse().join(",")
 }
 
 export default connect(mapStateToProps)(ProjectDetail)
