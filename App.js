@@ -12,6 +12,7 @@ import AppWithNavigationState from './AppNavigator'
 import * as utils from './src/utils'
 import * as api from './src/api'
 import { receiveCurrentUserInfo } from './actions'
+import * as WeChat from 'react-native-wechat';
 
 AsyncStorage.setItem('source', '1')
 window.LANG = 'cn'
@@ -19,6 +20,8 @@ StatusBar.setBarStyle('light-content');
 const store = createStore(rootReducer)
 
 let msgReceiveTime = 0
+
+WeChat.registerApp('wx9a404829cfaab3aa');
 
 AsyncStorage.getItem('userInfo').then(data => {
   if (!data) { return }

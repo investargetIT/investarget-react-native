@@ -14,6 +14,7 @@ import { connect } from 'react-redux'
 import Toast from 'react-native-root-toast'
 
 import * as api from '../api';
+import * as WeChat from 'react-native-wechat';
 
 class ProjectDetail extends React.Component {
     
@@ -106,10 +107,18 @@ class ProjectDetail extends React.Component {
     }
     
     handleShareIconPressed = () => {
-      Share.share({
-        message: Platform.OS === 'ios' ? this.title : `${this.title} ${this.state.url}`,
-        url: this.state.url, // Only work on iOS
-      })
+      // Share.share({
+      //   message: Platform.OS === 'ios' ? this.title : `${this.title} ${this.state.url}`,
+      //   url: this.state.url, // Only work on iOS
+      // })
+      WeChat.shareToSession({
+          type: 'news', 
+          title: this.title,
+          description: '测试的内通',
+          webpageUrl: this.state.url,
+          thumbImage: 'http://news.xinhuanet.com/politics/2017-10/14/1121803301_15079856371461n.jpg?1508151611653',
+        });
+        
     }
 
     render() {
