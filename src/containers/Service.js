@@ -50,6 +50,8 @@ class Service extends React.Component {
             title: '选择名片',
             cancelButtonTitle: '取消',
             mediaType: 'photo',
+            takePhotoButtonTitle: '拍照',
+            chooseFromLibraryButtonTitle: '从相册中选择',
         }
         ImagePicker.showImagePicker(options, (response) => {
             if (response.didCancel) {
