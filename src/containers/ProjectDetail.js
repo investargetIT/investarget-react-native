@@ -9,6 +9,7 @@ import {
   TouchableOpacity, 
   Alert,
   Share,
+  ActionSheetIOS
 } from 'react-native';
 import { connect } from 'react-redux'
 import Toast from 'react-native-root-toast'
@@ -112,13 +113,13 @@ class ProjectDetail extends React.Component {
       //   message: Platform.OS === 'ios' ? this.title : `${this.title} ${this.state.url}`,
       //   url: this.state.url, // Only work on iOS
       // })
-      WeChat.shareToSession({
-          type: 'news', 
-          title: this.title,
-          description: '地区:' + this.project.country + ' 行业:' + this.project.industrys + ' 交易规模:$' + formatNumber(this.project.amount),
-          webpageUrl: this.state.url,
-          thumbImage: this.project.imgUrl,
-        });
+      // WeChat.shareToSession({
+      //     type: 'news', 
+      //     title: this.title,
+      //     description: '地区:' + this.project.country + ' 行业:' + this.project.industrys + ' 交易规模:$' + formatNumber(this.project.amount),
+      //     webpageUrl: this.state.url,
+      //     thumbImage: this.project.imgUrl,
+      //   });
       // WeChat.shareToSession({
       //     type: 'imageFile', 
       //     title: this.title,
@@ -126,6 +127,21 @@ class ProjectDetail extends React.Component {
       //     imageUrl: '../images/home/projCollected.png',
       //   });
         
+      const options = [
+        '分享项目名片',
+        '分享项目二维码',
+        '分享项目BP',
+        '取消',
+      ];
+      const CANCEL_INDEX = options.length - 1;
+      ActionSheetIOS.showActionSheetWithOptions({
+        options,
+        cancelButtonIndex: CANCEL_INDEX,
+      },
+      (buttonIndex) => {
+        console.log('button clicked :', buttonIndex);
+      });
+
     }
 
     render() {
