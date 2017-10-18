@@ -23,6 +23,7 @@ class ProjectList extends React.Component {
             refreshing: false,
             projects: []
         }
+        this.isLoadingMore = false;
     }
 
     componentWillReceiveProps(nextProps) {
@@ -172,6 +173,7 @@ class ProjectList extends React.Component {
             obj['imgUrl'] = item.industries[0].url
             obj['industrys'] = item.industries.map(i => i.name)
             obj['isMarketPlace'] = item.ismarketplace
+            obj['amount_cny'] = item.financeAmount
             return obj
           })
           callback(projects, newArray);
@@ -201,6 +203,7 @@ class ProjectList extends React.Component {
               obj['imgUrl'] = item.industries[0].url
               obj['industrys'] = item.industries.map(i => i.name)
               obj['isMarketPlace'] = item.ismarketplace
+              obj['amount_cny'] = item.financeAmount
               return obj
             })
             callback(projects)
@@ -209,10 +212,13 @@ class ProjectList extends React.Component {
       }
 
       loadMore = () => {
+        if (this.isLoadingMore) return;
+        this.isLoadingMore = true;
         this.getMoreProjects(projects => {
             if (projects.length > 0) {
               this.props.dispatch(appendProjects(projects))
-            } 
+            }
+            this.isLoadingMore = false;
         })
       }
 

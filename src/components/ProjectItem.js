@@ -35,7 +35,9 @@ function ProjectItem(props) {
                 </View>
                 <View style={{marginTop: 8}}>
                     <Text style={{fontSize:13,color:'#666'}}>
-                        交易规模：<Text style={{color:'#ff8f40'}}>{props.amount > 0 ? "$" + formatNumber(props.amount) : "N/A"}</Text>
+                        交易规模：<Text style={{color:'#ff8f40'}}>
+                            {props.country !== '中国' ? props.amount > 0 ? "$" + formatNumber(props.amount) : "N/A" : props.amount_cny > 0 ? "¥" + formatNumber(props.amount_cny) : "N/A"}
+                            </Text>
                     </Text>
                 </View>
             </View>
