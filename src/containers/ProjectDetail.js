@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux'
 import Toast from 'react-native-root-toast'
-
+import fs from 'react-native-fs';
 import * as api from '../api';
 import * as WeChat from 'react-native-wechat';
 
@@ -153,23 +153,68 @@ class ProjectDetail extends React.Component {
     }
 
     handleShareToWechat = () => {
-      WeChat.shareToSession({
-        type: 'news',
-        title: this.title,
-        description: '地区:' + this.project.country + ' 行业:' + this.project.industrys + ' 交易规模:$' + formatNumber(this.project.amount),
-        webpageUrl: this.state.url,
-        thumbImage: this.project.imgUrl,
-      });
+      let rootPath = fs.DocumentDirectoryPath;
+      let savePath = rootPath + '/email-signature-262x100.jpg';
+      console.log(savePath);
+      fs.downloadFile({ fromUrl: 'https://imgsa.baidu.com/news/q%3D100/sign=b5ed8d152e1f95caa0f596b6f9167fc5/0e2442a7d933c895f3a41010da1373f083020086.jpg', toFile: savePath }).promise
+      .then(res => {
+        console.log('res', res);
+        WeChat.shareToSession({
+          type: 'imageFile', 
+          title: 'email-signature-262x100',
+          description: 'share image file to time line',
+          mediaTagName: 'email signature',
+          messageAction: undefined,
+          messageExt: undefined,
+          imageUrl: "file://" + savePath, // require the prefix on both iOS and Android platform
+          fileExtension: '.jpg'
+        });
+
+      })
+
+
+
+      // WeChat.shareToSession({
+      //   type: 'news',
+      //   title: this.title,
+      //   description: '地区:' + this.project.country + ' 行业:' + this.project.industrys + ' 交易规模:$' + formatNumber(this.project.amount),
+      //   webpageUrl: this.state.url,
+      //   thumbImage: this.project.imgUrl,
+      // });
     }
 
     handleShareToMoments = () => {
-      WeChat.shareToTimeline({
-        type: 'news',
-        title: this.title,
-        description: '地区:' + this.project.country + ' 行业:' + this.project.industrys + ' 交易规模:$' + formatNumber(this.project.amount),
-        webpageUrl: this.state.url,
-        thumbImage: this.project.imgUrl,
-      });
+      // WeChat.shareToTimeline({
+      //   type: 'news',
+      //   title: this.title,
+      //   description: '地区:' + this.project.country + ' 行业:' + this.project.industrys + ' 交易规模:$' + formatNumber(this.project.amount),
+      //   webpageUrl: this.state.url,
+      //   thumbImage: this.project.imgUrl,
+      // });
+
+      let rootPath = Platform.OS === 'ios' ? fs.DocumentDirectoryPath : fs.ExternalDirectoryPath;
+      let fileName = 'signature_method.doc';
+      /*
+       * savePath on iOS may be:
+       *  /var/mobile/Containers/Data/Application/B1308E13-35F1-41AB-A20D-3117BE8EE8FE/Documents/signature_method.doc
+       **/ 
+      let savePath = rootPath + '/' + fileName;
+      fs.downloadFile({ 
+        fromUrl: 'https://open.weixin.qq.com/zh_CN/htmledition/res/assets/signature_method.doc', 
+        toFile: savePath
+      }).promise.then(res => {
+        console.log('res', res);
+        WeChat.shareToSession({
+          type: 'file',
+          title: fileName, // WeChat app treat title as file name
+          description: 'share word file to chat session',
+          mediaTagName: 'word file',
+          messageAction: undefined,
+          messageExt: undefined,
+          filePath: savePath,
+          fileExtension: '.doc'
+        });
+      })
     }
 
     render() {

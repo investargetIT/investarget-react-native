@@ -3,6 +3,7 @@ package com.investargetnative;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.rnfs.RNFSPackage;
 import com.theweflex.react.WeChatPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.facebook.react.ReactNativeHost;
@@ -30,6 +31,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNFSPackage(),
             new WeChatPackage(),
             new ImagePickerPackage(),
               new JPushPackage(SHUTDOWN_TOAST, SHUTDOWN_LOG)
