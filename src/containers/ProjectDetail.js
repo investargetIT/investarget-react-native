@@ -128,24 +128,48 @@ class ProjectDetail extends React.Component {
       //     description: '地区:' + this.project.country + ' 行业:' + this.project.industrys + ' 交易规模:$' + formatNumber(this.project.amount),
       //     imageUrl: '../images/home/projCollected.png',
       //   });
-      const react = this;
-      const options = [
-        '分享项目名片',
-        '分享项目二维码',
-        '分享项目BP',
-        '取消',
-      ];
-      const CANCEL_INDEX = options.length - 1;
-      ActionSheetIOS.showActionSheetWithOptions({
-        options,
-        cancelButtonIndex: CANCEL_INDEX,
-      },
-      (buttonIndex) => {
-        console.log('button clicked :', buttonIndex);
-        if (buttonIndex === CANCEL_INDEX) return;
-        react.setState({ showShareDialog: true })
-      });
+      if (Platform.OS === 'ios') {
+        const react = this;
+        const options = [
+          '分享项目名片',
+          '分享项目二维码',
+          '分享项目BP',
+          '取消',
+        ];
+        const CANCEL_INDEX = options.length - 1;
+        ActionSheetIOS.showActionSheetWithOptions({
+          options,
+          cancelButtonIndex: CANCEL_INDEX,
+        },
+          (buttonIndex) => {
+            console.log('button clicked :', buttonIndex);
+            if (buttonIndex === CANCEL_INDEX) return;
+            react.setState({ showShareDialog: true });
+          });
+      } else {
+        this.setState({ showShareDialog: true });
+      }
 
+    }
+
+    handleShareToWechat = () => {
+      WeChat.shareToSession({
+        type: 'news',
+        title: this.title,
+        description: '地区:' + this.project.country + ' 行业:' + this.project.industrys + ' 交易规模:$' + formatNumber(this.project.amount),
+        webpageUrl: this.state.url,
+        thumbImage: this.project.imgUrl,
+      });
+    }
+
+    handleShareToMoments = () => {
+      WeChat.shareToTimeline({
+        type: 'news',
+        title: this.title,
+        description: '地区:' + this.project.country + ' 行业:' + this.project.industrys + ' 交易规模:$' + formatNumber(this.project.amount),
+        webpageUrl: this.state.url,
+        thumbImage: this.project.imgUrl,
+      });
     }
 
     render() {
@@ -192,19 +216,23 @@ class ProjectDetail extends React.Component {
 
               <View style={{ flexDirection: 'row', paddingTop: 20, paddingBottom: 20, justifyContent: 'center' }}>
                 <View style={{ alignItems: 'center' }}>
-                  <Image style={{ width: 48, height: 48 }} source={require('../images/home/projCollected.png')} />
-                  <Text style={{ marginTop: 6, textAlign: 'center', color: 'rgb(70, 70, 70)', fontSize: 12 }}>微信</Text>
+                  <TouchableOpacity onPress={this.handleShareToWechat}>
+                    <Image style={{ width: 56, height: 56 }} source={require('../images/icon64_appwx_logo.png')} />
+                    <Text style={{ marginTop: 6, textAlign: 'center', color: 'rgb(70, 70, 70)', fontSize: 14 }}>微信</Text>
+                  </TouchableOpacity>
                 </View>
 
                 <View style={{ width: 80 }}></View>
 
                 <View style={{ alignItems: 'center' }}>
-                  <Image style={{ width: 48, height: 48 }} source={require('../images/home/projNoCollect.png')} />
-                  <Text style={{ marginTop: 6, textAlign: 'center', color: 'rgb(70, 70, 70)', fontSize: 12 }}>朋友圈</Text>
+                  <TouchableOpacity onPress={this.handleShareToMoments}>
+                    <Image style={{ width: 56, height: 56 }} source={require('../images/wechat_moments.png')} />
+                    <Text style={{ marginTop: 6, textAlign: 'center', color: 'rgb(70, 70, 70)', fontSize: 14 }}>朋友圈</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
 
-              <Text style={{ padding: 12, textAlign: 'center', backgroundColor: 'rgb(250, 250, 250)' }}>取消</Text>
+              <Text style={{ padding: 12, textAlign: 'center', backgroundColor: 'rgb(250, 250, 250)', fontSize: 16 }}>取消</Text>
             </View>
             
           </View>
