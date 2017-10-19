@@ -9,7 +9,8 @@ import {
   TouchableOpacity, 
   Alert,
   Share,
-  ActionSheetIOS
+  ActionSheetIOS,
+  TouchableWithoutFeedback
 } from 'react-native';
 import { connect } from 'react-redux'
 import Toast from 'react-native-root-toast'
@@ -45,6 +46,7 @@ class ProjectDetail extends React.Component {
         url: null,
         isFavorite: false,
         favorId: null,
+        showShareDialog: false,
       }
     }
 
@@ -126,7 +128,7 @@ class ProjectDetail extends React.Component {
       //     description: '地区:' + this.project.country + ' 行业:' + this.project.industrys + ' 交易规模:$' + formatNumber(this.project.amount),
       //     imageUrl: '../images/home/projCollected.png',
       //   });
-        
+      const react = this;
       const options = [
         '分享项目名片',
         '分享项目二维码',
@@ -140,6 +142,8 @@ class ProjectDetail extends React.Component {
       },
       (buttonIndex) => {
         console.log('button clicked :', buttonIndex);
+        if (buttonIndex === CANCEL_INDEX) return;
+        react.setState({ showShareDialog: true })
       });
 
     }
@@ -177,6 +181,37 @@ class ProjectDetail extends React.Component {
                 <Image source={imgSource} style={{ width: 42, height: 42 }} />
               </TouchableOpacity>
             </View>
+
+          { this.state.showShareDialog ? 
+          <TouchableWithoutFeedback onPress={() => this.setState({ showShareDialog: false })}>
+          <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0, top: -30, backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
+          
+            <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0, backgroundColor: 'rgb(220, 220, 220)' }}>
+
+              <Text style={{ marginTop: 12, textAlign: 'center', fontSize: 12, color: 'gray' }}>分享到</Text>
+
+              <View style={{ flexDirection: 'row', paddingTop: 20, paddingBottom: 20, justifyContent: 'center' }}>
+                <View style={{ alignItems: 'center' }}>
+                  <Image style={{ width: 48, height: 48 }} source={require('../images/home/projCollected.png')} />
+                  <Text style={{ marginTop: 6, textAlign: 'center', color: 'rgb(70, 70, 70)', fontSize: 12 }}>微信</Text>
+                </View>
+
+                <View style={{ width: 80 }}></View>
+
+                <View style={{ alignItems: 'center' }}>
+                  <Image style={{ width: 48, height: 48 }} source={require('../images/home/projNoCollect.png')} />
+                  <Text style={{ marginTop: 6, textAlign: 'center', color: 'rgb(70, 70, 70)', fontSize: 12 }}>朋友圈</Text>
+                </View>
+              </View>
+
+              <Text style={{ padding: 12, textAlign: 'center', backgroundColor: 'rgb(250, 250, 250)' }}>取消</Text>
+            </View>
+            
+          </View>
+          </TouchableWithoutFeedback>
+          
+          : null }
+
         </View>
       )
     }
