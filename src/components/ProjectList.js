@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, Image, FlatList, RefreshControl, StatusBar, TouchableOpacity } from 'react-native'
+import { View, Text, Image, FlatList, RefreshControl, StatusBar, TouchableOpacity, ActivityIndicator } from 'react-native'
 import ProjectItem from './ProjectItem'
 import { connect } from 'react-redux'
 import * as newApi from '../api'
@@ -21,7 +21,8 @@ class ProjectList extends React.Component {
         super(props)
         this.state = {
             refreshing: false,
-            projects: []
+            projects: [],
+            isLoadingAll: false,
         }
         this.isLoadingMore = false;
     }
@@ -46,7 +47,7 @@ class ProjectList extends React.Component {
     }
 
     onRefresh = () => {
-        this.setState({ refreshing: true })
+        this.setState({ refreshing: true, isLoadingAll: false });
         this.getProjects((projects, dataStructure) => {
           this.props.dispatch(updateProjectStructure(dataStructure))
           this.props.dispatch(receiveContents('', projects))
@@ -96,7 +97,7 @@ class ProjectList extends React.Component {
         Object.assign(
           filterToObject(this.props.filter),
           {
-            projstatus: 8,
+            projstatus: [6, 7, 8],
             ismarketplace: false,
             skip_count: skipCount,
             max_size: maxSize,
@@ -107,7 +108,7 @@ class ProjectList extends React.Component {
         Object.assign(
           filterToObject(this.props.filter),
           {
-            projstatus: 8,
+            projstatus: [6, 7, 8],
             ismarketplace: true,
             skip_count: skipCount,
             max_size: maxSize,
@@ -164,6 +165,7 @@ class ProjectList extends React.Component {
           return Promise.all(requestArr)
         })
         .then(result => {
+          console.log('result', result);
           const projects = result.map(item => item.data).reduce((acc, val) => acc.concat(val), []).map(item => {
             var obj = {}
             obj['id'] = item.id
@@ -174,6 +176,7 @@ class ProjectList extends React.Component {
             obj['industrys'] = item.industries.map(i => i.name)
             obj['isMarketPlace'] = item.ismarketplace
             obj['amount_cny'] = item.financeAmount
+            obj['currency'] = item.currency.id
             return obj
           })
           callback(projects, newArray);
@@ -204,6 +207,7 @@ class ProjectList extends React.Component {
               obj['industrys'] = item.industries.map(i => i.name)
               obj['isMarketPlace'] = item.ismarketplace
               obj['amount_cny'] = item.financeAmount
+              obj['currency'] = item.currency.id
               return obj
             })
             callback(projects)
@@ -212,11 +216,13 @@ class ProjectList extends React.Component {
       }
 
       loadMore = () => {
-        if (this.isLoadingMore) return;
+        if (this.isLoadingMore || this.props.projects.length === 0) return;
         this.isLoadingMore = true;
         this.getMoreProjects(projects => {
             if (projects.length > 0) {
               this.props.dispatch(appendProjects(projects))
+            } else {
+              this.setState({ isLoadingAll: true });
             }
             this.isLoadingMore = false;
         })
@@ -226,6 +232,25 @@ class ProjectList extends React.Component {
         this.props.navigation.navigate('ProjectDetail', { project: item });
       }
 
+      renderFooter = () => {
+        if (this.props.projects.length === 0) return null;
+        if (this.state.isLoadingAll) return (
+          <Text style={{ padding: 16, textAlign: 'center', fontSize: 12, color: 'gray' }}>---没有更多了---</Text>
+        );
+    
+        return (
+          <View
+            style={{
+              paddingVertical: 20,
+              borderTopWidth: 1,
+              borderColor: "#CED0CE"
+            }}>
+            <ActivityIndicator animating size="small" />
+          </View>
+        );
+      };
+
+      
     render() {
         return (
             <View style={{flex:1}}>
@@ -253,6 +278,7 @@ class ProjectList extends React.Component {
                     ItemSeparatorComponent={() => (
                         <View style={{height:1,backgroundColor:'#f4f4f4'}}></View>
                     )}
+                    ListFooterComponent={this.renderFooter}
                 />
             </View>
         )
