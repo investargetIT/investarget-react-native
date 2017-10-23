@@ -47,6 +47,8 @@ class ProjectDetail extends React.Component {
         isFavorite: false,
         favorId: null,
         showShareDialog: false,
+        showShareContentDialog: false,
+        sharingContent: -1,
       }
     }
 
@@ -111,110 +113,123 @@ class ProjectDetail extends React.Component {
     }
     
     handleShareIconPressed = () => {
-      // Share.share({
-      //   message: Platform.OS === 'ios' ? this.title : `${this.title} ${this.state.url}`,
-      //   url: this.state.url, // Only work on iOS
-      // })
-      // WeChat.shareToSession({
-      //     type: 'news', 
-      //     title: this.title,
-      //     description: '地区:' + this.project.country + ' 行业:' + this.project.industrys + ' 交易规模:$' + formatNumber(this.project.amount),
-      //     webpageUrl: this.state.url,
-      //     thumbImage: this.project.imgUrl,
-      //   });
-      // WeChat.shareToSession({
-      //     type: 'imageFile', 
-      //     title: this.title,
-      //     description: '地区:' + this.project.country + ' 行业:' + this.project.industrys + ' 交易规模:$' + formatNumber(this.project.amount),
-      //     imageUrl: '../images/home/projCollected.png',
-      //   });
-      if (Platform.OS === 'ios') {
-        const react = this;
-        const options = [
-          '分享项目名片',
-          '分享项目二维码',
-          '分享项目BP',
-          '取消',
-        ];
-        const CANCEL_INDEX = options.length - 1;
-        ActionSheetIOS.showActionSheetWithOptions({
-          options,
-          cancelButtonIndex: CANCEL_INDEX,
-        },
-          (buttonIndex) => {
-            console.log('button clicked :', buttonIndex);
-            if (buttonIndex === CANCEL_INDEX) return;
-            react.setState({ showShareDialog: true });
-          });
+      if (this.state.showShareDialog) {
+        this.setState({ showShareDialog: false });
       } else {
-        this.setState({ showShareDialog: true });
+        this.setState({ 
+          showShareContentDialog: !this.state.showShareContentDialog 
+        });
       }
+    }
 
+    shareContent(type) {
+      this.setState({ 
+        showShareContentDialog: false, 
+        showShareDialog: true,
+        sharingContent: type,
+      });
     }
 
     handleShareToWechat = () => {
-      let rootPath = fs.DocumentDirectoryPath;
-      let savePath = rootPath + '/email-signature-262x100.jpg';
-      console.log(savePath);
-      fs.downloadFile({ fromUrl: 'https://imgsa.baidu.com/news/q%3D100/sign=b5ed8d152e1f95caa0f596b6f9167fc5/0e2442a7d933c895f3a41010da1373f083020086.jpg', toFile: savePath }).promise
-      .then(res => {
-        console.log('res', res);
-        WeChat.shareToSession({
-          type: 'imageFile', 
-          title: 'email-signature-262x100',
-          description: 'share image file to time line',
-          mediaTagName: 'email signature',
-          messageAction: undefined,
-          messageExt: undefined,
-          imageUrl: "file://" + savePath, // require the prefix on both iOS and Android platform
-          fileExtension: '.jpg'
-        });
-
-      })
-
-
-
-      // WeChat.shareToSession({
-      //   type: 'news',
-      //   title: this.title,
-      //   description: '地区:' + this.project.country + ' 行业:' + this.project.industrys + ' 交易规模:$' + formatNumber(this.project.amount),
-      //   webpageUrl: this.state.url,
-      //   thumbImage: this.project.imgUrl,
-      // });
+      switch (this.state.sharingContent) {
+        case 0:
+          WeChat.shareToSession({
+            type: 'news',
+            title: this.title,
+            description: '地区:' + this.project.country + ' 行业:' + this.project.industrys + ' 交易规模:$' + formatNumber(this.project.amount),
+            webpageUrl: this.state.url,
+            thumbImage: this.project.imgUrl,
+          });
+          break;
+        case 1:
+          let rootPath1 = fs.DocumentDirectoryPath;
+          let savePath1 = rootPath1 + '/email-signature-262x100.png';
+          fs.downloadFile({ fromUrl: 'http://192.168.1.251:8080/service/getQRCode?url=' + encodeURIComponent(this.state.url) + '&acw_tk=' + this.props.userInfo.token, toFile: savePath1 }).promise
+            .then(res => {
+              WeChat.shareToSession({
+                type: 'imageFile',
+                title: this.title,
+                description: 'share image file to time line',
+                mediaTagName: 'email signature',
+                messageAction: undefined,
+                messageExt: undefined,
+                imageUrl: "file://" + savePath1,
+                fileExtension: '.png'
+              });
+            });
+          break;
+        case 2:
+          let rootPath2 = Platform.OS === 'ios' ? fs.DocumentDirectoryPath : fs.ExternalDirectoryPath;
+          let fileName = 'signature_method.pdf';
+          let savePath2 = rootPath2 + '/' + fileName;
+          fs.downloadFile({
+            fromUrl: 'http://192.168.1.251:8080/proj/pdf/' + this.id + '/?acw_tk=' + this.props.userInfo.token,
+            toFile: savePath2
+          }).promise.then(res => {
+            WeChat.shareToSession({
+              type: 'file',
+              title: this.title + '.pdf',
+              description: 'share word file to chat session',
+              mediaTagName: 'pdf file',
+              messageAction: undefined,
+              messageExt: undefined,
+              filePath: savePath2,
+              fileExtension: '.pdf'
+            });
+          })
+          break;
+      }
     }
 
     handleShareToMoments = () => {
-      // WeChat.shareToTimeline({
-      //   type: 'news',
-      //   title: this.title,
-      //   description: '地区:' + this.project.country + ' 行业:' + this.project.industrys + ' 交易规模:$' + formatNumber(this.project.amount),
-      //   webpageUrl: this.state.url,
-      //   thumbImage: this.project.imgUrl,
-      // });
-
-      let rootPath = Platform.OS === 'ios' ? fs.DocumentDirectoryPath : fs.ExternalDirectoryPath;
-      let fileName = 'signature_method.doc';
-      /*
-       * savePath on iOS may be:
-       *  /var/mobile/Containers/Data/Application/B1308E13-35F1-41AB-A20D-3117BE8EE8FE/Documents/signature_method.doc
-       **/ 
-      let savePath = rootPath + '/' + fileName;
-      fs.downloadFile({ 
-        fromUrl: 'https://open.weixin.qq.com/zh_CN/htmledition/res/assets/signature_method.doc', 
-        toFile: savePath
-      }).promise.then(res => {
-        console.log('res', res);
-        WeChat.shareToSession({
-          type: 'file',
-          title: fileName, // WeChat app treat title as file name
-          description: 'share word file to chat session',
-          mediaTagName: 'word file',
-          messageAction: undefined,
-          messageExt: undefined,
-          filePath: savePath,
-          fileExtension: '.doc'
-        });
-      })
+      switch (this.state.sharingContent) {
+        case 0:
+          WeChat.shareToTimeline({
+            type: 'news',
+            title: this.title,
+            description: '地区:' + this.project.country + ' 行业:' + this.project.industrys + ' 交易规模:$' + formatNumber(this.project.amount),
+            webpageUrl: this.state.url,
+            thumbImage: this.project.imgUrl,
+          });
+          break;
+        case 1:
+          let rootPath1 = fs.DocumentDirectoryPath;
+          let savePath1 = rootPath1 + '/email-signature-262x100.png';
+          fs.downloadFile({ fromUrl: 'http://192.168.1.251:8080/service/getQRCode?url=' + encodeURIComponent(this.state.url) + '&acw_tk=' + this.props.userInfo.token, toFile: savePath1 }).promise
+            .then(res => {
+              WeChat.shareToTimeline({
+                type: 'imageFile',
+                title: this.title,
+                description: 'share image file to time line',
+                mediaTagName: 'email signature',
+                messageAction: undefined,
+                messageExt: undefined,
+                imageUrl: "file://" + savePath1,
+                fileExtension: '.png'
+              });
+            });
+          break;
+        case 2:
+          let rootPath2 = Platform.OS === 'ios' ? fs.DocumentDirectoryPath : fs.ExternalDirectoryPath;
+          let fileName = 'signature_method.pdf';
+          let savePath2 = rootPath2 + '/' + fileName;
+          fs.downloadFile({
+            fromUrl: 'http://192.168.1.251:8080/proj/pdf/' + this.id + '/?acw_tk=' + this.props.userInfo.token,
+            toFile: savePath2
+          }).promise.then(res => {
+            WeChat.shareToTimeline({
+              type: 'file',
+              title: this.title + '.pdf',
+              description: 'share word file to chat session',
+              mediaTagName: 'pdf file',
+              messageAction: undefined,
+              messageExt: undefined,
+              filePath: savePath2,
+              fileExtension: '.pdf'
+            });
+          })
+          break;
+      }
     }
 
     render() {
@@ -251,6 +266,19 @@ class ProjectDetail extends React.Component {
               </TouchableOpacity>
             </View>
 
+
+          { this.state.showShareContentDialog ? 
+          <TouchableWithoutFeedback onPress={() => this.setState({ showShareContentDialog: false })}>
+            <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0, top: 0, backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
+              <View style={{ position: 'absolute', top: 0, right: 0, backgroundColor: '#10458F' }}>
+                <Text style={{ padding: 10, color: 'white' }} onPress={this.shareContent.bind(this, 0)}>分享项目名片</Text>
+                <Text style={{ padding: 10, color: 'white' }} onPress={this.shareContent.bind(this, 1)}>分享项目二维码</Text>
+                <Text style={{ padding: 10, color: 'white' }} onPress={this.shareContent.bind(this, 2)}>分享项目BP</Text>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+          : null }
+
           { this.state.showShareDialog ? 
           <TouchableWithoutFeedback onPress={() => this.setState({ showShareDialog: false })}>
           <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0, top: -30, backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
@@ -267,14 +295,19 @@ class ProjectDetail extends React.Component {
                   </TouchableOpacity>
                 </View>
 
+                { this.state.sharingContent !== 2 ? 
                 <View style={{ width: 80 }}></View>
+                : null }
 
+                { this.state.sharingContent !== 2 ? 
                 <View style={{ alignItems: 'center' }}>
                   <TouchableOpacity onPress={this.handleShareToMoments}>
                     <Image style={{ width: 56, height: 56 }} source={require('../images/wechat_moments.png')} />
                     <Text style={{ marginTop: 6, textAlign: 'center', color: 'rgb(70, 70, 70)', fontSize: 14 }}>朋友圈</Text>
                   </TouchableOpacity>
                 </View>
+                : null }
+
               </View>
 
               <Text style={{ padding: 12, textAlign: 'center', backgroundColor: 'rgb(250, 250, 250)', fontSize: 16 }}>取消</Text>
