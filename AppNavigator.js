@@ -45,6 +45,7 @@ import TimelineManagement from './src/containers/TimelineManagement';
 import MyFavoriteProject from './src/containers/MyFavoriteProject';
 import Timeline from './src/containers/Timeline';
 import LatestRemark from './src/containers/LatestRemark';
+import MyPartnerOrg from './src/containers/MyPartnerOrg';
 
 
 
@@ -132,6 +133,7 @@ const CustomTabView = ({ router, navigation }) => {
     Filter: { screen: Filter },
     AddInvestor: { screen: AddInvestor },
     LatestRemark: { screen: LatestRemark },
+    MyPartnerOrg: { screen: MyPartnerOrg },
   })
 
   const DrawerApp = DrawerNavigator(

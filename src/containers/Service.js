@@ -21,7 +21,8 @@ class Service extends React.Component {
     }
 
     handleClickAll = () => {
-        this.props.navigation.navigate('MyPartner', { userType: this.props.userType })
+        // this.props.navigation.navigate('MyPartner', { userType: this.props.userType })
+        this.props.navigation.navigate('MyPartnerOrg', { userType: this.props.userType });
     }
 
     handleClickNotification = () => {
