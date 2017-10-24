@@ -27,15 +27,16 @@ const cardStyle = {
     paddingRight: 24,
 }
 
-const PAGE_SIZE = 20
+const PAGE_SIZE = 200
 
 class MyPartner extends React.Component {
 
     static navigationOptions = ({navigation}) => {
         const { params } = navigation.state
+        const org = params.org
         const userType = params.userType
         return {
-            title: userType == 1 ? '我的交易师' : '我的投资人',
+            title: userType == 1 ? '我的交易师' : org.org,
             headerStyle: {
                 backgroundColor: '#10458f',
             },
@@ -68,6 +69,7 @@ class MyPartner extends React.Component {
             param['investoruser'] = userId
         } else {
             param['traderuser'] = userId
+            param['orgs'] = this.org.id
         }
         return api.getUserRelation(param).then(data => {
             var { count: total, data: list } = data
@@ -159,6 +161,7 @@ class MyPartner extends React.Component {
     }
 
     componentDidMount() {
+        this.org = this.props.navigation.state.params.org;
         this.props.navigation.setParams({ onPress: this.addInvestor })
         this.getPartners(1).then(({ total, list }) => {
             this.setState({ total, partners: list })
