@@ -41,9 +41,9 @@ class MyPartner extends React.Component {
                 backgroundColor: '#10458f',
             },
             headerTintColor: '#fff',
-            headerRight: userType == 1 ? null : (
-                <TouchableOpacity style={{marginRight:12}} onPress={ () => {params.onPress && params.onPress()} }><Image source={require('../images/plus.png')} style={{width: 24, height: 24}} /></TouchableOpacity>
-            ),
+            // headerRight: userType == 1 ? null : (
+            //     <TouchableOpacity style={{marginRight:12}} onPress={ () => {params.onPress && params.onPress()} }><Image source={require('../images/plus.png')} style={{width: 24, height: 24}} /></TouchableOpacity>
+            // ),
             headerBackTitle: null,
         }
     }

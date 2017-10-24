@@ -36,7 +36,7 @@ class Service extends React.Component {
         const userId = this.props.userId
         const param = this.props.userType == 1 ? { investoruser: userId } : { traderuser: userId }
         api.getUserRelation(param).then(data => {
-            const partners = data.data.slice(0, 3).map(item => {
+            const partners = data.data.slice(0, 4).map(item => {
                 const user = this.props.userType == 1 ? item.traderuser : item.investoruser
                 const { id, username, org, photourl } = user
                 return { id, username, orgname: org ? org.orgname : '', photoUrl: photourl }
@@ -124,9 +124,9 @@ class Service extends React.Component {
                     </View>
                     {this.state.partners.length > 0 ? (
                         <View style={{flexDirection:'row',marginTop: 24}}>
-                            <TouchableOpacity style={{marginRight:12}} onPress={this.addInvestor}>
+                            {/* <TouchableOpacity style={{marginRight:12}} onPress={this.addInvestor}>
                                 <Image source={require('../images/add.png')} style={{width: 72, height: 72}} />
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
                             {
                                 this.state.partners.map(item => (
                                     <PartnerCard
