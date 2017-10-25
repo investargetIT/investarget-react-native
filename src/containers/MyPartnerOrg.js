@@ -155,8 +155,8 @@ class MyPartnerOrg extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { userInfo } = state.app;
-  return { userInfo };
+  const { userInfo, titles } = state.app;
+  return { userInfo, titles };
 }
 
 export default connect(mapStateToProps)(MyPartnerOrg);

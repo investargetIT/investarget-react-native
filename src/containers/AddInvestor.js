@@ -213,7 +213,7 @@ class AddInvestor extends React.Component {
         return (
             <KeyboardAwareScrollView style={{flex:1}}>
                 <View style={{flex: 0}}>
-                {file ? <FitImage source={{uri: 'data:image/png;base64, ' + imageData}} /> : <Image source={require('../images/userCenter/emptyCardImage.png')} style={{width:'100%'}} />}
+                {file ? <Image style={{ width: '100%', height: 220 }} source={{uri: 'data:image/png;base64, ' + imageData}} /> : <Image source={require('../images/userCenter/emptyCardImage.png')} style={{width:'100%'}} />}
                 </View>
                 <View style={{flex: 1}}>
                 <View style={cellStyle}>
