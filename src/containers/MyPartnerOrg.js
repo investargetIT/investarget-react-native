@@ -10,6 +10,7 @@ import * as api from '../api';
 import { connect } from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
 import Toast from 'react-native-root-toast';
+import { requestContents, hideLoading } from '../../actions';
 
 function MyPartnerOrgCell (props) {
   const { org, count, data } = props.data;
@@ -36,7 +37,8 @@ class MyPartnerOrg extends React.Component {
     constructor (props) {
       super(props);
       this.state = {
-        data: []
+        data: [],
+        loading: false,
       }
     }
 
@@ -94,12 +96,14 @@ class MyPartnerOrg extends React.Component {
           } else if (response.error) {
               Toast.show(response.error, {position: Toast.positions.CENTER})
           } else {
+              this.props.dispatch(requestContents());
               let file = { uri: response.uri, type: 'application/octet-stream', name: 'businessCard.jpg' }
               _file = file
               var formData = new FormData()
               formData.append('file', file)
 
               api.ccUpload(formData).then(data => {
+                this.props.dispatch(hideLoading());
                   try {
                       data = JSON.parse(data)
                   } catch (e) {
@@ -140,18 +144,16 @@ class MyPartnerOrg extends React.Component {
       return { name, email, title, mobile, company }
   }
 
-    render() {
-      return (
-        <FlatList
-          style={{ backgroundColor: 'white' }}
-          data={this.state.data}
-          keyExtractor={ item => item.id }
-          renderItem={({ item }) => <MyPartnerOrgCell data={item} onPress={this.handleItemPressed.bind(this, item)} />}
-          ItemSeparatorComponent={this.separator}
-          ListHeaderComponent={this.renderHeader}
-        />
-      );
-    }
+  render() {
+    return <FlatList
+      style={{ backgroundColor: 'white' }}
+      data={this.state.data}
+      keyExtractor={item => item.id}
+      renderItem={({ item }) => <MyPartnerOrgCell data={item} onPress={this.handleItemPressed.bind(this, item)} />}
+      ItemSeparatorComponent={this.separator}
+      ListHeaderComponent={this.renderHeader}
+    />
+  }
 }
 
 function mapStateToProps(state) {

@@ -11,7 +11,7 @@ import {
     NavigationActions,
     DrawerNavigator,
 } from 'react-navigation';
-
+import Spinner from 'react-native-loading-spinner-overlay';
 import ProjectList from './src/components/ProjectList'
 import Posts from './src/components/Posts'
 import Events from './src/components/Events'
@@ -50,7 +50,7 @@ import MyPartnerOrg from './src/containers/MyPartnerOrg';
 
 
 
-const CustomTabView = ({ router, navigation }) => {
+const CustomTabView = ({ router, navigation, isFetching }) => {
     const { routes, index } = navigation.state;
     const ActiveScreen = router.getComponentForRouteName(routes[index].routeName);
     return (
@@ -58,6 +58,7 @@ const CustomTabView = ({ router, navigation }) => {
         { Platform.OS === 'ios' ? 
         <View style={{ height: 24, backgroundColor: '#10458F' }} />
         : null }
+        <Spinner visible={isFetching} />
         <CustomTabBar navigation={navigation} />
         <ActiveScreen
           navigation={addNavigationHelpers({
@@ -68,7 +69,11 @@ const CustomTabView = ({ router, navigation }) => {
       </View>
     );
   };
-  
+  function mapStateToProps1(state) {
+    const { isFetching } = state.app;
+    return { isFetching };
+  }
+
   const CustomTabRouter = TabRouter(
     {
       project: {
@@ -89,7 +94,7 @@ const CustomTabView = ({ router, navigation }) => {
     }
   );
   const CustomTabs = createNavigationContainer(
-    createNavigator(CustomTabRouter)(CustomTabView)
+    createNavigator(CustomTabRouter)(connect(mapStateToProps1)(CustomTabView))
   );
   
   const AppNavigator = StackNavigator({
