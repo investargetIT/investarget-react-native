@@ -38,7 +38,7 @@ import SelectUser from './src/components/SelectUser'
 import SelectProjects from './src/components/SelectProjects'
 import Filter from './src/containers/Filter'
 import AddInvestor from './src/containers/AddInvestor'
-
+import MyCalendar from './src/containers/MyCalendar';
 import CustomTabBar from './src/components/CustomTabBar';
 import CustomDrawerContentComponent from './src/components/CustomDrawerContentComponent'
 import TimelineManagement from './src/containers/TimelineManagement';
@@ -139,6 +139,7 @@ const CustomTabView = ({ router, navigation, isFetching }) => {
     AddInvestor: { screen: AddInvestor },
     LatestRemark: { screen: LatestRemark },
     MyPartnerOrg: { screen: MyPartnerOrg },
+    MyCalendar: { screen: MyCalendar },
   })
 
   const DrawerApp = DrawerNavigator(
@@ -146,6 +147,9 @@ const CustomTabView = ({ router, navigation, isFetching }) => {
       App: {
         path: '/',
         screen: AppNavigator,
+      },
+      MyCalendar: {
+        screen: MyCalendar
       },
       MyTags: {
         screen: MyTags
