@@ -1,20 +1,30 @@
 import React from 'react';
 import { 
-    Text,
-    View,
-    StyleSheet,
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
 } from 'react-native';
 import { Agenda } from 'react-native-calendars';
 
 class MyCalendar extends React.Component {
   
-  static navigationOptions = {
-    title: '日程管理',
-    headerStyle: {
-      backgroundColor: '#10458f',
-    },
-    headerTintColor: '#fff',
-    headerBackTitle: null,
+  static navigationOptions = ({ navigation }) => {
+    const { params } = navigation.state;
+    return {
+      title: '日程管理',
+      headerStyle: {
+        backgroundColor: '#10458f',
+      },
+      headerTintColor: '#fff',
+      headerBackTitle: null,
+      headerRight: params ?
+        <TouchableOpacity style={{ marginRight: 12 }} onPress={params.onPress}>
+          <Image source={require('../images/plus.png')} style={{ width: 24, height: 24 }} />
+        </TouchableOpacity>
+        : null,
+    }
   }
 
   constructor(props) {
@@ -23,6 +33,12 @@ class MyCalendar extends React.Component {
       items: {}
     };
   }
+
+  componentDidMount() {
+    this.props.navigation.setParams({ onPress: this.handleAddIconPressed });
+  }
+
+  handleAddIconPressed = () => {}
 
   render() {
     return (
