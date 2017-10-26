@@ -38,7 +38,9 @@ class MyCalendar extends React.Component {
     this.props.navigation.setParams({ onPress: this.handleAddIconPressed });
   }
 
-  handleAddIconPressed = () => {}
+  handleAddIconPressed = () => {
+    this.props.navigation.navigate('AddEvent');
+  }
 
   render() {
     return (
