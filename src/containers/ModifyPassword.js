@@ -40,7 +40,6 @@ class ModifyPassword extends React.Component {
             title: '修改密码',
             headerTintColor: '#fff',
             headerStyle: {
-                height: 48,
                 backgroundColor: '#10458F',
             },
             headerRight: <Text style={headerRightStyle} onPress={() => {params.handleSubmit && params.handleSubmit()}}>提交</Text>

@@ -32,7 +32,6 @@ class Contact extends React.Component {
             title: '联系我们',
             headerTintColor: '#fff',
             headerStyle: {
-                height: 48,
                 backgroundColor: '#10458F',
             },
         }
