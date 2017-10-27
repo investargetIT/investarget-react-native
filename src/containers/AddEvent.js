@@ -50,8 +50,10 @@ class AddEvent extends React.Component {
     this.props.navigation.setParams({ onPress: this.handleSubmit });
   }
 
-  handleSubmit () {
-
+  handleSubmit = () => {
+    const { navigation } = this.props;
+    navigation.goBack();
+    navigation.state.params.onSelect({ abc: 'abc' });
   }
 
   render () {
