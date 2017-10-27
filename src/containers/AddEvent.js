@@ -2,7 +2,15 @@ import React from 'react';
 import { 
   Text,
   TouchableOpacity,
+  TextInput,
+  View,
+  DatePickerIOS,
+  Platform,
+  Modal,
+  TouchableHighlight,
+  TouchableWithoutFeedback,
 } from 'react-native';
+import DatePicker from 'react-native-datepicker';
 
 class AddEvent extends React.Component {
   
@@ -24,6 +32,17 @@ class AddEvent extends React.Component {
     }
   }
 
+  constructor (props) {
+    super (props);
+
+    this.state = {
+      title: '',
+      address: '',
+      showDatePickerIOS: false,
+      date: new Date(),
+    }
+  }
+
   componentDidMount () {
     this.props.navigation.setParams({ onPress: this.handleSubmit });
   }
@@ -33,7 +52,61 @@ class AddEvent extends React.Component {
   }
 
   render () {
-    return <Text>AddEvent</Text>;
+    return (
+      <View>
+
+        <View style={{ backgroundColor: 'white',  marginTop: 20 }}>
+
+        <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, justifyContent: 'center' }}>
+          <TextInput
+            style={{ fontSize: 16 }}
+            onChangeText={ title => this.setState({ title })}
+            value={this.state.title}
+            placeholder="标题"
+          />
+        </View>
+
+        <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
+
+        <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, justifyContent: 'center' }}>
+          <TextInput
+            style={{ fontSize: 16 }}
+            onChangeText={address => this.setState({ address })}
+            value={this.state.address}
+            placeholder="地点"
+          />
+        </View>
+        </View>
+
+        <TouchableHighlight style={{ marginTop: 20, backgroundColor: 'white' }} onPress={() => this.setState({ showDatePickerIOS: 'end' })} underlayColor={'lightgray'}>
+          <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Text style={{ fontSize: 16 }}>时间</Text>
+            <Text style={{ fontSize: 16 }}>{this.state.date.toLocaleString()}</Text>
+          </View>
+        </TouchableHighlight>
+
+
+        {Platform.OS === 'ios' && this.state.showDatePickerIOS ?
+          <Modal
+            transparent={true}
+            visible={true}
+            onRequestClose={() => { alert("Modal has been closed.") }}
+          >
+            <TouchableWithoutFeedback onPress={() => this.setState({ showDatePickerIOS: false })}>
+              <View style={{ position: 'absolute', bottom: 0, top: 0, left: 0, right: 0, backgroundColor: 'rgba(0, 0, 0, 0.1)' }}>
+                <DatePickerIOS
+                  style={{ position: 'absolute', bottom: 0, left: 0, right: 0, backgroundColor: 'white' }}
+                  date={this.state.date}
+                  mode="datetime"
+                  onDateChange={date => this.setState({date})}
+                />
+              </View>
+            </TouchableWithoutFeedback>
+          </Modal>
+          : null}
+        
+      </View>
+    );
   }
 
 }
