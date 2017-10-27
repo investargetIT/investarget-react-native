@@ -9,8 +9,11 @@ import {
   Modal,
   TouchableHighlight,
   TouchableWithoutFeedback,
+  ScrollView,
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
+import ProjectItem from '../components/ProjectItem';
+import PartnerCard from '../components/PartnerCard';
 
 class AddEvent extends React.Component {
   
@@ -53,7 +56,7 @@ class AddEvent extends React.Component {
 
   render () {
     return (
-      <View>
+      <ScrollView>
 
         <View style={{ backgroundColor: 'white',  marginTop: 20 }}>
 
@@ -85,6 +88,13 @@ class AddEvent extends React.Component {
           </View>
         </TouchableHighlight>
 
+        <View style={{ marginTop: 20 }}>
+          <ProjectItem onPress={this.chooseProject} />
+        </View>
+
+        <View style={{ marginTop: 20 }}>
+          <PartnerCard onPress={this.chooseUser} />
+        </View>
 
         {Platform.OS === 'ios' && this.state.showDatePickerIOS ?
           <Modal
@@ -105,7 +115,7 @@ class AddEvent extends React.Component {
           </Modal>
           : null}
         
-      </View>
+      </ScrollView>
     );
   }
 
