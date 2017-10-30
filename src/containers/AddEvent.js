@@ -43,6 +43,8 @@ class AddEvent extends React.Component {
       address: '',
       showDatePickerIOS: false,
       date: new Date(),
+      project: null,
+      user: null,
     }
   }
 
@@ -90,13 +92,25 @@ class AddEvent extends React.Component {
           </View>
         </TouchableHighlight>
 
+        { this.state.project ? 
         <View style={{ marginTop: 20 }}>
           <ProjectItem onPress={this.chooseProject} />
         </View>
+        : 
+        <TouchableHighlight style={{ marginTop:20, paddingLeft: 10, backgroundColor: 'white' }} underlayColor="lightgray" onPress={() => console.log('dd')}>
+          <Text style={{ fontSize: 16, lineHeight: 44 }}>选择项目</Text>
+        </TouchableHighlight>
+        }
 
+        { this.state.user ? 
         <View style={{ marginTop: 20 }}>
           <PartnerCard onPress={this.chooseUser} />
         </View>
+        :
+        <TouchableHighlight style={{ marginTop:20, paddingLeft: 10, backgroundColor: 'white' }} underlayColor="lightgray" onPress={() => console.log('dd')}>
+          <Text style={{ fontSize: 16, lineHeight: 44 }}>选择用户</Text>
+        </TouchableHighlight>
+        }
 
         {Platform.OS === 'ios' && this.state.showDatePickerIOS ?
           <Modal
