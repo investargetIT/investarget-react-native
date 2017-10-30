@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import ProjectItem from '../components/ProjectItem';
-import PartnerCard from '../components/PartnerCard';
+import UserItem from '../components/UserItem';
 
 class AddEvent extends React.Component {
   
@@ -131,7 +131,7 @@ class AddEvent extends React.Component {
 
         { this.state.user ? 
         <View style={{ marginTop: 20 }}>
-          <PartnerCard onPress={this.handleUserProcessed} />
+          <UserItem {...this.state.user} onSelect={this.handleUserProcessed} />
         </View>
         :
         <TouchableHighlight style={{ marginTop:20, paddingLeft: 10, backgroundColor: 'white' }} underlayColor="lightgray" onPress={this.handleUserProcessed}>
