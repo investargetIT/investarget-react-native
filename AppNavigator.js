@@ -47,6 +47,7 @@ import Timeline from './src/containers/Timeline';
 import LatestRemark from './src/containers/LatestRemark';
 import MyPartnerOrg from './src/containers/MyPartnerOrg';
 import AddEvent from './src/containers/AddEvent';
+import AddProject from './src/containers/AddProject';
 
 
 
@@ -141,6 +142,7 @@ const CustomTabView = ({ router, navigation, isFetching }) => {
     MyPartnerOrg: { screen: MyPartnerOrg },
     MyCalendar: { screen: MyCalendar },
     AddEvent: { screen: AddEvent },
+    AddProject: { screen: AddProject },
   })
 
   const DrawerApp = DrawerNavigator(

@@ -25,6 +25,7 @@ class AddEvent extends React.Component {
           backgroundColor: '#10458f',
       },
       headerTintColor: '#fff',
+      headerBackTitle: null,
       headerRight: (
         <TouchableOpacity 
           style={{ marginRight: 16 }} 
@@ -97,8 +98,8 @@ class AddEvent extends React.Component {
           <ProjectItem onPress={this.chooseProject} />
         </View>
         : 
-        <TouchableHighlight style={{ marginTop:20, paddingLeft: 10, backgroundColor: 'white' }} underlayColor="lightgray" onPress={() => console.log('dd')}>
-          <Text style={{ fontSize: 16, lineHeight: 44 }}>选择项目</Text>
+        <TouchableHighlight style={{ marginTop:20, paddingLeft: 10, backgroundColor: 'white' }} underlayColor="lightgray" onPress={() => this.props.navigation.navigate('AddProject')}>
+          <Text style={{ fontSize: 16, lineHeight: 44 }}>添加项目</Text>
         </TouchableHighlight>
         }
 
@@ -108,7 +109,7 @@ class AddEvent extends React.Component {
         </View>
         :
         <TouchableHighlight style={{ marginTop:20, paddingLeft: 10, backgroundColor: 'white' }} underlayColor="lightgray" onPress={() => console.log('dd')}>
-          <Text style={{ fontSize: 16, lineHeight: 44 }}>选择用户</Text>
+          <Text style={{ fontSize: 16, lineHeight: 44 }}>添加用户</Text>
         </TouchableHighlight>
         }
 
