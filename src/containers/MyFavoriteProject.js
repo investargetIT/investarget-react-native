@@ -28,6 +28,7 @@ class MyFavoriteProject extends React.Component {
             headerStyle: {
                 backgroundColor: '#10458f',
             },
+            headerBackTitle: null,
             headerTintColor: '#fff',
             headerRight: (params && params.userType == 1 ? null : <TouchableOpacity style={{marginRight: 16}} onPress={() => { params.onPress && params.onPress() }}>
                             <Text style={{color: '#fff',fontSize: 15}}>推荐</Text>
@@ -81,8 +82,8 @@ class MyFavoriteProject extends React.Component {
         })
     }
 
-    projectOnPress = (id) => {
-        this.props.navigation.navigate('ProjectDetail', { projectID: id })
+    projectOnPress = project => {
+        this.props.navigation.navigate('ProjectDetail', { project });
     }
 
     projectOnRemove = (id, favorId) => {
@@ -169,7 +170,7 @@ class MyFavoriteProject extends React.Component {
                     renderItem={({item, sparators}) => (
                         <_ProjectItem
                             {...t(item)}
-                            onPress={this.projectOnPress.bind(this, item.id)}
+                            onPress={this.projectOnPress.bind(this, item)}
                             selecting={this.state.selecting}
                             selected={this.state.selected.includes(item.id)}
                             onToggleSelect={this.toggleSelect.bind(this, item.id)}

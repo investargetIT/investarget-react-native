@@ -16,7 +16,6 @@ class SelectUser extends React.Component {
             title: params ? params.title : '',
             headerTintColor: '#fff',
             headerStyle: {
-                height: 48,
                 backgroundColor: '#10458F',
             },
             headerRight: (<TouchableOpacity style={{marginRight:16}} onPress={() => {params.onPress && params.onPress()}}>
