@@ -63,10 +63,21 @@ class AddEvent extends React.Component {
     this.setState({ project });
   }
 
+  onSelectUser = user => {
+    this.setState({ user });
+  }
+  
   handleProjectPressed = () => {
     this.props.navigation.navigate(
       'SelectProject', 
       { onSelectProject: this.onSelectProject }
+    );
+  }
+
+  handleUserProcessed = () => {
+    this.props.navigation.navigate(
+      'SearchUser', 
+      { onSelectUser: this.onSelectUser }
     );
   }
 
@@ -120,10 +131,10 @@ class AddEvent extends React.Component {
 
         { this.state.user ? 
         <View style={{ marginTop: 20 }}>
-          <PartnerCard onPress={this.chooseUser} />
+          <PartnerCard onPress={this.handleUserProcessed} />
         </View>
         :
-        <TouchableHighlight style={{ marginTop:20, paddingLeft: 10, backgroundColor: 'white' }} underlayColor="lightgray" onPress={() => console.log('dd')}>
+        <TouchableHighlight style={{ marginTop:20, paddingLeft: 10, backgroundColor: 'white' }} underlayColor="lightgray" onPress={this.handleUserProcessed}>
           <Text style={{ fontSize: 16, lineHeight: 44 }}>添加用户</Text>
         </TouchableHighlight>
         }
