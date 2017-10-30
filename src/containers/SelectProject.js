@@ -10,7 +10,7 @@ import {
 import ProjectItem from '../components/ProjectItem';
 import * as api from '../api';
 
-class AddProject extends React.Component {
+class SelectProject extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const { params } = navigation.state;
     return {
@@ -109,4 +109,4 @@ class AddProject extends React.Component {
   }
 }
 
-export default AddProject;
+export default SelectProject;

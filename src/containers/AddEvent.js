@@ -65,7 +65,7 @@ class AddEvent extends React.Component {
 
   handleProjectPressed = () => {
     this.props.navigation.navigate(
-      'AddProject', 
+      'SelectProject', 
       { onSelectProject: this.onSelectProject }
     );
   }
