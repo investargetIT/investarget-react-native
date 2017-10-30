@@ -59,6 +59,17 @@ class AddEvent extends React.Component {
     navigation.state.params.onSelect({ abc: 'abc' });
   }
 
+  onSelectProject = project => {
+    this.setState({ project });
+  }
+
+  handleProjectPressed = () => {
+    this.props.navigation.navigate(
+      'AddProject', 
+      { onSelectProject: this.onSelectProject }
+    );
+  }
+
   render () {
     return (
       <ScrollView>
@@ -95,10 +106,14 @@ class AddEvent extends React.Component {
 
         { this.state.project ? 
         <View style={{ marginTop: 20 }}>
-          <ProjectItem onPress={this.chooseProject} />
+          <ProjectItem {...this.state.project} onPress={this.handleProjectPressed}/>
         </View>
         : 
-        <TouchableHighlight style={{ marginTop:20, paddingLeft: 10, backgroundColor: 'white' }} underlayColor="lightgray" onPress={() => this.props.navigation.navigate('AddProject')}>
+        <TouchableHighlight 
+          style={{ marginTop:20, paddingLeft: 10, backgroundColor: 'white' }} 
+          underlayColor="lightgray" 
+          onPress={this.handleProjectPressed}
+        >
           <Text style={{ fontSize: 16, lineHeight: 44 }}>添加项目</Text>
         </TouchableHighlight>
         }
