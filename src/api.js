@@ -675,3 +675,4 @@ export const ccUpload = formData => r('/service/ccupload', 'POST', formData, tru
 export const getPostsAndEvent = () => r('/activity/');
 
 export const addSchedule = body => r('/msg/schedule/', 'POST', body);
+export const getSchedule = () => r('/msg/schedule/');

@@ -192,8 +192,7 @@ function formatDate(date) {
   '-' + pad(date.getDate()) +
   'T' + pad(date.getHours()) +
   ':' + pad(date.getMinutes()) +
-  ':' + pad(date.getSeconds()) + 
-  'Z';
+  ':' + pad(date.getSeconds());
 }
 
 export default connect()(AddEvent);

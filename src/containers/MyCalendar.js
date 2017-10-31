@@ -7,6 +7,7 @@ import {
   Image,
 } from 'react-native';
 import { Agenda } from 'react-native-calendars';
+import * as api from '../api';
 
 class MyCalendar extends React.Component {
   
@@ -30,7 +31,7 @@ class MyCalendar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: {}
+      items: {},
     };
   }
 
@@ -51,10 +52,11 @@ class MyCalendar extends React.Component {
       <Agenda
         items={this.state.items}
         loadItemsForMonth={this.loadItems.bind(this)}
-        selected={'2017-05-16'}
+        selected={new Date().toISOString().slice(0, 10)}
         renderItem={this.renderItem.bind(this)}
         renderEmptyDate={this.renderEmptyDate.bind(this)}
         rowHasChanged={this.rowHasChanged.bind(this)}
+        /* onDayPress={this.handleOnDayPress} */
         //markingType={'interactive'}
         //markedDates={{
         //  '2017-05-08': [{textColor: '#666'}],
@@ -72,30 +74,44 @@ class MyCalendar extends React.Component {
     );
   }
 
+  handleOnDayPress = day => {
+    if (this.state.items[day.dateString] === null) {
+      this.state.items[day.dateString] = []
+    }
+    this.setState({
+      items: this.state.items,
+    });
+  }
+
   loadItems(day) {
-    setTimeout(() => {
-      for (let i = -15; i < 85; i++) {
-        const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-        const strTime = this.timeToString(time);
-        if (!this.state.items[strTime]) {
-          this.state.items[strTime] = [];
-          const numItems = Math.floor(Math.random() * 5);
-          for (let j = 0; j < numItems; j++) {
-            this.state.items[strTime].push({
-              name: 'Item for ' + strTime,
-              height: Math.max(50, Math.floor(Math.random() * 150))
-            });
-          }
+
+    const items = Object.assign({}, this.state.items);
+
+    api.getSchedule()
+    .then(result => {
+
+      // 从服务端加载日程
+      result.data.forEach(function(element) {
+        const date = element.scheduledtime.slice(0, 10)
+        
+        if (date in items && !items[date].map(m => m.id).includes(element.id)) {
+          items[date].push({ name: element.comments, id: element.id });
+        } else {
+          items[date] = [{ name: element.comments, id: element.id }];
+        }
+      }, this);
+
+      // 加上前后30天内没有日程的日期
+      for (const i = -30; i < 30; i++) {
+        const newDate = addDaysToDate(day.dateString, i);
+        const newDateString = newDate.toISOString().slice(0, 10);
+        if (items[newDateString] === undefined) {
+          items[newDateString] = [];
         }
       }
-      //console.log(this.state.items);
-      const newItems = {};
-      Object.keys(this.state.items).forEach(key => {newItems[key] = this.state.items[key];});
-      this.setState({
-        items: newItems
-      });
-    }, 1000);
-    // console.log(`Load Items for ${day.year}-${day.month}`);
+
+      this.setState({ items });
+    });
   }
 
   renderItem(item) {
@@ -106,7 +122,7 @@ class MyCalendar extends React.Component {
 
   renderEmptyDate() {
     return (
-      <View style={styles.emptyDate}><Text>This is empty date!</Text></View>
+      null
     );
   }
 
@@ -136,5 +152,12 @@ const styles = StyleSheet.create({
       paddingTop: 30
     }
   });
+
+
+function addDaysToDate(dateString, days) {
+  var dat = new Date(dateString);
+  dat.setDate(dat.getDate() + days);
+  return dat;
+} 
 
 export default MyCalendar;
