@@ -39,12 +39,11 @@ class MyCalendar extends React.Component {
   }
 
   handleAddIconPressed = () => {
-    this.props.navigation.navigate('AddEvent', { onSelect: this.onSelect });
+    this.props.navigation.navigate('AddEvent', { onEditEventCompleted: this.onEditEventCompleted });
   }
 
-  onSelect = data => {
-    // this.setState(data);
-    console.log('data', data);
+  onEditEventCompleted = event => {
+    console.log('event', event);
   };
 
   render() {

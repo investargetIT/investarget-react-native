@@ -673,3 +673,5 @@ export const ccUpload = formData => r('/service/ccupload', 'POST', formData, tru
  * 获取智库文章列表和活动地址
  */
 export const getPostsAndEvent = () => r('/activity/');
+
+export const addSchedule = body => r('/msg/schedule/', 'POST', body);

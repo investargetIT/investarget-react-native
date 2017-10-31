@@ -14,6 +14,9 @@ import {
 import DatePicker from 'react-native-datepicker';
 import ProjectItem from '../components/ProjectItem';
 import UserItem from '../components/UserItem';
+import * as api from '../api';
+import { requestContents, hideLoading } from '../../actions';
+import { connect } from 'react-redux';
 
 class AddEvent extends React.Component {
   
@@ -54,9 +57,22 @@ class AddEvent extends React.Component {
   }
 
   handleSubmit = () => {
-    const { navigation } = this.props;
-    navigation.goBack();
-    navigation.state.params.onSelect({ abc: 'abc' });
+    this.props.dispatch(requestContents());
+    const body = {
+      scheduledtime: formatDate(this.state.date),
+      comments: this.state.title,
+      proj: this.state.project.id,
+      address: this.state.address,
+      user: this.state.user.id
+    };
+    api.addSchedule(body)
+    .then(data => {
+      this.props.dispatch(hideLoading());
+      const { navigation } = this.props;
+      navigation.goBack();
+      navigation.state.params.onEditEventCompleted(body);
+    })
+    .catch(err => console.error(err));
   }
 
   onSelectProject = project => {
@@ -164,4 +180,20 @@ class AddEvent extends React.Component {
 
 }
 
-export default AddEvent;
+function formatDate(date) {
+  function pad(number) {
+    if (number < 10) {
+      return '0' + number;
+    }
+    return number;
+  }
+  return date.getFullYear() +
+  '-' + pad(date.getMonth() + 1) +
+  '-' + pad(date.getDate()) +
+  'T' + pad(date.getHours()) +
+  ':' + pad(date.getMinutes()) +
+  ':' + pad(date.getSeconds()) + 
+  'Z';
+}
+
+export default connect()(AddEvent);
