@@ -21,9 +21,11 @@ class SearchUser extends React.Component {
       },
       headerTintColor: '#fff',
       headerRight: (
-        <TouchableOpacity style={{ marginRight: 16 }} onPress={() => { params.onPress && params.onPress() }}>
+        params.onPress ?
+        <TouchableOpacity style={{ marginRight: 16 }} onPress={params.onPress}>
           <Text style={{ fontSize: 15, color: '#fff' }}>确定</Text>
         </TouchableOpacity>
+        : null
       )
     }
   }
@@ -37,11 +39,7 @@ class SearchUser extends React.Component {
     }
   }
 
-  handleSubmit = () => {
-    const { navigation } = this.props;
-    navigation.goBack();
-    navigation.state.params.onSelectUser(this.state.users.filter(f => f.id === this.state.selected)[0]);
-  }
+  handleSubmit = () => {}
 
   searchUser = () => {
     const params = {
@@ -67,11 +65,13 @@ class SearchUser extends React.Component {
   }
   
   componentDidMount () {
-    this.props.navigation.setParams({ onPress: this.handleSubmit });
+    // this.props.navigation.setParams({ onPress: this.handleSubmit });
   }
 
-  handleSelect = (id) => {
-    this.setState({ selected: id })
+  handleSelect = user => {
+    const { navigation } = this.props;
+    navigation.goBack();
+    navigation.state.params.onSelectUser(user);
   }
 
   handleSearchTextChange = value => {
@@ -105,7 +105,7 @@ class SearchUser extends React.Component {
         style={{ marginTop: 48.4 }}
         data={this.state.users}
         keyExtractor={(item, index) => item.id}
-        renderItem={({ item, sparators }) => <UserItem {...item} selected={this.state.selected == item.id} onSelect={this.handleSelect.bind(this, item.id)} />}
+        renderItem={({ item, sparators }) => <UserItem {...item} selected={this.state.selected == item.id} onSelect={this.handleSelect.bind(this, item)} />}
         overScrollMode="always"
         onEndReachedThreshold={0.5}
         ItemSeparatorComponent={() => (

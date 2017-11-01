@@ -20,9 +20,11 @@ class SelectProject extends React.Component {
       },
       headerTintColor: '#fff',
       headerRight: (
-        <TouchableOpacity style={{ marginRight: 16 }} onPress={() => { params.onPress && params.onPress() }}>
-          <Text style={{ fontSize: 15, color: '#fff' }}>保存</Text>
+        params.onPress ? 
+        <TouchableOpacity style={{ marginRight: 16 }} onPress={params.onPress}>
+          <Text style={{ fontSize: 15, color: '#fff' }}>确定</Text>
         </TouchableOpacity>
+        : null
       )
     }
   }
@@ -36,10 +38,12 @@ class SelectProject extends React.Component {
   }
   
   componentDidMount () {
-    this.props.navigation.setParams({ onPress: this.handleSubmit });
+    // this.props.navigation.setParams({ onPress: this.handleSubmit });
   }
   
-  handleSubmit = () => {
+  handleSubmit = () => {}
+
+  searchProject = () => {
     const params = {
       search: this.state.search
     };
@@ -69,6 +73,10 @@ class SelectProject extends React.Component {
     navigation.state.params.onSelectProject(item);
   }
 
+  handleSearchTextChange = value => {
+    this.setState({ search: value }, this.searchProject());
+  }
+
   render() {
     return (
       <View>
@@ -84,7 +92,7 @@ class SelectProject extends React.Component {
               style={{ width: '100%', fontSize: 15 }}
               placeholder="搜索项目"
               value={this.state.search}
-              onChangeText={value => this.setState({ search: value })}
+              onChangeText={this.handleSearchTextChange}
             />
           </View>
 
