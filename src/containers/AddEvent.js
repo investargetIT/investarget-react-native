@@ -42,11 +42,14 @@ class AddEvent extends React.Component {
   constructor (props) {
     super (props);
 
+    // 一小时以后
+    this.minimumDate = new Date(new Date().getTime() + 1 * 60 * 60 * 1000);
+
     this.state = {
       title: '',
       address: '',
       showDatePickerIOS: false,
-      date: new Date(),
+      date: this.minimumDate,
       project: null,
       user: null,
     }
@@ -167,6 +170,7 @@ class AddEvent extends React.Component {
                   style={{ position: 'absolute', bottom: 0, left: 0, right: 0, backgroundColor: 'white' }}
                   date={this.state.date}
                   mode="datetime"
+                  minimumDate={this.minimumDate}
                   onDateChange={date => this.setState({date})}
                 />
               </View>
