@@ -10,6 +10,7 @@ import {
   TouchableHighlight,
   TouchableWithoutFeedback,
   ScrollView,
+  Alert,
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import ProjectItem from '../components/ProjectItem';
@@ -45,6 +46,8 @@ class AddEvent extends React.Component {
     // 一小时以后
     this.minimumDate = new Date(new Date().getTime() + 1 * 60 * 60 * 1000);
 
+    this.timeline = null;
+
     this.state = {
       title: '',
       address: '',
@@ -60,6 +63,25 @@ class AddEvent extends React.Component {
   }
 
   handleSubmit = () => {
+
+    if (!this.timeline) {
+      this.addSchedule();
+      return;
+    }
+
+    Alert.alert(
+      '是否同步到时间轴备忘录？',
+      '',
+      [
+        {text: '否', onPress: this.addSchedule},
+        {text: '是', onPress: this.addScheduleAndSyncRemark},
+      ],
+      { cancelable: true }
+    );
+
+  }
+
+  addSchedule = () => {
     this.props.dispatch(requestContents());
     const body = {
       scheduledtime: formatDate(this.state.date),
@@ -78,12 +100,37 @@ class AddEvent extends React.Component {
     .catch(err => console.error(err));
   }
 
+  addScheduleAndSyncRemark = () => {
+    const body = {
+      scheduledtime: formatDate(this.state.date),
+      comments: this.state.title,
+      proj: this.state.project.id,
+      address: this.state.address,
+      user: this.state.user.id
+    };
+    const request = [
+      api.addTimelineRemark({
+        remark: this.state.title,
+        timeline: this.timeline.id
+      }),
+      api.addSchedule(body),
+    ]
+    Promise.all(request)
+    .then(result => {
+      this.props.dispatch(hideLoading());
+      const { navigation } = this.props;
+      navigation.goBack();
+      navigation.state.params.onEditEventCompleted(body);
+    })
+    .catch(err => console.error(err));
+  }
+
   onSelectProject = project => {
-    this.setState({ project });
+    this.setState({ project }, this.checkTimelineExist);
   }
 
   onSelectUser = user => {
-    this.setState({ user });
+    this.setState({ user }, this.checkTimelineExist);
   }
   
   handleProjectPressed = () => {
@@ -98,6 +145,22 @@ class AddEvent extends React.Component {
       'SearchUser', 
       { onSelectUser: this.onSelectUser }
     );
+  }
+
+  checkTimelineExist = () => {
+    if (!this.state.project || !this.state.user) return;
+    const params = {
+      proj: this.state.project.id,
+      investor: this.state.user.id,
+      trader: this.props.userInfo.id,
+    };
+    api.getTimeline(params)
+    .then(result => {
+      if (result.count > 0) {
+        this.timeline = result.data[0];
+      }
+    })
+    .catch(err => console.error(err));
   }
 
   render () {
@@ -199,4 +262,9 @@ function formatDate(date) {
   ':' + pad(date.getSeconds());
 }
 
-export default connect()(AddEvent);
+function mapStateToProps (state) {
+  const { userInfo } = state.app;
+  return { userInfo };
+}
+
+export default connect(mapStateToProps)(AddEvent);

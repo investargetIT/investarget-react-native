@@ -394,8 +394,14 @@ export function getTimelineRemarkDetail(id) {
   return r('/timeline/remark/' + id + '/')
 }
 
-export function addTimelineRemark(data) {
-  return r('/timeline/remark/', 'POST', data)
+/**
+ * 添加时间轴备注
+ * @param {Object} body
+ * @param {String} body.remark - 备注内容
+ * @param {Number} body.timeline - 时间轴ID
+ */
+export function addTimelineRemark(body) {
+  return r('/timeline/remark/', 'POST', body)
 }
 
 export function editTimelineRemark(id, data) {
