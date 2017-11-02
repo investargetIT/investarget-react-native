@@ -94,6 +94,7 @@ class SearchUser extends React.Component {
             placeholder="搜索用户"
             value={this.state.search}
             onChangeText={this.handleSearchTextChange}
+            underlineColorAndroid="transparent"
           />
         </View>
 

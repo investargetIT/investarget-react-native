@@ -93,6 +93,7 @@ class SelectProject extends React.Component {
               placeholder="搜索项目"
               value={this.state.search}
               onChangeText={this.handleSearchTextChange}
+              underlineColorAndroid="transparent"
             />
           </View>
 
