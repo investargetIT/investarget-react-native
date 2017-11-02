@@ -33,11 +33,13 @@ class AddEvent extends React.Component {
       headerTintColor: '#fff',
       headerBackTitle: null,
       headerRight: (
+        params.onPress ? 
         <TouchableOpacity 
           style={{ marginRight: 16 }} 
-          onPress={() => { params.onPress && params.onPress() }}>
-          <Text style={{ fontSize: 15, color: '#fff' }}>保存</Text>
+          onPress={params.onPress}>
+          <Text style={{ fontSize: 15, color: 'white' }}>保存</Text>
         </TouchableOpacity>
+        : <Text style={{ marginRight: 16, fontSize: 15, color: 'rgba(255, 255, 255, .5)' }}>保存</Text>
       )
     }
   }
@@ -58,10 +60,6 @@ class AddEvent extends React.Component {
       project: null,
       user: null,
     }
-  }
-
-  componentDidMount () {
-    this.props.navigation.setParams({ onPress: this.handleSubmit });
   }
 
   handleSubmit = () => {
@@ -88,9 +86,9 @@ class AddEvent extends React.Component {
     const body = {
       scheduledtime: formatDate(this.state.date),
       comments: this.state.title,
-      proj: this.state.project.id,
+      proj: this.state.project && this.state.project.id,
       address: this.state.address,
-      user: this.state.user.id
+      user: this.state.user && this.state.user.id
     };
     api.addSchedule(body)
     .then(data => {
@@ -106,9 +104,9 @@ class AddEvent extends React.Component {
     const body = {
       scheduledtime: formatDate(this.state.date),
       comments: this.state.title,
-      proj: this.state.project.id,
+      proj: this.state.project && this.state.project.id,
       address: this.state.address,
-      user: this.state.user.id
+      user: this.state.user && this.state.user.id
     };
     const request = [
       api.addTimelineRemark({
@@ -195,6 +193,15 @@ class AddEvent extends React.Component {
     }
   }
 
+  handleContentChange = title => {
+    this.setState({ title });
+    if (title.length > 0) {
+      this.props.navigation.setParams({ onPress: this.handleSubmit });
+    } else {
+      this.props.navigation.setParams({ onPress: null });
+    }
+  }
+
   render () {
     return (
       <ScrollView>
@@ -204,9 +211,9 @@ class AddEvent extends React.Component {
         <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, justifyContent: 'center' }}>
           <TextInput
             style={{ fontSize: 16, paddingLeft: 0 }}
-            onChangeText={ title => this.setState({ title })}
+            onChangeText={this.handleContentChange}
             value={this.state.title}
-            placeholder="标题"
+            placeholder="内容"
             underlineColorAndroid="transparent"
           />
         </View>
