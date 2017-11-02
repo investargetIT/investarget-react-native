@@ -171,10 +171,11 @@ class AddEvent extends React.Component {
 
         <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, justifyContent: 'center' }}>
           <TextInput
-            style={{ fontSize: 16 }}
+            style={{ fontSize: 16, paddingLeft: 0 }}
             onChangeText={ title => this.setState({ title })}
             value={this.state.title}
             placeholder="标题"
+            underlineColorAndroid="transparent"
           />
         </View>
 
@@ -182,10 +183,11 @@ class AddEvent extends React.Component {
 
         <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, justifyContent: 'center' }}>
           <TextInput
-            style={{ fontSize: 16 }}
+            style={{ fontSize: 16, paddingLeft: 0 }}
             onChangeText={address => this.setState({ address })}
             value={this.state.address}
             placeholder="地点"
+            underlineColorAndroid="transparent"
           />
         </View>
         </View>
@@ -203,11 +205,13 @@ class AddEvent extends React.Component {
         </View>
         : 
         <TouchableHighlight 
-          style={{ marginTop:20, paddingLeft: 10, backgroundColor: 'white' }} 
+          style={{ marginTop: 20 }} 
           underlayColor="lightgray" 
           onPress={this.handleProjectPressed}
         >
-          <Text style={{ fontSize: 16, lineHeight: 44 }}>添加项目</Text>
+          <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, justifyContent: 'center', backgroundColor: 'white' }}>
+            <Text style={{ fontSize: 16 }}>添加项目</Text>
+          </View>
         </TouchableHighlight>
         }
 
@@ -216,8 +220,10 @@ class AddEvent extends React.Component {
           <UserItem {...this.state.user} onSelect={this.handleUserProcessed} />
         </View>
         :
-        <TouchableHighlight style={{ marginTop:20, paddingLeft: 10, backgroundColor: 'white' }} underlayColor="lightgray" onPress={this.handleUserProcessed}>
-          <Text style={{ fontSize: 16, lineHeight: 44 }}>添加用户</Text>
+        <TouchableHighlight style={{ marginTop:20 }} underlayColor="lightgray" onPress={this.handleUserProcessed}>
+          <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, justifyContent: 'center', backgroundColor: 'white' }}>
+            <Text style={{ fontSize: 16 }}>添加用户</Text>
+          </View>
         </TouchableHighlight>
         }
 
