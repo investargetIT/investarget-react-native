@@ -11,6 +11,8 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
   Alert,
+  DatePickerAndroid,
+  TimePickerAndroid,
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import ProjectItem from '../components/ProjectItem';
@@ -163,6 +165,36 @@ class AddEvent extends React.Component {
     .catch(err => console.error(err));
   }
 
+  handleDatePressed = async () => {
+    if (Platform.OS === 'ios') {
+      this.setState({ showDatePickerIOS: true });
+    } else if (Platform.OS === 'android') {
+      try {
+        const {action, year, month, day} = await DatePickerAndroid.open({
+          // Use `new Date()` for current date.
+          // May 25 2020. Month 0 is January.
+          date: this.state.date,
+          minDate: this.minimumDate,
+        });
+        if (action !== DatePickerAndroid.dismissedAction) {
+          // Selected year, month (0-11), day
+          const {action, hour, minute} = await TimePickerAndroid.open({
+            hour: 14,
+            minute: 0,
+            is24Hour: false, // Will display '2 PM'
+          });
+          if (action !== TimePickerAndroid.dismissedAction) {
+            // Selected hour (0-23), minute (0-59)
+            console.log(year, month, day, hour, minute);
+            this.setState({ date: new Date(`${year}-${pad(month + 1)}-${pad(day)}T${pad(hour)}:${pad(minute)}`) });
+          }
+        }
+      } catch ({code, message}) {
+        console.warn('Cannot open date picker', message);
+      }
+    }
+  }
+
   render () {
     return (
       <ScrollView>
@@ -192,7 +224,11 @@ class AddEvent extends React.Component {
         </View>
         </View>
 
-        <TouchableHighlight style={{ marginTop: 20, backgroundColor: 'white' }} onPress={() => this.setState({ showDatePickerIOS: 'end' })} underlayColor={'lightgray'}>
+        <TouchableHighlight 
+          style={{ marginTop: 20, backgroundColor: 'white' }} 
+          onPress={this.handleDatePressed} 
+          underlayColor={'lightgray'}
+        >
           <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
             <Text style={{ fontSize: 16 }}>时间</Text>
             <Text style={{ fontSize: 16 }}>{this.state.date.toLocaleString()}</Text>
@@ -253,13 +289,13 @@ class AddEvent extends React.Component {
 
 }
 
-function formatDate(date) {
-  function pad(number) {
-    if (number < 10) {
-      return '0' + number;
-    }
-    return number;
+function pad(number) {
+  if (number < 10) {
+    return '0' + number;
   }
+  return number;
+}
+function formatDate(date) {
   return date.getFullYear() +
   '-' + pad(date.getMonth() + 1) +
   '-' + pad(date.getDate()) +
