@@ -27,7 +27,6 @@ class Avatar extends React.Component {
             title: '上传头像',
             headerTintColor: '#fff',
             headerStyle: {
-                height: 48,
                 backgroundColor: '#10458F',
             },
             headerRight: (
@@ -53,6 +52,8 @@ class Avatar extends React.Component {
             allowsEditing: true,
             maxWidth: 200,
             maxHeight: 200,
+            takePhotoButtonTitle: '拍照',
+            chooseFromLibraryButtonTitle: '从相册中选择',
         }
         ImagePicker.showImagePicker(options, (response) => {
             if (response.didCancel) {

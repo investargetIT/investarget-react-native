@@ -47,43 +47,6 @@ class Service extends React.Component {
         })
     }
 
-    addInvestor = () => {
-        var _file = null
-
-        const options = {
-            title: '选择名片',
-            cancelButtonTitle: '取消',
-            mediaType: 'photo',
-            takePhotoButtonTitle: '拍照',
-            chooseFromLibraryButtonTitle: '从相册中选择',
-        }
-        ImagePicker.showImagePicker(options, (response) => {
-            if (response.didCancel) {
-                Toast.show('已取消', {position: Toast.positions.CENTER})
-            } else if (response.error) {
-                Toast.show(response.error, {position: Toast.positions.CENTER})
-            } else {
-                let file = { uri: response.uri, type: 'application/octet-stream', name: 'businessCard.jpg' }
-                _file = file
-                var formData = new FormData()
-                formData.append('file', file)
-
-                api.ccUpload(formData).then(data => {
-                    try {
-                        data = JSON.parse(data)
-                    } catch (e) {
-                        this.props.navigation.navigate('AddInvestor', {file: _file})
-                        return
-                    }
-                    const parsedData = this.parseData(data)
-                    this.props.navigation.navigate('AddInvestor', {...parsedData, file: _file, imageData: response.data})
-                }, error => {
-                    this.props.navigation.navigate('AddInvestor', {file: _file})
-                })
-            }
-        })
-    }
-
     parseData(data) {
         const name = data.formatted_name ? data.formatted_name[0].item : null
         const email = data.email ? data.email[0].item : null
@@ -124,9 +87,6 @@ class Service extends React.Component {
                     </View>
                     {this.state.partners.length > 0 ? (
                         <View style={{flexDirection:'row',marginTop: 24}}>
-                            {/* <TouchableOpacity style={{marginRight:12}} onPress={this.addInvestor}>
-                                <Image source={require('../images/add.png')} style={{width: 72, height: 72}} />
-                            </TouchableOpacity> */}
                             {
                                 this.state.partners.map(item => (
                                     <PartnerCard
