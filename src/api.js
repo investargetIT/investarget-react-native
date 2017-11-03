@@ -1,5 +1,5 @@
 import AsyncStorage from './AsyncStorage'
-
+import { Platform } from 'react-native';
 import request from './request'
 import qs from 'qs'
 import _ from 'lodash'
@@ -16,7 +16,7 @@ function r(url, method, body, isUploadFile) {
             headers: {
               "Accept": "application/json",
               "Content-Type": "application/json",
-              "clienttype": "3",
+              "clienttype": Platform.OS === 'ios' ? 1 : 2,
               "source": source  || 1
             }
           }
