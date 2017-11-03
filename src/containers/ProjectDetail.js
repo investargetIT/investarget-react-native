@@ -10,7 +10,8 @@ import {
   Alert,
   Share,
   ActionSheetIOS,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  Dimensions,
 } from 'react-native';
 import { connect } from 'react-redux'
 import Toast from 'react-native-root-toast'
@@ -260,7 +261,7 @@ class ProjectDetail extends React.Component {
 
           </View>
 
-          <View style={{ position: 'absolute', left: 0, right: 0, bottom: 16, alignItems: 'center' }}>
+          <View style={{ position: 'absolute', left: Dimensions.get('window').width / 2 - 21, bottom: 16 }}>
               <TouchableOpacity onPress={this.handleSavePress}>
                 <Image source={imgSource} style={{ width: 42, height: 42 }} />
               </TouchableOpacity>
