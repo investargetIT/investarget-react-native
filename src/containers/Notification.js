@@ -35,13 +35,9 @@ class Notification extends React.Component {
         this.setState({ isRead: !this.state.isRead })
     }
 
-    handlePress = (id, isRead) => {
-        if (!isRead) {
-            api.readMsg(data.id).then(() => {
-                //
-            }).catch(error => {
-                Toast.show(error.message, {position: Toast.positions.CENTER})
-            })
+    handlePress = data => {
+        if (!data.isRead) {
+            api.readMsg(data.id);
         }
         // TODO: 跳转到消息详情
     }
@@ -176,7 +172,7 @@ class Message extends React.Component {
         created = created.slice(0, 19).replace('T', ' ')
 
         return (
-            <TouchableOpacity activeOpacity={0.8} style={msgContainerStyle} onPress={this.props.onPress.bind(this, id, isRead)}>
+            <TouchableOpacity activeOpacity={0.8} style={msgContainerStyle} onPress={this.props.onPress.bind(this, this.props)}>
                 <Image source={require('../images/ht-notify.png')} style={msgImageStyle} />
                 <View style={msgStyle}>
                     <View style={msgTitleWrapStyle}>
