@@ -538,6 +538,7 @@ export const checkUserExist = mobileOrEmail => r('/user/checkexists/?account=' +
 export const getUserFriend = () => r('/user/friend/')
 export const editUserFriend = (id, isaccept) => r(`/user/friend/${id}/`, 'PUT', { isaccept })
 export const addUserFriend = friend => r('/user/friend/', 'POST', { friend })
+export const checkUserFriend = id => r('/user/checkfriendship/', 'POST', { user: id });
 
 // user remark
 

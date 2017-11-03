@@ -3,7 +3,7 @@ import { View, ScrollView, Text, TouchableOpacity, Image } from 'react-native'
 import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view'
 import { connect } from 'react-redux'
 import MessageScreen from '../easemob/Containers/MessageScreen';
-
+import * as api from '../api';
 import FavoriteProjectList from '../components/FavoriteProjectList'
 
 const headerRightStyle = {
@@ -50,6 +50,7 @@ class Chat extends React.Component {
         const { targetUserId } = props.navigation.state.params
         this.state = {
             targetUserId: targetUserId,
+            isFriend: null,
         }
     }
 
@@ -72,7 +73,10 @@ class Chat extends React.Component {
             userType: this.props.userType,
             onPress: this.handleDelete,
             onPress2: this.handleRecommend,
-        })
+        });
+        api.checkUserFriend(this.state.targetUserId)
+        .then(result => this.setState({ isFriend: result }))
+        .catch(err => console.error(err));
     }
 
     render() {
@@ -82,6 +86,7 @@ class Chat extends React.Component {
 
         return (
             <View style={{flex:1}}>
+                { this.state.isFriend !== null ? 
                 <ScrollableTabView
                     renderTabBar={() => <DefaultTabBar style={{borderBottomColor: '#f4f4f4'}} tabStyle={{paddingBottom: 0}} />}
                     tabBarUnderlineStyle={{height:0}}
@@ -91,12 +96,15 @@ class Chat extends React.Component {
                     tabBarInactiveTextColor="#666"
                     onChangeTab={({ i, ref }) => { this.handleChangeTab(i) }}
                 >
+                    { this.state.isFriend ? 
                     <View tabLabel="聊天" style={{flex:1,backgroundColor:'#fff'}}><MessageScreen id={targetUserId} chatType="chat" /></View>
+                    : null }
                     <FavoriteProjectList tabLabel={isInvestor ? "感兴趣" : "Ta感兴趣"} navigation={navigation} favoritetype={5} userType={userType} userId={userId} targetUserId={targetUserId} />
                     <FavoriteProjectList tabLabel={isInvestor ? "我的收藏" : "Ta的收藏"} navigation={navigation} favoritetype={4} userType={userType} userId={userId} targetUserId={targetUserId} />
                     <FavoriteProjectList tabLabel={isInvestor ? "交易师推荐" : "推荐Ta的"} navigation={navigation} favoritetype={3} userType={userType} userId={userId} targetUserId={targetUserId} />
                     <FavoriteProjectList tabLabel="系统推荐" navigation={navigation} favoritetype={1} userType={userType} userId={userId} targetUserId={targetUserId} />
                 </ScrollableTabView>
+                : null }
             </View>
         )
     }
