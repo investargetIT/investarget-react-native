@@ -10,6 +10,7 @@ import {
   SET_NEED_REFRESH_FALSE, 
   requestContents 
 } from '../../actions';
+import Login from '../containers/Login';
 
 
 class ProjectList extends React.Component {
@@ -234,7 +235,12 @@ class ProjectList extends React.Component {
       }
 
       projectOnPress = item => {
-        this.props.navigation.navigate('ProjectDetail', { project: item });
+        if (this.props.userInfo) {
+          this.props.navigation.navigate('ProjectDetail', { project: item });
+        } else {
+          this.props.navigation.navigate('Login');
+        }
+        
       }
 
       renderFooter = () => {
