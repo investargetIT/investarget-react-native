@@ -83,8 +83,8 @@ class FavoriteProjectList extends React.Component {
         })
     }
 
-    projectOnPress = (id) => {
-        this.props.navigation.navigate('ProjectDetail', { projectID: id })
+    projectOnPress = project => {
+        this.props.navigation.navigate('ProjectDetail', { project })
     }
 
     componentDidMount() {
@@ -122,7 +122,7 @@ class FavoriteProjectList extends React.Component {
                     renderItem={({item, sparators}) => (
                         <ProjectItem
                             {...t(item)}
-                            onPress={this.projectOnPress.bind(this, item.id)}
+                            onPress={this.projectOnPress.bind(this, item)}
                         />)}
                     overScrollMode="always"
                     onEndReachedThreshold={0.5}

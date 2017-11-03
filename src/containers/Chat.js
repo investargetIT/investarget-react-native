@@ -40,7 +40,8 @@ class Chat extends React.Component {
                             <Image source={require('../images/plus.png')} style={{width:24,height:24}} />
                         </TouchableOpacity>
                     ) : null
-                )
+                ),
+            headerBackTitle: null,
         }
     }
 
