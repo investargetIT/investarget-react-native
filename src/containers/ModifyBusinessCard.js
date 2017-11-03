@@ -82,7 +82,6 @@ class ModifyBusinessCard extends React.Component {
 
     render() {
         const { name, orgName, titleName, emailAddress, cardUrl } = this.props
-console.log('cardUrl', cardUrl)
         return (
             <View style={containerStyle}>
                 <Spinner visible={this.state.loading} />
@@ -96,8 +95,8 @@ console.log('cardUrl', cardUrl)
                     <Text style={{ fontSize: 13, color: '#333', marginBottom: 8 }}>我的名片<Text style={{color: 'red'}}>:(名片请横向放置)</Text></Text>
                     <TouchableOpacity style={{width: '100%'}} activeOpacity={0.8} onPress={this.handleClickImage}>
                     {
-                        cardUrl ? <FitImage source={{ uri: cardUrl }} /> 
-                                : <Image source={require('../images/userCenter/emptyCardImage.png')} />
+                        cardUrl ? <Image source={{ uri: cardUrl }} style={{ width: '100%', height: 200 }}  /> 
+                               : <Image source={require('../images/userCenter/emptyCardImage.png')} />
                     }
                     </TouchableOpacity>
                     
