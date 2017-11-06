@@ -110,7 +110,13 @@ class MyFavoriteProject extends React.Component {
         const { projects } = this.state
         const param = { favoriteids: [favorId] }
         api.projCancelFavorite(param).then(data => {
-            this.setState({ projects: projects.filter(item => item.id !== id) })
+            this.setState({ projects: projects.filter(item => item.id !== id) }, () => {
+                if (this.state.projects.length === 0) {
+                    this.props.navigation.setParams({
+                        onPress: undefined
+                    });
+                }
+            })
         }).catch(error => {
             Toast.show(error.message, {position: Toast.positions.CENTER})
         })
