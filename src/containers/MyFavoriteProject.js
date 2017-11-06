@@ -23,6 +23,17 @@ class MyFavoriteProject extends React.Component {
     
     static navigationOptions = ({navigation}) => {
         const { params } = navigation.state
+        const headerRight = function (params) {
+            if (params === undefined) {
+                return null;
+            } else if (params.showRightHeader && params.onPress) {
+                return <TouchableOpacity style={{marginRight: 16}} onPress={() => { params.onPress && params.onPress() }}>
+                <Text style={{color: '#fff',fontSize: 15}}>推荐</Text>
+            </TouchableOpacity>;
+            } else if (params.showRightHeader && !params.onPress) {
+                return <Text style={{ marginRight: 16, fontSize: 15, color: 'rgba(255, 255, 255, .5)' }}>推荐</Text>
+            }
+        }
         return {
             title: '收藏的项目',
             headerStyle: {
@@ -30,9 +41,7 @@ class MyFavoriteProject extends React.Component {
             },
             headerBackTitle: null,
             headerTintColor: '#fff',
-            headerRight: (params && params.userType == 1 ? null : <TouchableOpacity style={{marginRight: 16}} onPress={() => { params.onPress && params.onPress() }}>
-                            <Text style={{color: '#fff',fontSize: 15}}>推荐</Text>
-                        </TouchableOpacity>)
+            headerRight: headerRight(params),
         };
     }
 
@@ -123,10 +132,18 @@ class MyFavoriteProject extends React.Component {
 
     confirmSelect = () => {
         const { selected } = this.state
-        if (selected) {
-            this.props.navigation.navigate('SelectUser', { title: '我的投资人', favoritetype: 3, projects: selected })
+        const { investorId } = this.props.navigation.state.params
+        if (selected.length === 0) return;
+        if (investorId) {
+            const { userId } = this.props
+            const param = { user: investorId, projs: selected, favoritetype: 3, trader: userId }
+            api.projFavorite(param).then(() => {
+                Toast.show('推荐成功', {position: Toast.positions.CENTER})
+            }).catch(error => {
+                Toast.show(error.message, {position: Toast.positions.CENTER})
+            });
         } else {
-            //
+            this.props.navigation.navigate('SelectUser', { title: '我的投资人', favoritetype: 3, projects: selected });
         }
     }
 
@@ -135,8 +152,12 @@ class MyFavoriteProject extends React.Component {
     }
 
     componentDidMount() {
-        this.props.navigation.setParams({ onPress: this.handleRecommend, userType: this.props.userType })
-
+        if (this.props.userType === 1) {
+            this.props.navigation.setParams({ showRightHeader: false });
+        } else {
+            this.props.navigation.setParams({ showRightHeader: true });
+        }
+        
         this.setState({ loading: true })
         this.getProjects(1).then(({ total, list }) => {
             this.setState({
@@ -144,6 +165,12 @@ class MyFavoriteProject extends React.Component {
                 total,
                 projects: list,
             })
+            if (total > 0) {
+                this.props.navigation.setParams({ 
+                    onPress: this.handleRecommend, 
+                    showRightHeader: true 
+                });
+            }
         }).catch(error => {
             this.setState({ loading: false })
             Toast.show(error.message, {position: Toast.positions.CENTER})
@@ -164,6 +191,7 @@ class MyFavoriteProject extends React.Component {
         }
         return (
             <View style={{flex: 1}}>
+                { this.state.projects.length > 0 ?
                 <FlatList
                     data={this.state.projects}
                     keyExtractor={(item,index)=>item.id}
@@ -186,6 +214,12 @@ class MyFavoriteProject extends React.Component {
                         <View style={{height:1,backgroundColor:'#f4f4f4'}}></View>
                     )}
                 />
+                : 
+                <View style={{ alignItems: 'center', marginTop: 48 }}>
+                    <Image style={{ width: 64, height: 64 }} source={require('../images/emptyBox.png')} />
+                </View>
+                }
+
                 {this.state.selecting ? (
                     <View style={{height:40,backgroundColor:'#10458f',flexDirection:'row',alignItems:'center'}}>
                         <TouchableOpacity style={{flex:1}} onPress={this.cancelSelect}>

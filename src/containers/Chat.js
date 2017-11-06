@@ -59,7 +59,7 @@ class Chat extends React.Component {
     }
 
     handleRecommend = () => {
-        this.props.navigation.navigate('SelectProjects', { investorId: this.state.targetUserId })
+        this.props.navigation.navigate('MyFavoriteProject', { investorId: this.state.targetUserId })
     }
 
     handleChangeTab = (i) => {

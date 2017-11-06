@@ -35,7 +35,6 @@ import OrganizationInfo from './src/containers/OrganizationInfo'
 import MyPartner from './src/containers/MyPartner'
 import Chat from './src/containers/Chat'
 import SelectUser from './src/components/SelectUser'
-import SelectProjects from './src/components/SelectProjects'
 import Filter from './src/containers/Filter'
 import AddInvestor from './src/containers/AddInvestor'
 import MyCalendar from './src/containers/MyCalendar';
@@ -136,7 +135,6 @@ const CustomTabView = ({ router, navigation, isFetching }) => {
     Chat: { screen: Chat },
     Timeline: { screen: Timeline },
     SelectUser: { screen: SelectUser },
-    SelectProjects: { screen: SelectProjects },
     Filter: { screen: Filter },
     AddInvestor: { screen: AddInvestor },
     LatestRemark: { screen: LatestRemark },
