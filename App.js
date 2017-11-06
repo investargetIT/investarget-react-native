@@ -5,13 +5,12 @@ import { createStore } from 'redux'
 import Toast from 'react-native-root-toast'
 import JPushModule from 'jpush-react-native'
 import { NavigationActions } from 'react-navigation'
-
 import AsyncStorage from './src/AsyncStorage'
 import rootReducer from './reducers'
 import AppWithNavigationState from './AppNavigator'
 import * as utils from './src/utils'
 import * as api from './src/api'
-import { receiveCurrentUserInfo } from './actions'
+import { receiveCurrentUserInfo, logout } from './actions'
 import * as WeChat from 'react-native-wechat';
 
 AsyncStorage.setItem('source', '1')
@@ -60,7 +59,12 @@ AsyncStorage.getItem('userInfo').then(data => {
       // todo？
     })
   }).catch(error => {
-    Toast.show(error.message, { position: Toast.positions.CENTER })
+    // Toast.show(error.message, { position: Toast.positions.CENTER })
+    AsyncStorage.removeItem('userInfo')
+    .then(data => {
+      store.dispatch(logout());
+      store.dispatch(NavigationActions.navigate({routeName: 'Login'}));
+    })
   })
 })
 
