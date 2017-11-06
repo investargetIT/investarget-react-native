@@ -57,7 +57,7 @@ class Avatar extends React.Component {
         }
         ImagePicker.showImagePicker(options, (response) => {
             if (response.didCancel) {
-                Toast.show('已取消', {position: Toast.positions.CENTER})
+                // Toast.show('已取消', {position: Toast.positions.CENTER})
             } else if (response.error) {
                 Toast.show(response.error, {position: Toast.positions.CENTER})
             } else {
