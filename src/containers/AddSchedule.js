@@ -20,6 +20,7 @@ import UserItem from '../components/UserItem';
 import * as api from '../api';
 import { requestContents, hideLoading } from '../../actions';
 import { connect } from 'react-redux';
+import ScheduleForm from '../components/ScheduleForm';
 
 class AddSchedule extends React.Component {
   
@@ -140,7 +141,7 @@ class AddSchedule extends React.Component {
     );
   }
 
-  handleUserProcessed = () => {
+  handleUserPressed = () => {
     this.props.navigation.navigate(
       'SearchUser', 
       { onSelectUser: this.onSelectUser }
@@ -163,36 +164,6 @@ class AddSchedule extends React.Component {
     .catch(err => console.error(err));
   }
 
-  handleDatePressed = async () => {
-    if (Platform.OS === 'ios') {
-      this.setState({ showDatePickerIOS: true });
-    } else if (Platform.OS === 'android') {
-      try {
-        const {action, year, month, day} = await DatePickerAndroid.open({
-          // Use `new Date()` for current date.
-          // May 25 2020. Month 0 is January.
-          date: this.state.date,
-          minDate: this.minimumDate,
-        });
-        if (action !== DatePickerAndroid.dismissedAction) {
-          // Selected year, month (0-11), day
-          const {action, hour, minute} = await TimePickerAndroid.open({
-            hour: 14,
-            minute: 0,
-            is24Hour: false, // Will display '2 PM'
-          });
-          if (action !== TimePickerAndroid.dismissedAction) {
-            // Selected hour (0-23), minute (0-59)
-            console.log(year, month, day, hour, minute);
-            this.setState({ date: new Date(`${year}-${pad(month + 1)}-${pad(day)}T${pad(hour)}:${pad(minute)}`) });
-          }
-        }
-      } catch ({code, message}) {
-        console.warn('Cannot open date picker', message);
-      }
-    }
-  }
-
   handleContentChange = title => {
     this.setState({ title });
     if (title.length > 0) {
@@ -202,93 +173,27 @@ class AddSchedule extends React.Component {
     }
   }
 
+  handleAddressChange = address => {
+    this.setState({ address });
+  }
+
   render () {
     return (
       <ScrollView>
 
-        <View style={{ backgroundColor: 'white',  marginTop: 20 }}>
-
-        <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, justifyContent: 'center' }}>
-          <TextInput
-            style={{ fontSize: 16, paddingLeft: 0 }}
-            onChangeText={this.handleContentChange}
-            value={this.state.title}
-            placeholder="内容"
-            underlineColorAndroid="transparent"
-          />
-        </View>
-
-        <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
-
-        <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, justifyContent: 'center' }}>
-          <TextInput
-            style={{ fontSize: 16, paddingLeft: 0 }}
-            onChangeText={address => this.setState({ address })}
-            value={this.state.address}
-            placeholder="地点"
-            underlineColorAndroid="transparent"
-          />
-        </View>
-        </View>
-
-        <TouchableHighlight 
-          style={{ marginTop: 20, backgroundColor: 'white' }} 
-          onPress={this.handleDatePressed} 
-          underlayColor={'lightgray'}
-        >
-          <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Text style={{ fontSize: 16 }}>时间</Text>
-            <Text style={{ fontSize: 16 }}>{this.state.date.toLocaleString()}</Text>
-          </View>
-        </TouchableHighlight>
-
-        { this.state.project ? 
-        <View style={{ marginTop: 20 }}>
-          <ProjectItem {...this.state.project} onPress={this.handleProjectPressed}/>
-        </View>
-        : 
-        <TouchableHighlight 
-          style={{ marginTop: 20 }} 
-          underlayColor="lightgray" 
-          onPress={this.handleProjectPressed}
-        >
-          <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, justifyContent: 'center', backgroundColor: 'white' }}>
-            <Text style={{ fontSize: 16 }}>添加项目</Text>
-          </View>
-        </TouchableHighlight>
-        }
-
-        { this.state.user ? 
-        <View style={{ marginTop: 20 }}>
-          <UserItem {...this.state.user} onSelect={this.handleUserProcessed} />
-        </View>
-        :
-        <TouchableHighlight style={{ marginTop:20 }} underlayColor="lightgray" onPress={this.handleUserProcessed}>
-          <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, justifyContent: 'center', backgroundColor: 'white' }}>
-            <Text style={{ fontSize: 16 }}>添加用户</Text>
-          </View>
-        </TouchableHighlight>
-        }
-
-        {Platform.OS === 'ios' && this.state.showDatePickerIOS ?
-          <Modal
-            transparent={true}
-            visible={true}
-            onRequestClose={() => { alert("Modal has been closed.") }}
-          >
-            <TouchableWithoutFeedback onPress={() => this.setState({ showDatePickerIOS: false })}>
-              <View style={{ position: 'absolute', bottom: 0, top: 0, left: 0, right: 0, backgroundColor: 'rgba(0, 0, 0, 0.1)' }}>
-                <DatePickerIOS
-                  style={{ position: 'absolute', bottom: 0, left: 0, right: 0, backgroundColor: 'white' }}
-                  date={this.state.date}
-                  mode="datetime"
-                  minimumDate={this.minimumDate}
-                  onDateChange={date => this.setState({date})}
-                />
-              </View>
-            </TouchableWithoutFeedback>
-          </Modal>
-          : null}
+        <ScheduleForm 
+          title={this.state.title}
+          handleContentChange={this.handleContentChange}
+          address={this.state.address}
+          handleAddressChange={this.handleAddressChange}
+          date={this.state.date}
+          minimumDate={this.minimumDate}
+          onDateChange={date => this.setState({ date })}
+          project={this.state.project}
+          handleProjectPressed={this.handleProjectPressed}
+          user={this.state.user}
+          handleUserPressed={this.handleUserPressed}
+        />
         
       </ScrollView>
     );
