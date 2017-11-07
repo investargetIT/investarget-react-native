@@ -21,8 +21,7 @@ class Chat extends React.Component {
 
     static navigationOptions = ({ navigation }) => {
         const { params } = navigation.state
-        const isChat = 'isChat' in params ? params.isChat : true
-        const userType = 'userType' in params ? params.userType : 1
+        const { rightIcon, onPress } = params;
         
         return {
             title: params.targetUserName || '聊天',
@@ -30,17 +29,11 @@ class Chat extends React.Component {
             headerStyle: {
                 backgroundColor: '#10458F',
             },
-            headerRight: isChat ? (
-                    <TouchableOpacity style={headerRightStyle} onPress={() => { params.onPress && params.onPress() }}>
-                        <Image source={require('../images/delete.png')} style={{width:24,height:24}} />
+            headerRight: rightIcon && onPress ? (
+                    <TouchableOpacity style={headerRightStyle} onPress={onPress}>
+                        <Image source={rightIcon} style={{width:24,height:24}} />
                     </TouchableOpacity>
-                ) : (
-                    userType == 3 ? (
-                        <TouchableOpacity style={headerRightStyle} onPress={() => { params.onPress2 && params.onPress2() }}>
-                            <Image source={require('../images/plus.png')} style={{width:24,height:24}} />
-                        </TouchableOpacity>
-                    ) : null
-                ),
+                ) :  null,
             headerBackTitle: null,
         }
     }
@@ -62,20 +55,31 @@ class Chat extends React.Component {
         this.props.navigation.navigate('MyFavoriteProject', { investorId: this.state.targetUserId })
     }
 
-    handleChangeTab = (i) => {
-        const isChat = i == 0
-        this.props.navigation.setParams({ isChat })
+    handleChangeTab = tabLabel => {
+        if (tabLabel === '推荐Ta的') {
+            this.props.navigation.setParams({
+                rightIcon: require('../images/plus.png'),
+                onPress: this.handleRecommend,
+            });
+        } else if (tabLabel === '聊天') {
+            this.props.navigation.setParams({
+                rightIcon: require('../images/delete.png'),
+                onPress: this.handleDelete,
+            });
+        } else {
+            this.props.navigation.setParams({
+                rightIcon: null,
+                onPress: null,
+            });
+        }
     }
 
     componentDidMount() {
-        this.props.navigation.setParams({
-            isChat: true,
-            userType: this.props.userType,
-            onPress: this.handleDelete,
-            onPress2: this.handleRecommend,
-        });
         api.checkUserFriend(this.state.targetUserId)
-        .then(result => this.setState({ isFriend: result }))
+        .then(result => {
+            this.setState({ isFriend: result });
+            this.handleChangeTab(result ? '聊天' : null);
+        })
         .catch(err => console.error(err));
     }
 
@@ -94,7 +98,7 @@ class Chat extends React.Component {
                     tabBarBackgroundColor="#fff"
                     tabBarActiveTextColor="#10458f"
                     tabBarInactiveTextColor="#666"
-                    onChangeTab={({ i, ref }) => { this.handleChangeTab(i) }}
+                    onChangeTab={({ ref }) => { this.handleChangeTab(ref.props.tabLabel) }}
                 >
                     { this.state.isFriend ? 
                     <View tabLabel="聊天" style={{flex:1,backgroundColor:'#fff'}}><MessageScreen id={targetUserId} chatType="chat" /></View>
