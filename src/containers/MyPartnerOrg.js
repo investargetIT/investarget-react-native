@@ -5,6 +5,7 @@ import {
   FlatList,
   TouchableHighlight,
   Image,
+  ActionSheetIOS,
 } from 'react-native';
 import * as api from '../api';
 import { connect } from 'react-redux';
@@ -64,7 +65,7 @@ class MyPartnerOrg extends React.Component {
     separator = () => <View style={{ height: 0.3, backgroundColor: "#CED0CE", marginLeft: 10 }} />;
 
     renderHeader = () => (
-      <TouchableHighlight onPress={this.addInvestor} underlayColor={'lightgray'}>
+      <TouchableHighlight onPress={this.handleAddButtonPressed} underlayColor={'lightgray'}>
       <View>
         <View style={{ flexDirection: 'row', paddingLeft: 16, paddingTop: 20, paddingBottom: 20, alignItems: 'center' }}>
         <Image source={require('../images/addwithcolor.png')} style={{width: 16, height: 16, marginRight: 10}} />
@@ -80,44 +81,67 @@ class MyPartnerOrg extends React.Component {
       this.props.navigation.navigate('MyPartner', { org, userType });
     }
 
-    addInvestor = () => {
+    handleAddButtonPressed = () => {
+      var BUTTONS = [
+        '用相机拍摄名片',
+        '从相册选取名片',
+        '手工录入',
+        '取消',
+      ];
+      var CANCEL_INDEX = BUTTONS.length - 1;
+
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options: BUTTONS,
+          cancelButtonIndex: CANCEL_INDEX,
+          title: '上传名片自动添加或手工录入',
+        },
+        this.handleActionButtonPressed,
+      );
+    }
+  
+    imagePickerCallback = response => {
       var _file = null
+      if (response.didCancel) {
+        // Toast.show('已取消', {position: Toast.positions.CENTER})
+      } else if (response.error) {
+        Toast.show(response.error, { position: Toast.positions.CENTER })
+      } else {
+        this.props.dispatch(requestContents());
+        let file = { uri: response.uri, type: 'application/octet-stream', name: 'businessCard.jpg' }
+        _file = file
+        var formData = new FormData()
+        formData.append('file', file)
 
-      const options = {
-          title: '选择名片',
-          cancelButtonTitle: '取消',
-          mediaType: 'photo',
-          takePhotoButtonTitle: '拍照',
-          chooseFromLibraryButtonTitle: '从相册中选择',
-      }
-      ImagePicker.showImagePicker(options, (response) => {
-          if (response.didCancel) {
-              // Toast.show('已取消', {position: Toast.positions.CENTER})
-          } else if (response.error) {
-              Toast.show(response.error, {position: Toast.positions.CENTER})
-          } else {
-              this.props.dispatch(requestContents());
-              let file = { uri: response.uri, type: 'application/octet-stream', name: 'businessCard.jpg' }
-              _file = file
-              var formData = new FormData()
-              formData.append('file', file)
-
-              api.ccUpload(formData).then(data => {
-                this.props.dispatch(hideLoading());
-                  try {
-                      data = JSON.parse(data)
-                  } catch (e) {
-                      this.props.navigation.navigate('AddInvestor', {file: _file})
-                      return
-                  }
-                  const parsedData = this.parseData(data)
-                  this.props.navigation.navigate('AddInvestor', {...parsedData, file: _file, imageData: response.data})
-              }, error => {
-                  this.props.navigation.navigate('AddInvestor', {file: _file})
-              })
+        api.ccUpload(formData).then(data => {
+          this.props.dispatch(hideLoading());
+          try {
+            data = JSON.parse(data)
+          } catch (e) {
+            this.props.navigation.navigate('AddInvestor', { file: _file })
+            return
           }
-      })
-  }
+          const parsedData = this.parseData(data)
+          this.props.navigation.navigate('AddInvestor', { ...parsedData, file: _file, imageData: response.data })
+        }, error => {
+          this.props.navigation.navigate('AddInvestor', { file: _file })
+        })
+      }
+    }
+
+    handleActionButtonPressed = buttonIndex => {
+      switch (buttonIndex) {
+        case 0:
+          ImagePicker.launchCamera({}, this.imagePickerCallback);
+          break;
+        case 1:
+          ImagePicker.launchImageLibrary({}, this.imagePickerCallback);
+          break;
+        case 2:
+          this.props.navigation.navigate('AddInvestor');
+          break;
+      }
+    }
 
   parseData(data) {
       const name = data.formatted_name ? data.formatted_name[0].item : null

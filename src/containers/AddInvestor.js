@@ -190,8 +190,11 @@ class AddInvestor extends React.Component {
     }
 
     componentDidMount() {
-        const { name, title, mobile, email, company, file, imageData } = this.props.navigation.state.params
-        this.setState({ name, title, mobile, email, company, file, imageData })
+        if (this.props.navigation.state.params) {
+            const { name, title, mobile, email, company, file, imageData } = this.props.navigation.state.params
+            this.setState({ name, title, mobile, email, company, file, imageData })
+        }
+
         this.props.navigation.setParams({ onPress: this.handleSubmit })
         
         api.getSource('title').then(data => {
