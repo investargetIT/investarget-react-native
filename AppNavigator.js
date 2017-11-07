@@ -45,7 +45,7 @@ import MyFavoriteProject from './src/containers/MyFavoriteProject';
 import Timeline from './src/containers/Timeline';
 import LatestRemark from './src/containers/LatestRemark';
 import MyPartnerOrg from './src/containers/MyPartnerOrg';
-import AddEvent from './src/containers/AddEvent';
+import AddSchedule from './src/containers/AddSchedule';
 import SelectProject from './src/containers/SelectProject';
 import SearchUser from './src/containers/SearchUser';
 
@@ -140,7 +140,7 @@ const CustomTabView = ({ router, navigation, isFetching }) => {
     LatestRemark: { screen: LatestRemark },
     MyPartnerOrg: { screen: MyPartnerOrg },
     MyCalendar: { screen: MyCalendar },
-    AddEvent: { screen: AddEvent },
+    AddSchedule: { screen: AddSchedule },
     SelectProject: { screen: SelectProject },
     SearchUser: { screen: SearchUser },
   })

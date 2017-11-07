@@ -21,7 +21,7 @@ import * as api from '../api';
 import { requestContents, hideLoading } from '../../actions';
 import { connect } from 'react-redux';
 
-class AddEvent extends React.Component {
+class AddSchedule extends React.Component {
   
   static navigationOptions = ({ navigation }) => {
     const { params } = navigation.state;
@@ -316,4 +316,4 @@ function mapStateToProps (state) {
   return { userInfo };
 }
 
-export default connect(mapStateToProps)(AddEvent);
+export default connect(mapStateToProps)(AddSchedule);

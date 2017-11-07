@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  TouchableHighlight,
 } from 'react-native';
 import { Agenda } from 'react-native-calendars';
 import * as api from '../api';
@@ -40,7 +41,7 @@ class MyCalendar extends React.Component {
   }
 
   handleAddIconPressed = () => {
-    this.props.navigation.navigate('AddEvent', { onEditEventCompleted: this.onEditEventCompleted });
+    this.props.navigation.navigate('AddSchedule', { onEditEventCompleted: this.onEditEventCompleted });
   }
 
   onEditEventCompleted = event => {
@@ -114,9 +115,17 @@ class MyCalendar extends React.Component {
     });
   }
 
+  handleSchedulePressed (schedule) {
+    console.log('schedule', schedule);
+  }
+
   renderItem(item) {
     return (
-      <View style={[styles.item, {height: item.height}]}><Text>{item.name}</Text></View>
+      <TouchableHighlight style={[styles.item, { height: item.height }]} onPress={this.handleSchedulePressed.bind(this, item)} underlayColor="lightgray">
+      <View >
+        <Text>{item.name}</Text>
+      </View>
+      </TouchableHighlight>
     );
   }
 
