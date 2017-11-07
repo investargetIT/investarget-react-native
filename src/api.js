@@ -683,3 +683,5 @@ export const getPostsAndEvent = () => r('/activity/');
 
 export const addSchedule = body => r('/msg/schedule/', 'POST', body);
 export const getSchedule = () => r('/msg/schedule/');
+export const getScheduleDetail = id => r('/msg/schedule/' + id + '/');
+export const editSchedule = (id, body) => r('/msg/schedule/' + id + '/', 'PUT', body);
