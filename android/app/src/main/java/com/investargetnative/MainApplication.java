@@ -3,6 +3,7 @@ package com.investargetnative;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.investargetnative.modules.actionsheet.ActionSheetPackage;
 import com.rnfs.RNFSPackage;
 import com.theweflex.react.WeChatPackage;
 import com.imagepicker.ImagePickerPackage;
@@ -30,11 +31,12 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-            new RNFSPackage(),
-            new WeChatPackage(),
-            new ImagePickerPackage(),
-              new JPushPackage(SHUTDOWN_TOAST, SHUTDOWN_LOG)
+              new MainReactPackage(),
+              new RNFSPackage(),
+              new WeChatPackage(),
+              new ImagePickerPackage(),
+              new JPushPackage(SHUTDOWN_TOAST, SHUTDOWN_LOG),
+              new ActionSheetPackage()
       );
     }
   };

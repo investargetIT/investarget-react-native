@@ -6,12 +6,14 @@ import {
   TouchableHighlight,
   Image,
   ActionSheetIOS,
+  Platform,
 } from 'react-native';
 import * as api from '../api';
 import { connect } from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
 import Toast from 'react-native-root-toast';
 import { requestContents, hideLoading } from '../../actions';
+import ActionSheet from '../ActionSheet';
 
 function MyPartnerOrgCell (props) {
   const { org, count, data } = props.data;
@@ -82,22 +84,35 @@ class MyPartnerOrg extends React.Component {
     }
 
     handleAddButtonPressed = () => {
-      var BUTTONS = [
-        '用相机拍摄名片',
-        '从相册选取名片',
-        '手工录入',
-        '取消',
-      ];
-      var CANCEL_INDEX = BUTTONS.length - 1;
+      if (Platform.OS === 'ios') {
+        var BUTTONS = [
+          '用相机拍摄名片',
+          '从相册选取名片',
+          '手工录入',
+          '取消',
+        ];
+        var CANCEL_INDEX = BUTTONS.length - 1;
 
-      ActionSheetIOS.showActionSheetWithOptions(
-        {
-          options: BUTTONS,
-          cancelButtonIndex: CANCEL_INDEX,
+        ActionSheetIOS.showActionSheetWithOptions(
+          {
+            options: BUTTONS,
+            cancelButtonIndex: CANCEL_INDEX,
+            title: '上传名片自动添加或手工录入',
+          },
+          this.handleActionButtonPressed,
+        );
+      } else if (Platform.OS === 'android') {
+        ActionSheet.showActionSheetWithOptions({
           title: '上传名片自动添加或手工录入',
+          options: [
+            '用相机拍摄名片',
+            '从相册选取名片',
+            '手工录入',
+          ],
         },
         this.handleActionButtonPressed,
       );
+      }
     }
   
     imagePickerCallback = response => {
