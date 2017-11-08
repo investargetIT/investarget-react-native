@@ -8,6 +8,8 @@ import {
     TouchableWithoutFeedback,
     DatePickerIOS,
     Platform,
+    DatePickerAndroid,
+    TimePickerAndroid,
 } from 'react-native';
 import ProjectItem from './ProjectItem';
 import UserItem from './UserItem';
@@ -38,13 +40,12 @@ class ScheduleForm extends React.Component {
               const {action, hour, minute} = await TimePickerAndroid.open({
                 hour: 14,
                 minute: 0,
-                is24Hour: false, // Will display '2 PM'
+                is24Hour: true, // Will display '2 PM'
               });
               if (action !== TimePickerAndroid.dismissedAction) {
                 // Selected hour (0-23), minute (0-59)
                 console.log(year, month, day, hour, minute);
-                props.onDateChange(new Date(`${year}-${pad(month + 1)}-${pad(day)}T${pad(hour)}:${pad(minute)}`))
-                // this.setState({ date: new Date(`${year}-${pad(month + 1)}-${pad(day)}T${pad(hour)}:${pad(minute)}`) });
+                this.props.onDateChange(new Date(`${year}-${pad(month + 1)}-${pad(day)}T${pad(hour)}:${pad(minute)}+08:00`))
               }
             }
           } catch ({code, message}) {
@@ -91,7 +92,7 @@ class ScheduleForm extends React.Component {
                 >
                     <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                         <Text style={{ fontSize: 16 }}>时间</Text>
-                        <Text style={{ fontSize: 16 }}>{props.date && props.date.toLocaleString()}</Text>
+                        <Text style={{ fontSize: 16 }}>{props.date && formatDate(props.date)}</Text>
                     </View>
                 </TouchableHighlight>
 
@@ -153,6 +154,15 @@ function pad(number) {
       return '0' + number;
     }
     return number;
+  }
+
+  function formatDate(date) {
+    return date.getFullYear() +
+    '-' + pad(date.getMonth() + 1) +
+    '-' + pad(date.getDate()) +
+    ' ' + pad(date.getHours()) +
+    ':' + pad(date.getMinutes()) +
+    ':' + pad(date.getSeconds());
   }
   
 export default ScheduleForm;
