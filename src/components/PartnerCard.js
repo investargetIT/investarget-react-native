@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, Image, TouchableOpacity } from 'react-native'
-
+import ImageWithPlaceholder from './ImageWithPlaceholder';
 
 const cardStyle = {
     width: 72,
@@ -40,7 +40,7 @@ class PartnerCard extends React.Component {
 
         return (
             <TouchableOpacity style={{...cardStyle, ...this.props.style}} onPress={this.props.onPress}>
-                <Image source={imgSource} style={avatarStyle} />
+                <ImageWithPlaceholder source={imgSource} style={avatarStyle} placeholder={require('../images/userCenter/defaultAvatar.png')} />
                 <View style={orgWrapStyle}>
                     <Text numberOfLines={1} style={orgStyle}>{orgName}</Text>
                 </View>
