@@ -1,14 +1,41 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { 
+    View, 
+    Text,
+    ScrollView, 
+    TouchableOpacity, 
+} from 'react-native'
 import { connect } from 'react-redux'
 import Toast from 'react-native-root-toast'
 import Spinner from 'react-native-loading-spinner-overlay'
-
+import Button from '../components/Button'
 import Select from '../components/BaseSelect'
 import * as api from '../api'
 import { receiveTags, modifyUserInfo } from '../../actions'
 
+const buttonContainerStyle = {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    height: 28,
+    borderRadius: 14,
+    paddingLeft: 12,
+    paddingRight: 12,
+    margin: 5,
 
+}
+const activeButtonContainerStyle = {
+    ...buttonContainerStyle,
+    borderColor: '#2269d4',
+}
+const buttonStyle = {
+    color: '#999',
+    fontSize: 13,   
+    flex: 0, 
+}
+const activeButtonStyle = {
+    ...buttonStyle,
+    color: '#2269d4',
+}
 class MyTags extends React.Component {
 
     static navigationOptions = {
@@ -29,7 +56,7 @@ class MyTags extends React.Component {
         }
     }
 
-    handleChange = (value) => {
+    handleConfirm = (value) => {
         this.setState({ loading: true, tags: value })
 
         const userId = this.props.userInfo.id
@@ -65,17 +92,55 @@ class MyTags extends React.Component {
         })
     }
 
+    handleChange = (itemValue) => {
+        if (this.state.tags.includes(itemValue)) {
+            let index = this.state.tags.indexOf(itemValue)
+            this.setState({ tags: [...this.state.tags.slice(0, index), ...this.state.tags.slice(index + 1)] })
+        } else {
+            this.setState({ tags: [...this.state.tags, itemValue] })
+        }
+    }
+
+    handleReset = () => {
+        this.setState({ tags: [] })
+    }
+
     render() {
         return (
-            <View>
+            <View style={{ flex: 1, backgroundColor: 'white' }}>
                 <Spinner visible={this.state.loading} />
-                <Select
-                    value={this.state.tags}
-                    onChange={this.handleChange}
-                    options={this.props.tagOptions}
-                    title="请选择您关注的标签"
-                    multiple={true}
-                />
+
+                <Text style={{fontSize: 16,padding: 16}}>请选择您关注的标签</Text>
+                <ScrollView style={{ marginBottom: 50 }}>
+                    <View style={{padding: 10,display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
+                        {
+                            this.props.tagOptions.map(option => {
+                                const active = this.state.tags.includes(option.value)
+                                return (
+                                    <Button
+                                        key={option.value}
+                                        containerStyle={active ? activeButtonContainerStyle : buttonContainerStyle}
+                                        style={active ? activeButtonStyle : buttonStyle}
+                                        onPress={this.handleChange.bind(this, option.value)}
+                                    >
+                                        {option.label}
+                                    </Button>
+                                )
+                            })
+                        }
+                    </View>                      
+                </ScrollView>
+
+
+            <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50 }}>
+                    <TouchableOpacity activeOpacity={0.8} style={{ flex: 1, height: 50, backgroundColor: '#ccc', alignItems: 'center', justifyContent: 'center' }} onPress={this.handleReset}>
+                        <Text style={{fontSize: 16, color: '#fff'}}>重置</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity activeOpacity={0.8} style={{ flex: 1, height: 50, backgroundColor: '#2269d4', alignItems: 'center', justifyContent: 'center' }} onPress={this.handleConfirm.bind(this, this.state.tags)}>
+                        <Text style={{fontSize: 16, color: '#fff'}}>确定</Text>
+                    </TouchableOpacity>
+                </View>
+
             </View>
         )
     }
