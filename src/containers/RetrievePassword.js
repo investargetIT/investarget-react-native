@@ -27,11 +27,15 @@ class RetrievePassword extends React.Component {
             token: '',
             password: '',
             loading: false,
+            disableCodeBtn: true,
         }
     }
 
     handleChange = (key, value) => {
-        this.setState({ [key]: value })
+        this.setState({ 
+            [key]: value, 
+            disableCodeBtn: key === 'mobile' && value.length === 0 
+        });
     }
 
     handleCodeSend = () => {
@@ -121,6 +125,7 @@ class RetrievePassword extends React.Component {
                     onMobileChange={this.handleChange.bind(this, 'mobile')}
                 />
                 <FormVerificationCode
+                    disabled={this.state.disableCodeBtn}
                     containerStyle={{marginBottom: 30}}
                     placeholder="请输入验证码"
                     value={this.state.code}

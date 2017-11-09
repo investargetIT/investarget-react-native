@@ -169,9 +169,9 @@ class FormVerificationCode extends React.Component {
                     {...extraProps} />
                 <Button
                     type="primary"
-                    containerStyle={{flex: 0, backgroundColor: '#2269d4', width: 90, height: 26, borderRadius: 13, ...disabledStyle}}
+                    containerStyle={{flex: 0, backgroundColor: this.props.disabled ? 'gray' : '#2269d4', width: 90, height: 26, borderRadius: 13, ...disabledStyle}}
                     style={{color: '#fff', fontSize: 13}}
-                    onPress={this.handleClick}>
+                    onPress={this.props.disabled ? null : this.handleClick}>
                     { this.state.timing ? `${this.state.waitingTime}s` : '发送验证码' }
                 </Button>
             </View>

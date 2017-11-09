@@ -84,8 +84,7 @@ class Login extends React.Component {
     }
 
     handleForget = () => {
-        // this.props.navigation.navigate('RetrievePassword', {title: '找回密码'})
-        this.props.navigation.navigate('Register2')
+        this.props.navigation.navigate('RetrievePassword', {title: '找回密码'})
     }
 
     componentDidMount() {
