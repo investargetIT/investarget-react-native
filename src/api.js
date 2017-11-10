@@ -682,6 +682,6 @@ export const ccUpload = formData => r('/service/ccupload', 'POST', formData, tru
 export const getPostsAndEvent = () => r('/activity/');
 
 export const addSchedule = body => r('/msg/schedule/', 'POST', body);
-export const getSchedule = () => r('/msg/schedule/');
+export const getSchedule = params => r('/msg/schedule/?' + qs.stringify(params));
 export const getScheduleDetail = id => r('/msg/schedule/' + id + '/');
 export const editSchedule = (id, body) => r('/msg/schedule/' + id + '/', 'PUT', body);

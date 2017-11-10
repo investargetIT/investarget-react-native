@@ -3910,8 +3910,8 @@ react-devtools@^2.5.2:
     update-notifier "^2.1.0"
 
 react-native-calendars@^1.7.1:
-  version "1.7.1"
-  resolved "http://registry.npm.taobao.org/react-native-calendars/download/react-native-calendars-1.7.1.tgz#b2c9eb67f6683b4f76e078fcb0af9b3701d4de4a"
+  version "1.9.2"
+  resolved "http://registry.npm.taobao.org/react-native-calendars/download/react-native-calendars-1.9.2.tgz#283c2fdcda5c9c37e31f02f621f3b659bb574337"
   dependencies:
     prop-types "^15.5.10"
     xdate "^0.8.0"

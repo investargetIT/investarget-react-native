@@ -33,6 +33,7 @@ class MyCalendar extends React.Component {
     super(props);
     this.state = {
       items: {},
+      markedDates: {},
     };
   }
 
@@ -58,18 +59,11 @@ class MyCalendar extends React.Component {
         renderEmptyDate={this.renderEmptyDate.bind(this)}
         rowHasChanged={this.rowHasChanged.bind(this)}
         /* onDayPress={this.handleOnDayPress} */
-        //markingType={'interactive'}
-        //markedDates={{
-        //  '2017-05-08': [{textColor: '#666'}],
-        //  '2017-05-09': [{textColor: '#666'}],
-        //  '2017-05-14': [{startingDay: true, color: 'blue'}, {endingDay: true, color: 'blue'}],
-        //  '2017-05-21': [{startingDay: true, color: 'blue'}],
-        //  '2017-05-22': [{endingDay: true, color: 'gray'}],
-        //  '2017-05-24': [{startingDay: true, color: 'gray'}],
-        //  '2017-05-25': [{color: 'gray'}],
-        //  '2017-05-26': [{endingDay: true, color: 'gray'}]}}
-        // monthFormat={'yyyy'}
-        // theme={{calendarBackground: 'red', agendaKnobColor: 'green'}}
+        
+        markedDates={this.state.markedDates}
+        markingType={'interactive'}
+         /* monthFormat={'yyyy'} */
+        /* theme={{calendarBackground: 'red', agendaKnobColor: 'green'}} */
         //renderDay={(day, item) => (<Text>{day ? day.day: 'item'}</Text>)}
       />
     );
@@ -85,21 +79,26 @@ class MyCalendar extends React.Component {
   }
 
   loadItems(day) {
-
     const items = Object.assign({}, this.state.items);
+    const markedDates = Object.assign({}, this.state.markedDates);
 
-    api.getSchedule()
+    api.getSchedule({ date: day.dateString, page_size: 10000 })
     .then(result => {
-
       // 从服务端加载日程
       result.data.forEach(function(element) {
         const date = element.scheduledtime.slice(0, 10)
         
         if (date in items && !items[date].map(m => m.id).includes(element.id)) {
-          items[date].push({ name: element.comments, id: element.id });
+          items[date].push(element);
         } else {
-          items[date] = [{ name: element.comments, id: element.id }];
+          items[date] = [element];
         }
+
+        if (date in markedDates === false) {
+          const color = dateToColor(new Date(element.scheduledtime + element.timezone));
+          markedDates[date] = [{startingDay: true, color}, {endingDay: true, color}];
+        }
+
       }, this);
 
       // 加上前后30天内没有日程的日期
@@ -110,8 +109,7 @@ class MyCalendar extends React.Component {
           items[newDateString] = [];
         }
       }
-
-      this.setState({ items });
+      this.setState({ items, markedDates });
     });
   }
 
@@ -120,10 +118,11 @@ class MyCalendar extends React.Component {
   }
 
   renderItem(item) {
+    const color = dateToColor(new Date(item.scheduledtime + item.timezone));
     return (
-      <TouchableHighlight style={[styles.item, { height: item.height }]} onPress={this.handleSchedulePressed.bind(this, item)} underlayColor="lightgray">
-      <View >
-        <Text>{item.name}</Text>
+      <TouchableHighlight style={[styles.item, { height: item.height, backgroundColor: color }]} onPress={this.handleSchedulePressed.bind(this, item)} underlayColor="lightgray">
+      <View>
+        <Text>{item.comments}</Text>
       </View>
       </TouchableHighlight>
     );
@@ -168,5 +167,18 @@ function addDaysToDate(dateString, days) {
   dat.setDate(dat.getDate() + days);
   return dat;
 } 
+
+function dateToColor(date) {
+  const seconds = (date - new Date()) / 1000;
+  let color;
+  if (seconds < 0) {
+    color = '#4caf50';
+  } else if (seconds < 2 * 24 * 60 * 60) {
+    color = '#f44336';
+  } else {
+    color = '#ffeb3b';
+  }
+  return color;
+}
 
 export default MyCalendar;

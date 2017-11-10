@@ -14,7 +14,6 @@ import {
   DatePickerAndroid,
   TimePickerAndroid,
 } from 'react-native';
-import DatePicker from 'react-native-datepicker';
 import ProjectItem from '../components/ProjectItem';
 import UserItem from '../components/UserItem';
 import * as api from '../api';
