@@ -187,7 +187,7 @@ const CustomTabView = ({ router, navigation, isFetching }) => {
 
 
 const App = ({dispatch, nav}) => (
-  <DrawerApp navigation={addNavigationHelpers({ dispatch, state: nav })} />
+  <DrawerApp screenProps={{drawerLockMode: 'locked-closed'}} navigation={addNavigationHelpers({ dispatch, state: nav })} />
 )
 
 const mapStateToProps = (state) => ({
