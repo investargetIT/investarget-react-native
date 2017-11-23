@@ -64,7 +64,7 @@ class Register extends React.Component {
             Toast.show('请先填写区号和手机号', { position: Toast.positions.CENTER })
             return
         }
-        const param = { areacode: areaCode, mobile }
+        const param = { areacode: areaCode.trim(), mobile }
         api.sendSmsCode(param)
             .then(data => {
                 const {status, smstoken: token, msg} = data
@@ -119,7 +119,7 @@ class Register extends React.Component {
             return
         }
         const { areaCode, mobile, code, token, email } = this.state
-        const param = { areaCode, mobile, code, token, email, userType }
+        const param = { areaCode: areaCode.trim(), mobile, code, token, email, userType }
         this.props.navigation.navigate('Register2', param)
     }
     
@@ -182,7 +182,9 @@ class Register extends React.Component {
 function mapStateToProps(state) {
     const { continentsAndCountries } = state.app
     const areaCodeOptions = continentsAndCountries.filter(item => item.level == 2)
-                                .map(item => ({ label: item.country, value: item.areaCode }))
+                                .map(item => {
+                                    return { label: item.country, value: item.country !== '美国' ? item.areaCode : item.areaCode + ' ' }
+                                })
     return { areaCodeOptions }
 }
 export default connect(mapStateToProps)(Register)

@@ -40,7 +40,7 @@ class RetrievePassword extends React.Component {
 
     handleCodeSend = () => {
         const { areaCode, mobile } = this.state
-        const param = { areacode: areaCode, mobile }
+        const param = { areacode: areaCode.trim(), mobile }
         api.sendSmsCode(param)
             .then(data => {
                 const {status, smstoken: token, msg} = data
@@ -90,7 +90,7 @@ class RetrievePassword extends React.Component {
         }
 
         const { areaCode, mobile, code, token, password } = this.state
-        const param = { mobile, mobileAreaCode: areaCode, mobilecode: code, mobilecodetoken: token, password }
+        const param = { mobile, mobileAreaCode: areaCode.trim(), mobilecode: code, mobilecodetoken: token, password }
         this.setState({ loading: true })
         api.retrievePassword(param).then(data => {
             this.setState({ loading: false })
@@ -147,7 +147,7 @@ class RetrievePassword extends React.Component {
 function mapStateToProps(state) {
     const { continentsAndCountries } = state.app
     const areaCodeOptions = continentsAndCountries.filter(item => item.level == 2)
-                                .map(item => ({ label: item.country, value: item.areaCode }))
+                                .map(item => ({ label: item.country, value: item.country !== '美国' ? item.areaCode : item.areaCode + ' ' }))
     return { areaCodeOptions }
 }
 
