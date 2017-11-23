@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import ProjectItem from './ProjectItem';
 import UserItem from './UserItem';
+import Picker from './Picker';
 
 class ScheduleForm extends React.Component {
 
@@ -58,7 +59,6 @@ class ScheduleForm extends React.Component {
     render() {
 
         const props = this.props;
-
         return (
             <View>
                 <View style={{ backgroundColor: 'white', marginTop: 20 }}>
@@ -74,6 +74,15 @@ class ScheduleForm extends React.Component {
 
                     <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
 
+                    <Picker
+                        style={{flex: 1, height: 44, paddingLeft: 2}}
+                        value={props.area}
+                        onChange={props.handleChangeArea}
+                        placeholder="地区"
+                        options={props.areaOptions} />
+                    
+                    <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
+                    
                     <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, justifyContent: 'center' }}>
                         <TextInput
                             style={{ fontSize: 16, paddingLeft: 0 }}

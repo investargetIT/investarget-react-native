@@ -59,7 +59,17 @@ class AddSchedule extends React.Component {
       date: this.minimumDate,
       project: null,
       user: null,
+      area: null,
+      areaOptions: [],
     }
+  }
+
+  componentDidMount() {
+    api.getSource('country')
+    .then(result => {
+      const areaOptions = result.filter(f => f.level === 3).map(m => ({ value: m.id, label: m.country }));
+      this.setState({ areaOptions });
+    })
   }
 
   handleSubmit = () => {
@@ -88,7 +98,8 @@ class AddSchedule extends React.Component {
       comments: this.state.title,
       proj: this.state.project && this.state.project.id,
       address: this.state.address,
-      user: this.state.user && this.state.user.id
+      user: this.state.user && this.state.user.id,
+      country: this.state.area,
     };
     api.addSchedule(body)
     .then(data => {
@@ -192,6 +203,9 @@ class AddSchedule extends React.Component {
           handleProjectPressed={this.handleProjectPressed}
           user={this.state.user}
           handleUserPressed={this.handleUserPressed}
+          areaOptions={this.state.areaOptions}
+          area={this.state.area}
+          handleChangeArea={ area => this.setState({ area })}
         />
         
       </ScrollView>

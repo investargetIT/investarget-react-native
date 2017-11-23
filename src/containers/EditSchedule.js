@@ -59,6 +59,8 @@ class EditSchedule extends React.Component {
       date: this.minimumDate,
       project: null,
       user: null,
+      area: null,
+      areaOptions: [],
     }
   }
 
@@ -99,11 +101,18 @@ class EditSchedule extends React.Component {
         address: result.address,
         date: new Date(result.scheduledtime + result.timezone),
         project: obj,
-        user: investor
+        user: investor,
+        area: result.country && result.country.id,
       });
       this.props.navigation.setParams({ onPress: this.handleSubmit });
     })
     .catch(error => console.error(error));
+
+    api.getSource('country')
+      .then(result => {
+        const areaOptions = result.filter(f => f.level === 3).map(m => ({ value: m.id, label: m.country }));
+        this.setState({ areaOptions });
+      })
   }
 
   handleSubmit = () => {
@@ -132,7 +141,8 @@ class EditSchedule extends React.Component {
       comments: this.state.title,
       proj: this.state.project && this.state.project.id,
       address: this.state.address,
-      user: this.state.user && this.state.user.id
+      user: this.state.user && this.state.user.id,
+      country: this.state.area,
     };
     api.editSchedule(this.id, body)
     .then(data => {
@@ -236,6 +246,9 @@ class EditSchedule extends React.Component {
           handleProjectPressed={this.handleProjectPressed}
           user={this.state.user}
           handleUserPressed={this.handleUserPressed}
+          areaOptions={this.state.areaOptions}
+          area={this.state.area}
+          handleChangeArea={ area => this.setState({ area })}
         />
         
       </ScrollView>
