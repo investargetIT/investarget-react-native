@@ -139,7 +139,7 @@ class ProjectDetail extends React.Component {
             title: this.title,
             description: '地区:' + this.project.country + ' 行业:' + this.project.industrys + ' 交易规模:$' + formatNumber(this.project.amount),
             webpageUrl: this.state.url,
-            thumbImage: this.project.imgUrl,
+            thumbImage: this.project.imgUrl+'?imageView2/0/w/300/h/300',
           });
           break;
         case 1:
@@ -190,7 +190,7 @@ class ProjectDetail extends React.Component {
             title: this.title,
             description: '地区:' + this.project.country + ' 行业:' + this.project.industrys + ' 交易规模:$' + formatNumber(this.project.amount),
             webpageUrl: this.state.url,
-            thumbImage: this.project.imgUrl,
+            thumbImage: this.project.imgUrl+'?imageView2/0/w/300/h/300',
           });
           break;
         case 1:
