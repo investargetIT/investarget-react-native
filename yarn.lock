@@ -4001,9 +4001,9 @@ react-native-swipeout@^2.2.2:
     prop-types "^15.5.10"
     react-tween-state "^0.1.5"
 
-react-native-swiper@^1.5.12:
-  version "1.5.12"
-  resolved "https://registry.yarnpkg.com/react-native-swiper/-/react-native-swiper-1.5.12.tgz#fe040e19d936304013f1671dd83f7e25ee3c4d83"
+react-native-swiper@1.5.5:
+  version "1.5.5"
+  resolved "http://registry.npm.taobao.org/react-native-swiper/download/react-native-swiper-1.5.5.tgz#faf306fcaa676465f50459f16ee25c40c2d70e28"
   dependencies:
     prop-types "^15.5.10"
 
