@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Image, Text, TouchableOpacity, FlatList, RefreshControl } from 'react-native'
+import { View, Image, Text, TouchableOpacity, FlatList, RefreshControl, Alert } from 'react-native'
 import Toast from 'react-native-root-toast'
 
 import * as api from '../api'
@@ -40,6 +40,7 @@ class Notification extends React.Component {
             api.readMsg(data.id);
         }
         // TODO: 跳转到消息详情
+        Alert.alert(data.messagetitle, data.content);
     }
 
     render() {
@@ -160,8 +161,8 @@ const msgContainerStyle = {flexDirection:'row',paddingTop:16,paddingBottom:16,pa
 const msgImageStyle = {marginRight: 12, width:24,height:24}
 const msgStyle = {flex:1}
 const msgTitleWrapStyle = {flexDirection:'row',justifyContent:'space-between',marginBottom:8}
-const msgTitleStyle = {fontSize:15,color:'#666'}
-const msgTimeStyle = {fontSize:13,color:'#999'}
+const msgTitleStyle = {fontSize:15,color:'#666',flex:0.5}
+const msgTimeStyle = {fontSize:13,color:'#999',flex:0.5,textAlign:'right'}
 const msgContentStyle = {fontSize:13,color:'#999'}
 
 
