@@ -112,8 +112,10 @@ class Service extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { userType, id } = state.app.userInfo
-    const { titles } = state.app
-    return { userType, userId: id, titles }
+    if (state.app.userInfo) {
+        const { userType, id } = state.app.userInfo
+        const { titles } = state.app
+        return { userType, userId: id, titles }
+    }
 }
 export default connect(mapStateToProps)(Service)
