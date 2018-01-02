@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 import request from './request'
 import qs from 'qs'
 import _ from 'lodash'
-import { ApiError } from './request'
+import { ApiError, baseUrl } from './request'
 
 export const SOURCE = 1
 
@@ -284,7 +284,7 @@ export function qiniuUpload(bucket, file) {
           var formData = new FormData()
           formData.append('file', file)
           
-          return fetch('http://192.168.1.251:8080/service/qiniubigupload?bucket=' + bucket, {
+          return fetch(baseUrl + '/service/qiniubigupload?bucket=' + bucket, {
             headers,
             method: 'POST',
             body: formData,

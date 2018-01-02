@@ -18,6 +18,7 @@ import Toast from 'react-native-root-toast'
 import fs from 'react-native-fs';
 import * as api from '../api';
 import * as WeChat from 'react-native-wechat';
+import { baseUrl, mobileUrl } from '../request';
 
 class ProjectDetail extends React.Component {
     
@@ -56,7 +57,7 @@ class ProjectDetail extends React.Component {
     componentDidMount() {
       this.props.navigation.setParams({ onPress: this.handleShareIconPressed })
       api.getShareToken(this.id)
-      .then(token => this.setState({ url: `http://192.168.1.113:3000/project_for_rn/${this.id}?token=${token}` }))
+      .then(token => this.setState({ url: `${mobileUrl}/project_for_rn/${this.id}?token=${token}` }))
       .catch(error => {
         Toast.show(error.message, {position: Toast.positions.CENTER})
       })
@@ -145,7 +146,7 @@ class ProjectDetail extends React.Component {
         case 1:
           let rootPath1 = fs.DocumentDirectoryPath;
           let savePath1 = rootPath1 + '/email-signature-262x100.png';
-          fs.downloadFile({ fromUrl: 'http://192.168.1.251:8080/service/getQRCode?url=' + encodeURIComponent(this.state.url) + '&acw_tk=' + this.props.userInfo.token, toFile: savePath1 }).promise
+          fs.downloadFile({ fromUrl: baseUrl + '/service/getQRCode?url=' + encodeURIComponent(this.state.url) + '&acw_tk=' + this.props.userInfo.token, toFile: savePath1 }).promise
             .then(res => {
               WeChat.shareToSession({
                 type: 'imageFile',
@@ -164,7 +165,7 @@ class ProjectDetail extends React.Component {
           let fileName = 'signature_method.pdf';
           let savePath2 = rootPath2 + '/' + fileName;
           fs.downloadFile({
-            fromUrl: 'http://192.168.1.251:8080/proj/pdf/' + this.id + '/?acw_tk=' + this.props.userInfo.token,
+            fromUrl: baseUrl + '/proj/pdf/' + this.id + '/?acw_tk=' + this.props.userInfo.token,
             toFile: savePath2
           }).promise.then(res => {
             WeChat.shareToSession({
@@ -196,7 +197,7 @@ class ProjectDetail extends React.Component {
         case 1:
           let rootPath1 = fs.DocumentDirectoryPath;
           let savePath1 = rootPath1 + '/email-signature-262x100.png';
-          fs.downloadFile({ fromUrl: 'http://192.168.1.251:8080/service/getQRCode?url=' + encodeURIComponent(this.state.url) + '&acw_tk=' + this.props.userInfo.token, toFile: savePath1 }).promise
+          fs.downloadFile({ fromUrl: baseUrl + '/service/getQRCode?url=' + encodeURIComponent(this.state.url) + '&acw_tk=' + this.props.userInfo.token, toFile: savePath1 }).promise
             .then(res => {
               WeChat.shareToTimeline({
                 type: 'imageFile',
@@ -215,7 +216,7 @@ class ProjectDetail extends React.Component {
           let fileName = 'signature_method.pdf';
           let savePath2 = rootPath2 + '/' + fileName;
           fs.downloadFile({
-            fromUrl: 'http://192.168.1.251:8080/proj/pdf/' + this.id + '/?acw_tk=' + this.props.userInfo.token,
+            fromUrl: baseUrl + '/proj/pdf/' + this.id + '/?acw_tk=' + this.props.userInfo.token,
             toFile: savePath2
           }).promise.then(res => {
             WeChat.shareToTimeline({
