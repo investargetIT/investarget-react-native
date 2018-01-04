@@ -294,7 +294,7 @@ class ProjectList extends React.Component {
         newApi.getAndroidVersion()
           .then(result => {
             const currentBuildNumber = DeviceInfo.getBuildNumber();
-            const latestBuildNumber = result.map(m => m.build).reduce((a, b) => Math.max(a, b));
+            const latestBuildNumber = result.map(m => m.build).reduce((a, b) => Math.max(a, b), 0);
             if (latestBuildNumber > currentBuildNumber) {
               const version = result.filter(f => f.build === latestBuildNumber)[0];
               Alert.alert(

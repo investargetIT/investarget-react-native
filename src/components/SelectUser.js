@@ -6,7 +6,14 @@ import Toast from 'react-native-root-toast'
 import * as api from '../api'
 
 const PAGE_SIZE = 10
-
+const loadingBottomStyle = {
+    fontSize:15,
+    color:'#999',
+    textAlign:'center',
+    paddingTop:8,
+    paddingBottom:8,
+    backgroundColor:'#fff'
+}
 
 class SelectUser extends React.Component {
 

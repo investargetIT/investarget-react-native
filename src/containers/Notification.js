@@ -13,6 +13,14 @@ const tabTextStyle = {color:'#fff',textAlign:'center'}
 const activeTabStyle = {flex:1,justifyContent:'center',alignItems:'center',backgroundColor:'#fff',borderRadius:16}
 const activeTabTextStyle = {color:'#10458f',textAlign:'center'}
 
+const loadingBottomStyle = {
+    fontSize:15,
+    color:'#999',
+    textAlign:'center',
+    paddingTop:8,
+    paddingBottom:8,
+    backgroundColor:'#fff'
+}
 
 class Notification extends React.Component {
 
@@ -135,7 +143,7 @@ class MessageList extends React.Component {
                     renderItem={({item}) => <Message {...item} onPress={this.props.onPress} />}
                     refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} colors={['#10458f']} tintColor="#10458f" />}
                     overScrollMode="always"
-                    onEndReachedThreshold={0.5}
+                    onEndReachedThreshold={0.9}
                     onEndReached={this.loadMore}
                     ListFooterComponent={() => {
                         return this.state.loading && this.state.total >= PAGE_SIZE ? (<Text style={loadingBottomStyle}>加载中...</Text>) : null
@@ -169,8 +177,8 @@ const msgContentStyle = {fontSize:13,color:'#999'}
 class Message extends React.Component {
     
     render() {
-        var { id, isRead, messagetitle, created, content } = this.props
-        created = created.slice(0, 19).replace('T', ' ')
+        var { id, isRead, messagetitle, createdtime, content } = this.props
+        const created = createdtime && createdtime.slice(0, 19).replace('T', ' ');
 
         return (
             <TouchableOpacity activeOpacity={0.8} style={msgContainerStyle} onPress={this.props.onPress.bind(this, this.props)}>
