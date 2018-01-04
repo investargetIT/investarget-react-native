@@ -25,6 +25,7 @@ import {
 import Login from '../containers/Login';
 import fs from 'react-native-fs';
 import DeviceInfo from 'react-native-device-info';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 
 class ProjectList extends React.Component {
@@ -43,7 +44,8 @@ class ProjectList extends React.Component {
         this.state = {
             refreshing: false,
             projects: [],
-            isLoadingAll: false,
+            isLoadingAll: false, 
+            isDownloading: false, 
         }
         this.isLoadingMore = false;
     }
@@ -279,35 +281,39 @@ class ProjectList extends React.Component {
       };
 
       checkUpdate = () => {
-        const body = {
-          build: 2, 
-          path: 'https://www.investarget.com/downloadapp/android/android.apk', 
-        };
+        // const body = {
+        //   build: 3, 
+        //   path: 'https://www.investarget.com/downloadapp/android/android.apk', 
+        //   version: 'v1.0.0', 
+        //   description: '1.优化实际的的撒的你解答\n2.的撒的三角吃的舒服\n3.的撒的你坚持的是非得失'
+        // };
         // newApi.addAndroidVersion(body)
         //   .then(result => console.log(result))
         //   .catch(error => console.error(error));
         // return;
         newApi.getAndroidVersion()
           .then(result => {
-            const buildNumber = DeviceInfo.getBuildNumber();
-            console.log('buildNumber', buildNumber);
-            console.log(result);
-            Alert.alert(
-              '发现新版本',
-              '点击确定下载新版本',
-              [
-                {text: '取消', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-                {text: '确定', onPress: () => this.downloadAndroidApk(result[1].path)},
-              ],
-              { cancelable: true }
-            );
+            const currentBuildNumber = DeviceInfo.getBuildNumber();
+            const latestBuildNumber = result.map(m => m.build).reduce((a, b) => Math.max(a, b));
+            if (latestBuildNumber > currentBuildNumber) {
+              const version = result.filter(f => f.build === latestBuildNumber)[0];
+              Alert.alert(
+                '下载最新版本' + (version.version || ''), 
+                version.description || '',
+                [
+                  {text: '取消', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                  {text: '确定', onPress: () => this.downloadAndroidApk(version.path)},
+                ],
+                { cancelable: false }
+              );
+            }
           })
           .catch(error => console.error(error));
       }
 
       downloadAndroidApk = path => {
-        console.log('path', path);
-        var filePath = fs.DocumentDirectoryPath + '/com.domain.example.apk';
+        this.setState({ isDownloading: true });
+        var filePath = fs.DocumentDirectoryPath + '/com.investargetnative.apk';
         fs.downloadFile({
           fromUrl: path,
           toFile: filePath,
@@ -316,7 +322,7 @@ class ProjectList extends React.Component {
           },
           progressDivider: 1
         }).promise.then(result => {
-          console.log('resultddd', result);
+          this.setState({ isDownloading: false });
           if (result.statusCode == 200) {
             NativeModules.InstallApk.install(filePath);
           }
@@ -352,19 +358,8 @@ class ProjectList extends React.Component {
                     )}
                     ListFooterComponent={this.renderFooter}
                 />
-{/* 
-                  <Modal
-                    animationType="fade"
-                    transparent={true}
-                    visible={true}
-                    onRequestClose={()=>{}}
-                  >
 
-                    <View style={{flex:1,backgroundColor:'rgba(0,0,0,.5)'}}>
-                    
-                    </View>
-
-                  </Modal> */}
+            <Spinner visible={this.state.isDownloading} />
 
             </View>
         )
