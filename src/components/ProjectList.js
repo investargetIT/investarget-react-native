@@ -24,6 +24,7 @@ import {
 } from '../../actions';
 import Login from '../containers/Login';
 import fs from 'react-native-fs';
+import DeviceInfo from 'react-native-device-info';
 
 
 class ProjectList extends React.Component {
@@ -288,6 +289,8 @@ class ProjectList extends React.Component {
         // return;
         newApi.getAndroidVersion()
           .then(result => {
+            const buildNumber = DeviceInfo.getBuildNumber();
+            console.log('buildNumber', buildNumber);
             console.log(result);
             Alert.alert(
               '发现新版本',

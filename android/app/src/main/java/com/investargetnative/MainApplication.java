@@ -3,6 +3,7 @@ package com.investargetnative;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.heyao216.react_native_installapk.InstallApkPackager;
 import com.investargetnative.modules.actionsheet.ActionSheetPackage;
 import com.rnfs.RNFSPackage;
@@ -33,6 +34,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+            new RNDeviceInfo(),
             new InstallApkPackager(),
               new RNFSPackage(),
               new WeChatPackage(),
