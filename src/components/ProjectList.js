@@ -1,5 +1,17 @@
 import React from 'react'
-import { View, Text, Image, FlatList, RefreshControl, StatusBar, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { 
+  View, 
+  Text, 
+  Image, 
+  FlatList, 
+  RefreshControl, 
+  StatusBar, 
+  TouchableOpacity, 
+  ActivityIndicator, 
+  Alert, 
+  NativeModules,
+  Platform, 
+} from 'react-native';
 import ProjectItem from './ProjectItem'
 import { connect } from 'react-redux'
 import * as newApi from '../api'
@@ -11,6 +23,7 @@ import {
   requestContents 
 } from '../../actions';
 import Login from '../containers/Login';
+import fs from 'react-native-fs';
 
 
 class ProjectList extends React.Component {
@@ -43,6 +56,9 @@ class ProjectList extends React.Component {
     }
 
     componentDidMount() {
+      if (Platform.OS === 'android') {
+        this.checkUpdate();
+      }
       if (this.props.projects.length === 0) {
         this.props.dispatch(requestContents(''));
         this.getProjects((projects, dataStructure) => {
@@ -261,6 +277,48 @@ class ProjectList extends React.Component {
         );
       };
 
+      checkUpdate = () => {
+        const body = {
+          build: 2, 
+          path: 'https://www.investarget.com/downloadapp/android/android.apk', 
+        };
+        // newApi.addAndroidVersion(body)
+        //   .then(result => console.log(result))
+        //   .catch(error => console.error(error));
+        // return;
+        newApi.getAndroidVersion()
+          .then(result => {
+            console.log(result);
+            Alert.alert(
+              '发现新版本',
+              '点击确定下载新版本',
+              [
+                {text: '取消', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                {text: '确定', onPress: () => this.downloadAndroidApk(result[1].path)},
+              ],
+              { cancelable: true }
+            );
+          })
+          .catch(error => console.error(error));
+      }
+
+      downloadAndroidApk = path => {
+        console.log('path', path);
+        var filePath = fs.DocumentDirectoryPath + '/com.domain.example.apk';
+        fs.downloadFile({
+          fromUrl: path,
+          toFile: filePath,
+          progress: res => {
+            console.log((res.bytesWritten / res.contentLength).toFixed(2));
+          },
+          progressDivider: 1
+        }).promise.then(result => {
+          console.log('resultddd', result);
+          if (result.statusCode == 200) {
+            NativeModules.InstallApk.install(filePath);
+          }
+        })
+      }
       
     render() {
         return (
@@ -291,6 +349,20 @@ class ProjectList extends React.Component {
                     )}
                     ListFooterComponent={this.renderFooter}
                 />
+{/* 
+                  <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={true}
+                    onRequestClose={()=>{}}
+                  >
+
+                    <View style={{flex:1,backgroundColor:'rgba(0,0,0,.5)'}}>
+                    
+                    </View>
+
+                  </Modal> */}
+
             </View>
         )
     }

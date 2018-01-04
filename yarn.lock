@@ -3962,6 +3962,10 @@ react-native-image-picker@^0.26.7:
   version "0.26.7"
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-0.26.7.tgz#ad2ee957f7f6cc01396893ea03d84cb2adb2e376"
 
+react-native-install-apk@^1.0.0:
+  version "1.0.0"
+  resolved "http://registry.npm.taobao.org/react-native-install-apk/download/react-native-install-apk-1.0.0.tgz#2a5923a61d2c0a6fdea8efaacae17ad2868abdef"
+
 react-native-keyboard-aware-scroll-view@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/react-native-keyboard-aware-scroll-view/-/react-native-keyboard-aware-scroll-view-0.3.0.tgz#b9d7b0d5b47d2bb4285fe50a3d274b10a3b5e1a7"
