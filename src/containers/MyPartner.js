@@ -1,12 +1,20 @@
 import React from 'react'
-import { ScrollView, View, Text, Image, TouchableOpacity } from 'react-native'
+import { 
+  ScrollView, 
+  View, 
+  Text, 
+  Image, 
+  TouchableOpacity, 
+  FlatList, 
+  RefreshControl, 
+  ActivityIndicator, 
+} from 'react-native';
 import Toast from 'react-native-root-toast'
 import { connect } from 'react-redux'
 import ImagePicker from 'react-native-image-picker'
  
 import * as api from '../api'
 import PartnerCard from '../components/PartnerCard'
-
 
 const headerRightStyle = {
     marginRight: 12,
@@ -27,8 +35,7 @@ const cardStyle = {
     paddingRight: 24,
 }
 
-const PAGE_SIZE = 200
-
+const PAGE_SIZE = 7 
 class MyPartner extends React.Component {
 
     static navigationOptions = ({navigation}) => {
@@ -52,6 +59,8 @@ class MyPartner extends React.Component {
             total: 0,
             page: 1,
             loading: false,
+            isLoadingAll: false, 
+            isLoadingMore: false, 
         }
     }
 
@@ -72,8 +81,14 @@ class MyPartner extends React.Component {
             var { count: total, data: list } = data
             list = list.map(item => {
                 const user = userType == 1 ? item.traderuser : item.investoruser
-                const { id, username, org, photourl } = user
-                return { id, username, orgname: org ? org.orgname : '', photoUrl: photourl }
+                const { id, username, org, photourl, title } = user
+                return { 
+                    id, 
+                    username, 
+                    org: org ? org.orgname : '', 
+                    photoUrl: photourl, 
+                    title: title ? title.name : '', 
+                }
             })
             return { total, list }
         })
@@ -124,30 +139,111 @@ class MyPartner extends React.Component {
 
     componentDidMount() {
         this.org = this.props.navigation.state.params.org;
+        this.getData();
+    }
+
+    getData = () => {
+        this.setState({ loading: true });
         this.getPartners(1).then(({ total, list }) => {
-            this.setState({ total, partners: list })
+            this.setState({ 
+                total, 
+                partners: list, 
+                isLoadingAll: total === list.length,
+                page: 1,
+                loading: false,  
+            });
         }).catch(error => {
             Toast.show(error.message, {position: Toast.positions.CENTER})
         })
     }
 
+    loadMore = () => {
+        if (this.state.isLoadingAll || this.state.isLoadingMore || this.state.partners.length === 0) return;
+        this.setState({ isLoadingMore: true });
+        this.getPartners(this.state.page + 1)
+          .then(({ total, list }) => setTimeout(
+            () => this.setState({
+              total,
+              partners: this.state.partners.concat(list),
+              isLoadingAll: list.length < PAGE_SIZE,
+              isLoadingMore: false,
+              page: this.state.page + 1
+            }),
+            1000
+          ))
+          .catch(error => Toast.show(error.message, { position: Toast.positions.CENTER }));
+    }
+
+    renderFooter = () => {
+        if (this.state.partners.length < PAGE_SIZE) return null;
+        if (this.state.isLoadingAll) return (
+          <Text style={{ padding: 16, textAlign: 'center', fontSize: 12, color: 'gray' }}>---没有更多了---</Text>
+        );
+    
+        return (
+          <View
+            style={{
+              paddingVertical: 20,
+              borderTopWidth: 1,
+              borderColor: "#CED0CE"
+            }}>
+            <ActivityIndicator animating size="small" />
+          </View>
+        );
+      };
+
     render() {
         return (
-            <ScrollView style={{flex: 1}}>
-                <View style={cardContainerStyle}>
-                    {this.state.partners.map(item => (
-                        <PartnerCard
-                            key={item.id}
-                            style={cardStyle}
-                            photoUrl={item.photoUrl}
-                            orgName={item.orgname}
-                            userName={item.username}
-                            onPress={this.handleClickPartner.bind(this, item.id, item.username)} />
-                    ))}                
-                </View>
-            </ScrollView>    
+            <View style={{flex:1}}>
+                <FlatList
+                    data={this.state.partners}
+                    keyExtractor={(item,index)=>item.id}             
+                    renderItem={({ item }) => <UserItem {...item} />}
+                    overScrollMode="always"
+                    onEndReachedThreshold={0.01}
+                    refreshControl={
+                      <RefreshControl 
+                        refreshing={this.state.loading} 
+                        onRefresh={this.getData} 
+                        colors={['#10458f']} 
+                        tintColor="#10458f" 
+                      />
+                    }
+                    onEndReached={this.loadMore}
+                    ListFooterComponent={this.renderFooter}
+                    // ListEmptyComponent={() => (
+                    //     <View style={{flex:1,alignItems:'center',paddingTop: 60}}>
+                    //         <Image source={require('../images/emptyUser.png')} />
+                    //     </View>
+                    // )}
+                    ItemSeparatorComponent={() => <View style={{height:1,backgroundColor:'#f4f4f4'}} />}
+                />
+            </View>
         )
     }
+}
+
+function UserItem(props) {
+    const { username, photoUrl, org, title } = props
+    const imgSource = photoUrl ? { uri: photoUrl } : require('../images/userCenter/defaultAvatar.png')
+
+    return (
+        <TouchableOpacity onPress={props.onSelect}>
+            <View style={{flexDirection:'row',backgroundColor:'#fff',padding: 16,paddingTop: 24}}>
+                <Image source={imgSource} style={{width:50,height:50,marginRight:16,borderRadius:25}} />
+                <View style={{justifyContent:'space-between'}}>
+                    <Text style={{fontSize:16,color:'#333'}} numberOfLines={1}>{org}</Text>
+                    <View style={{flexDirection:'row'}}>
+                        <Text style={{width:120,marginRight:20,fontSize:16,color:'#333'}} numberOfLines={1}>{username}</Text>
+                        <Text style={{fontSize:13,color:'#999'}} numberOfLines={1}>{title}</Text>
+                    </View>
+                </View>
+            </View>
+            {props.selected ? (
+                <View style={{position:'absolute',left:0,top:0,width:'100%',height:'100%',backgroundColor:'rgba(0,0,0,.3)',zIndex:1}}></View>
+            ):null}
+        </TouchableOpacity>
+    )
 }
 
 function mapStateToProps(state) {

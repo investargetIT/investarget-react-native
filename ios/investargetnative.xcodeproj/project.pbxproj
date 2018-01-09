@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -31,6 +32,7 @@
 		5647263AA5B2476ABD0A43AA /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5BC8EED8C30425D91F8E1B3 /* UserNotifications.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		57EC0938AD0749699F18C08B /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E7074B6CAF14B049D0483C3 /* libReact.a */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
+		623A99A331264CABBACE7E88 /* libRNDeviceInfo-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D7F8006C6F14C518C772F9E /* libRNDeviceInfo-tvOS.a */; };
 		6D5FD52C579D4276887D134D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB4711763B6C408C83C55B84 /* UIKit.framework */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		9209298A12B74C19B4307A72 /* libRCTJCoreModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E454D3705AAC41D9A85734E0 /* libRCTJCoreModule.a */; };
@@ -41,6 +43,7 @@
 		C804FCC4A4C94C7287688689 /* libRCTJPushModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8386BB88020D4715B2F5284E /* libRCTJPushModule.a */; };
 		C9D14B5253B64B6AA81C1DDA /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F53F4C201A1349BAB2C0550D /* SystemConfiguration.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		D52506289665475DA319CA88 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01D9F111DC244BA8B7CBAD66 /* CoreTelephony.framework */; };
+		DDE02883EFC94762B0AE037D /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A73E4AC810A42219022CE66 /* libRNDeviceInfo.a */; };
 		E5BE7391137642608E2E4157 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7B32C6C4476468DAAFB65D0 /* CoreFoundation.framework */; };
 		F5003EF4BB8540318EE22417 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C4D5B8EC9772416498C99E7B /* libRNImagePicker.a */; };
 		FBDD45C202BC4242A9CA50C2 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5BF5BC8C78D41FA96D36C9F /* Security.framework */; };
@@ -48,8 +51,6 @@
 		FFB1A41B1F94BCCC0005CFAB /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FFB1A41A1F94BCCC0005CFAB /* libsqlite3.0.tbd */; };
 		FFB1A41D1F94BCE60005CFAB /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FFB1A41C1F94BCE60005CFAB /* libc++.tbd */; };
 		FFB1A41E1F94BD240005CFAB /* libRCTWeChat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FFB1A4171F94BC260005CFAB /* libRCTWeChat.a */; };
-		DDE02883EFC94762B0AE037D /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A73E4AC810A42219022CE66 /* libRNDeviceInfo.a */; };
-		623A99A331264CABBACE7E88 /* libRNDeviceInfo-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D7F8006C6F14C518C772F9E /* libRNDeviceInfo-tvOS.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -291,6 +292,20 @@
 			remoteGlobalIDString = 014A3B5C1C6CF33500B6D375;
 			remoteInfo = RNImagePicker;
 		};
+		FF0E793720048E4C0023B78A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 32D038DFD348439EBD424AF5 /* RNDeviceInfo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DA5891D81BA9A9FC002B4DB2;
+			remoteInfo = RNDeviceInfo;
+		};
+		FF0E793920048E4C0023B78A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 32D038DFD348439EBD424AF5 /* RNDeviceInfo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E72EC1401F7ABB5A0001BC90;
+			remoteInfo = "RNDeviceInfo-tvOS";
+		};
 		FF2F0FB51F98896E00075E1E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 06B27206AF3E47D883191AC6 /* RNFS.xcodeproj */;
@@ -351,7 +366,10 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = investargetnative/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = investargetnative/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		1A73E4AC810A42219022CE66 /* libRNDeviceInfo.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNDeviceInfo.a; sourceTree = "<group>"; };
+		32D038DFD348439EBD424AF5 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		51E775E56457492A834DF1EB /* Foundation.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		5D7F8006C6F14C518C772F9E /* libRNDeviceInfo-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNDeviceInfo-tvOS.a"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		7E7074B6CAF14B049D0483C3 /* libReact.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReact.a; sourceTree = "<group>"; };
@@ -381,9 +399,6 @@
 		FB4711763B6C408C83C55B84 /* UIKit.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		FFB1A41A1F94BCCC0005CFAB /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		FFB1A41C1F94BCE60005CFAB /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
-		32D038DFD348439EBD424AF5 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; name = "RNDeviceInfo.xcodeproj"; path = "../node_modules/react-native-device-info/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		1A73E4AC810A42219022CE66 /* libRNDeviceInfo.a */ = {isa = PBXFileReference; name = "libRNDeviceInfo.a"; path = "libRNDeviceInfo.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-		5D7F8006C6F14C518C772F9E /* libRNDeviceInfo-tvOS.a */ = {isa = PBXFileReference; name = "libRNDeviceInfo-tvOS.a"; path = "libRNDeviceInfo-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -653,6 +668,8 @@
 				C7A76E75F99B4021AE107BDC /* libthird-party.a */,
 				8A44F401AC4A414C844CC5B9 /* libdouble-conversion.a */,
 				B56891FC1D3146C38FDED4A7 /* libRNFS.a */,
+				1A73E4AC810A42219022CE66 /* libRNDeviceInfo.a */,
+				5D7F8006C6F14C518C772F9E /* libRNDeviceInfo-tvOS.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -699,6 +716,15 @@
 				F41F5514B2EA4E72A07C4BA7 /* CoreGraphics.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FF0E793320048E4C0023B78A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FF0E793820048E4C0023B78A /* libRNDeviceInfo.a */,
+				FF0E793A20048E4C0023B78A /* libRNDeviceInfo-tvOS.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		FF2F0FB11F98896D00075E1E /* Products */ = {
@@ -854,6 +880,10 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+				},
+				{
+					ProductGroup = FF0E793320048E4C0023B78A /* Products */;
+					ProjectRef = 32D038DFD348439EBD424AF5 /* RNDeviceInfo.xcodeproj */;
 				},
 				{
 					ProductGroup = FF2F0FB11F98896D00075E1E /* Products */;
@@ -1102,6 +1132,20 @@
 			fileType = archive.ar;
 			path = libRNImagePicker.a;
 			remoteRef = D03EFBF11F8DCA90008B8282 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FF0E793820048E4C0023B78A /* libRNDeviceInfo.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNDeviceInfo.a;
+			remoteRef = FF0E793720048E4C0023B78A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FF0E793A20048E4C0023B78A /* libRNDeviceInfo-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRNDeviceInfo-tvOS.a";
+			remoteRef = FF0E793920048E4C0023B78A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		FF2F0FB61F98896E00075E1E /* libRNFS.a */ = {
