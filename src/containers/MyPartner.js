@@ -192,13 +192,18 @@ class MyPartner extends React.Component {
         );
       };
 
+    handlePartnerPressed = partner => this.props.navigation.navigate(
+        'Chat',
+        { targetUserId: partner.id, targetUserName: partner.username }
+    );
+
     render() {
         return (
             <View style={{flex:1}}>
                 <FlatList
                     data={this.state.partners}
                     keyExtractor={(item,index)=>item.id}             
-                    renderItem={({ item }) => <UserItem {...item} />}
+                    renderItem={({ item }) => <UserItem {...item} onSelect={this.handlePartnerPressed.bind(this, item)} />}
                     overScrollMode="always"
                     onEndReachedThreshold={0.01}
                     refreshControl={
