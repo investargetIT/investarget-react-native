@@ -81,10 +81,12 @@ class MyPartner extends React.Component {
             var { count: total, data: list } = data
             list = list.map(item => {
                 const user = userType == 1 ? item.traderuser : item.investoruser
-                const { id, username, org, photourl, title } = user
+                const { id, username, org, photourl, title, mobile, email } = user
                 return { 
                     id, 
                     username, 
+                    mobile, 
+                    email, 
                     org: org ? org.orgname : '', 
                     photoUrl: photourl, 
                     title: title ? title.name : '', 
@@ -229,19 +231,29 @@ class MyPartner extends React.Component {
 }
 
 function UserItem(props) {
-    const { username, photoUrl, org, title } = props
+    const { username, photoUrl, org, title, email, mobile } = props
     const imgSource = photoUrl ? { uri: photoUrl } : require('../images/userCenter/defaultAvatar.png')
 
     return (
         <TouchableOpacity onPress={props.onSelect}>
             <View style={{flexDirection:'row',backgroundColor:'#fff',padding: 16,paddingTop: 24}}>
                 <Image source={imgSource} style={{width:50,height:50,marginRight:16,borderRadius:25}} />
-                <View style={{justifyContent:'space-between'}}>
+                <View style={{justifyContent:'space-between', flex: 0.5}}>
                     <Text style={{fontSize:16,color:'#333'}} numberOfLines={1}>{org}</Text>
-                    <View style={{flexDirection:'row'}}>
-                        <Text style={{width:120,marginRight:20,fontSize:16,color:'#333'}} numberOfLines={1}>{username}</Text>
+                    <Text style={{fontSize:16,color:'#333'}} numberOfLines={1}>
+                        {username + ' '}
                         <Text style={{fontSize:13,color:'#999'}} numberOfLines={1}>{title}</Text>
-                    </View>
+                    </Text>
+                </View>
+                <View style={{ marginLeft: 4, flex: 0.5, justifyContent: 'space-between'}}>
+                  <View style={{flexDirection: 'row'}}>
+                    <Image source={require('../images/ic_phone.png')} />
+                    <Text style={{ marginLeft: 10, color: '#999' }}>{mobile}</Text>
+                  </View>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Image source={require('../images/ic_email.png')} />
+                    <Text style={{ marginLeft: 10, width: '80%', color: '#999' }} numberOfLines={2}>{email}</Text>
+                  </View>
                 </View>
             </View>
             {props.selected ? (
