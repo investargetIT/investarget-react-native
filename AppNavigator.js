@@ -49,6 +49,7 @@ import AddSchedule from './src/containers/AddSchedule';
 import SelectProject from './src/containers/SelectProject';
 import SearchUser from './src/containers/SearchUser';
 import EditSchedule from './src/containers/EditSchedule';
+import SelectOrg from './src/containers/SelectOrg';
 
 
 
@@ -145,6 +146,7 @@ const CustomTabView = ({ router, navigation, isFetching }) => {
     SelectProject: { screen: SelectProject },
     SearchUser: { screen: SearchUser },
     EditSchedule: { screen: EditSchedule },
+    SelectOrg: { screen: SelectOrg }, 
   })
 
   const DrawerApp = DrawerNavigator(

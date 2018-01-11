@@ -35,7 +35,8 @@ class AddInvestor extends React.Component {
                 style={{marginRight:16}}
                 onPress={() => { params.onPress && params.onPress() }}>
                 <Text style={{fontSize:15,color:'#fff'}}>提交</Text>
-            </TouchableOpacity>)
+            </TouchableOpacity>),
+            headerBackTitle: null,
         }
     }
 
@@ -204,6 +205,17 @@ class AddInvestor extends React.Component {
         })
     }
 
+    handleOrgPressed = () => {
+        this.props.navigation.navigate(
+            'SelectOrg',
+            { onSelectOrg: this.onSelectOrg }
+        );
+    }
+
+    onSelectOrg = org => {
+        console.log('org', org);
+    }
+
     render() {
         const { name, title, mobile, email, company, file, imageData } = this.state
         const textInputProps = {
@@ -245,8 +257,9 @@ class AddInvestor extends React.Component {
                     <TextInput style={rightStyle} {...textInputProps} value={email} onChangeText={this.handleChange.bind(this, 'email')} />
                 </View>
                 <View style={cellStyle}>
-                    <Text style={leftStyle}>公司</Text>
-                    <TextInput style={rightStyle} {...textInputProps} value={company} onChangeText={this.handleChange.bind(this, 'company')} />
+                    <Text style={leftStyle}>机构</Text>
+                    {/* <TextInput style={rightStyle} {...textInputProps} value={company} onChangeText={this.handleChange.bind(this, 'company')} /> */}
+                    <Text onPress={this.handleOrgPressed} style={rightStyle}>{company}</Text>
                 </View>
                 </View>
             </KeyboardAwareScrollView>
