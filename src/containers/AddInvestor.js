@@ -4,7 +4,7 @@ import Toast from 'react-native-root-toast'
 import { connect } from 'react-redux'
 import FitImage from 'react-native-fit-image'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-
+import Picker2 from '../components/Picker';
 import * as api from '../api'
 import Select from '../components/Select'
 import { 
@@ -54,6 +54,8 @@ class AddInvestor extends React.Component {
             file: null,
             imageData: null, 
             tags: [],
+            group: null, 
+            investorGroupOptions: [],
         }
         this.org = null;
     }
@@ -63,21 +65,23 @@ class AddInvestor extends React.Component {
     }
 
     checkFields = () => {
-        const { name, title, mobile, email, company } = this.state
+        const { name, title, mobile, email, company, tags } = this.state
         var errMsg = null
         if (!name) {
             errMsg = '请输入姓名'
         } else if (!title) {
             errMsg = '请选择职位'
+        } else if (tags.length === 0) {
+            errMsg = '请选择标签'
         } else if (!mobile) {
             errMsg = '请输入手机号'
         } else if (!email) {
             errMsg = '请输入邮箱'
         } else if (!/[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]+\.[A-Za-z0-9_\-\.]+/.test(email)) {
             errMsg = '请输入格式正确的邮箱'
-        }else if (!company) {
+        } else if (!company) {
             errMsg = '请输入公司'
-        }
+        } 
         return errMsg
     }
 
@@ -158,17 +162,23 @@ class AddInvestor extends React.Component {
           formData.append('file', this.state.file)
           return cardKey ? api.coverUpload(cardKey, formData, 'image') : api.basicUpload(formData, 'image')
         })
+        // 添加机构
+        .then(result => {
+          if (typeof this.state.company === 'string') {
+            return api.addOrg({ nameC: this.state.company });
+          }
+        })
         .then(result => {
           console.log('uploadCard', result)
           const cardKey = result.key
           const cardUrl = result.url
+          const org = result ? result.id : this.state.company.id;
           if (existUser) {
             const title = this.state.title || (existUser.title ? existUser.title.id : null)
             const email = this.state.email || existUser.email
-            const orgname = this.state.company || existUser.org.id
             const usernameC = this.state.name || existUser.username
             const mobile = this.state.mobile || existUser.mobile
-            return api.editUser([existUser.id], { orgname, title, email, usernameC, cardKey, cardUrl, mobile })
+            return api.editUser([existUser.id], { org, title, email, usernameC, cardKey, cardUrl, mobile })
           } else {
             const partnerId = this.props.userId
             return api.addUser({ ...body, partnerId, cardKey, cardUrl, userstatus: 2, groups: [1] })
@@ -199,7 +209,6 @@ class AddInvestor extends React.Component {
         if (this.props.navigation.state.params) {
             const { name, title, mobile, email, company, file, imageData } = this.props.navigation.state.params
             this.setState({ name, title, mobile, email, company, file, imageData })
-            this.org = company;
         }
 
         this.props.navigation.setParams({ onPress: this.handleSubmit })
@@ -215,6 +224,10 @@ class AddInvestor extends React.Component {
         .catch(error => {
             Toast.show(error.message, { position: Toast.positions.CENTER })
         })
+        api.queryUserGroup({ type: 'investor' }).then(data => {
+            const investorGroupOptions = data.data.map(m => ({ value: m.id, label: m.name }));
+            this.setState({ investorGroupOptions });
+        })
     }
 
     handleOrgPressed = () => {
@@ -229,7 +242,7 @@ class AddInvestor extends React.Component {
     }
 
     render() {
-        const { name, title, mobile, email, company, file, imageData, tags } = this.state
+        const { name, title, mobile, email, company, file, imageData, tags, group } = this.state
         const textInputProps = {
             autoCapitalize: "none",
             spellCheck: false,
@@ -247,6 +260,19 @@ class AddInvestor extends React.Component {
                     <Text style={leftStyle}>姓名</Text>
                     <TextInput style={rightStyle} {...textInputProps} value={name} onChangeText={this.handleChange.bind(this, 'name')} />
                 </View>
+                <View style={cellStyle}>
+                  <Text style={leftStyle}>角色</Text>
+                  <Select
+                    title="请选择角色"
+                    value={group}
+                    onChange={this.handleChange.bind(this, 'group')}
+                    options={this.state.investorGroupOptions}
+                    multiple={false}
+                    placeholder="点击选择角色"
+                    containerStyle={{ flex: 1, height: '100%' }}
+                    style={{fontSize: 15, color: '#333'}}
+                  /> 
+                </View> 
                 <View style={cellStyle}>
                     <Text style={leftStyle}>职位</Text>
                     <Select
