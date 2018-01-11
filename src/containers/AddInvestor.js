@@ -7,7 +7,10 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import * as api from '../api'
 import Select from '../components/Select'
-import { receiveTitles } from '../../actions'
+import { 
+    receiveTitles, 
+    receiveTags, 
+} from '../../actions';
 
 const cellStyle = {
     flexDirection:'row',
@@ -49,7 +52,8 @@ class AddInvestor extends React.Component {
             email: '',
             company: '',
             file: null,
-            imageData: null,
+            imageData: null, 
+            tags: [],
         }
         this.org = null;
     }
@@ -205,6 +209,12 @@ class AddInvestor extends React.Component {
         }).catch(error => {
             Toast.show(error.message, { position: Toast.positions.CENTER })
         })
+        api.getSource('tag').then(data => {
+            this.props.dispatch(receiveTags(data))
+        })
+        .catch(error => {
+            Toast.show(error.message, { position: Toast.positions.CENTER })
+        })
     }
 
     handleOrgPressed = () => {
@@ -219,7 +229,7 @@ class AddInvestor extends React.Component {
     }
 
     render() {
-        const { name, title, mobile, email, company, file, imageData } = this.state
+        const { name, title, mobile, email, company, file, imageData, tags } = this.state
         const textInputProps = {
             autoCapitalize: "none",
             spellCheck: false,
@@ -251,6 +261,19 @@ class AddInvestor extends React.Component {
                     />
                 </View>
                 <View style={cellStyle}>
+                    <Text style={leftStyle}>标签</Text>
+                    <Select
+                        title="请选择标签"
+                        value={tags}
+                        onChange={this.handleChange.bind(this, 'tags')}
+                        options={this.props.tagOptions}
+                        multiple={true}
+                        placeholder="点击选择标签"
+                        containerStyle={{ flex: 1, height: '100%' }}
+                        style={{fontSize: 15, color: '#333'}}
+                    />
+                </View>
+                <View style={cellStyle}>
                     <Text style={leftStyle}>手机</Text>
                     <TextInput style={rightStyle} {...textInputProps} value={mobile} onChangeText={this.handleChange.bind(this, 'mobile')} />
                 </View>
@@ -272,10 +295,11 @@ class AddInvestor extends React.Component {
 
 
 function mapStateToProps(state) {
-    const { titles, userInfo } = state.app
+    const { titles, userInfo, tags } = state.app
     const titleOptions = titles.map(item => ({ label: item.name.trim(), value: item.id }))
+    const tagOptions = tags.map(item => ({ label: item.name.trim(), value: item.id }))
     const { id } = userInfo
-    return { titleOptions, userId: id }
+    return { titleOptions, userId: id, tagOptions }
 }
 
 export default connect(mapStateToProps)(AddInvestor)
