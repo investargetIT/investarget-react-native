@@ -51,6 +51,7 @@ class AddInvestor extends React.Component {
             file: null,
             imageData: null,
         }
+        this.org = null;
     }
 
     handleChange = (key, value) => {
@@ -194,6 +195,7 @@ class AddInvestor extends React.Component {
         if (this.props.navigation.state.params) {
             const { name, title, mobile, email, company, file, imageData } = this.props.navigation.state.params
             this.setState({ name, title, mobile, email, company, file, imageData })
+            this.org = company;
         }
 
         this.props.navigation.setParams({ onPress: this.handleSubmit })
@@ -213,7 +215,7 @@ class AddInvestor extends React.Component {
     }
 
     onSelectOrg = org => {
-        console.log('org', org);
+        this.setState({ company: org });
     }
 
     render() {
@@ -258,8 +260,9 @@ class AddInvestor extends React.Component {
                 </View>
                 <View style={cellStyle}>
                     <Text style={leftStyle}>机构</Text>
-                    {/* <TextInput style={rightStyle} {...textInputProps} value={company} onChangeText={this.handleChange.bind(this, 'company')} /> */}
-                    <Text onPress={this.handleOrgPressed} style={rightStyle}>{company}</Text>
+                    <Text numberOfLines={1} onPress={this.handleOrgPressed} style={rightStyle}>
+                      { typeof company === 'string' ? company : company.orgname }
+                    </Text>
                 </View>
                 </View>
             </KeyboardAwareScrollView>

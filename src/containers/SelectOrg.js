@@ -80,24 +80,33 @@ class SelectOrg extends React.Component {
     this.setState({ search: value }, this.searchProject);
   }
 
+  handleAddOrgBtnPressed = () => {
+    const { navigation } = this.props;
+    navigation.goBack();
+    navigation.state.params.onSelectOrg(this.state.search);
+  }
+
   render() {
     return (
       <View>
         
-        <View style={{ position: 'absolute' }} >
+        <View style={{ position: 'absolute', left: 0, right: 0 }} >
           
-          <View style={{ height: 48, backgroundColor: 'white', paddingLeft: 8, paddingRight: 8, flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{ height: 48, backgroundColor: 'white', paddingLeft: 8, paddingRight: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
             <Image
               source={require('../images/home/search.png')}
-              style={{ width: 20, height: 20, marginRight: 8 }}
+              style={{ width: 20, height: 20, marginRight: 8, flexGrow: 0, flexShrink: 0, flexBasis: 20 }}
             />
             <TextInput
-              style={{ width: '100%', fontSize: 15 }}
+              style={{ fontSize: 15, flex: 1 }}
               placeholder="搜索项目"
               value={this.state.search}
               onChangeText={this.handleSearchTextChange}
               underlineColorAndroid="transparent"
             />
+            <TouchableOpacity onPress={this.handleAddOrgBtnPressed} style={{flexGrow: 0, flexShrink: 0, flexBasis: 70 }}>
+              <Text style={{ fontSize: 16, color: '#10458F', textAlign: 'right' }}>添加机构</Text>
+            </TouchableOpacity>
           </View>
 
           <View style={{ height: 0.4, backgroundColor: "#CED0CE" }} />
