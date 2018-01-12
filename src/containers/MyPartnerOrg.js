@@ -7,6 +7,8 @@ import {
   Image,
   ActionSheetIOS,
   Platform,
+  ActivityIndicator, 
+  RefreshControl, 
 } from 'react-native';
 import * as api from '../api';
 import { connect } from 'react-redux';
@@ -14,6 +16,8 @@ import ImagePicker from 'react-native-image-picker';
 import Toast from 'react-native-root-toast';
 import { requestContents, hideLoading } from '../../actions';
 import ActionSheet from '../ActionSheet';
+
+const PAGE_SIZE = 10;
 
 function MyPartnerOrgCell (props) {
   const { org, count, data } = props.data;
@@ -42,6 +46,9 @@ class MyPartnerOrg extends React.Component {
       this.state = {
         data: [],
         loading: false,
+        isLoadingAll: false,
+        isLoadingMore: false, 
+        page: 0, 
       }
     }
 
@@ -49,9 +56,16 @@ class MyPartnerOrg extends React.Component {
       this.getData();
     }
 
-    getData = () => {
+    getData = isLoadingMore => {
+      if (isLoadingMore === undefined) {
+        this.setState({ loading: true });
+      }
       let org = [];
-      api.getOrg({ trader: this.props.userInfo.id, page_size: 10000 })
+      api.getOrg({ 
+        trader: this.props.userInfo.id, 
+        page_size: PAGE_SIZE, 
+        page_index: isLoadingMore ?  this.state.page + 1 : 1 
+      })
       .then(data => {
         org = data.data;
         return Promise.all(
@@ -63,7 +77,15 @@ class MyPartnerOrg extends React.Component {
           element['id'] = org[index]['id'];
           element['org'] = org[index]['orgname'];
         }, this);
-        this.setState({ data })
+
+        setTimeout(() => this.setState({
+          data: isLoadingMore ? this.state.data.concat(data) : data,
+          isLoadingAll: data.length < PAGE_SIZE,
+          isLoadingMore: false,
+          page: isLoadingMore ? this.state.page + 1 : 1,
+          loading: false, 
+        }), 1000);
+
       })
       .catch(err => console.error(err));
     }
@@ -187,14 +209,48 @@ class MyPartnerOrg extends React.Component {
       return { name, email, title, mobile, company }
   }
 
+  loadMore = () => {
+    if (this.state.isLoadingAll || this.state.isLoadingMore || this.state.data.length === 0) return;
+    this.setState({ isLoadingMore: true });
+    this.getData(true);
+  }
+
+  renderFooter = () => {
+    if (this.state.data.length < PAGE_SIZE) return null;
+    if (this.state.isLoadingAll) return (
+      <Text style={{ padding: 16, textAlign: 'center', fontSize: 12, color: 'gray' }}>---没有更多了---</Text>
+    );
+
+    return (
+      <View
+        style={{
+          paddingVertical: 20,
+          borderColor: "#CED0CE"
+        }}>
+        <ActivityIndicator animating size="small" />
+      </View>
+    );
+  };
+
   render() {
     return <FlatList
       style={{ backgroundColor: 'white' }}
       data={this.state.data}
       keyExtractor={item => item.id}
       renderItem={({ item }) => <MyPartnerOrgCell data={item} onPress={this.handleItemPressed.bind(this, item)} />}
+      refreshControl={
+        <RefreshControl 
+          refreshing={this.state.loading} 
+          onRefresh={this.getData} 
+          colors={['#10458f']} 
+          tintColor="#10458f" 
+        />
+      }
       ItemSeparatorComponent={this.separator}
       ListHeaderComponent={this.renderHeader}
+      onEndReachedThreshold={0.01}
+      onEndReached={this.loadMore}
+      ListFooterComponent={this.renderFooter}
     />
   }
 }
