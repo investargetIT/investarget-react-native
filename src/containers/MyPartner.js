@@ -8,6 +8,7 @@ import {
   FlatList, 
   RefreshControl, 
   ActivityIndicator, 
+  Linking, 
 } from 'react-native';
 import Toast from 'react-native-root-toast'
 import { connect } from 'react-redux'
@@ -237,7 +238,7 @@ function UserItem(props) {
     return (
         <TouchableOpacity onPress={props.onSelect}>
             <View style={{flexDirection:'row',backgroundColor:'#fff',padding: 16,paddingTop: 24}}>
-                <Image source={imgSource} style={{width:50,height:50,marginRight:16,borderRadius:25}} />
+                <Image source={imgSource} style={{width:60,height:60,marginRight:16,borderRadius:30}} />
                 <View style={{justifyContent:'space-between', flex: 0.5}}>
                     <Text style={{fontSize:16,color:'#333'}} numberOfLines={1}>{org}</Text>
                     <Text style={{fontSize:16,color:'#333'}} numberOfLines={1}>
@@ -246,14 +247,18 @@ function UserItem(props) {
                     </Text>
                 </View>
                 <View style={{ marginLeft: 4, flex: 0.5, justifyContent: 'space-between'}}>
-                  <View style={{flexDirection: 'row'}}>
-                    <Image source={require('../images/ic_phone.png')} />
-                    <Text style={{ marginLeft: 10, color: '#999' }}>{mobile}</Text>
-                  </View>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Image source={require('../images/ic_email.png')} />
-                    <Text style={{ marginLeft: 10, width: '80%', color: '#999' }} numberOfLines={2}>{email}</Text>
-                  </View>
+                  <TouchableOpacity onPress={() => Linking.openURL(`tel:${mobile}`)}>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <Image source={require('../images/ic_phone.png')} />
+                      <Text style={{ marginLeft: 10, width: '80%', color: '#999' }}>{mobile}</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => Linking.openURL(`mailto:${email}`)}>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <Image source={require('../images/ic_email.png')} />
+                      <Text style={{ marginLeft: 10, width: '80%', color: '#999' }} numberOfLines={2}>{email}</Text>
+                    </View>
+                  </TouchableOpacity>
                 </View>
             </View>
             {props.selected ? (
