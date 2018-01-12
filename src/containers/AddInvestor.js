@@ -31,7 +31,7 @@ const cellStyle = {
     paddingRight:16,
 }
 const leftStyle = {width:'30%',fontSize:15,color:'#333'}
-const rightStyle = {flex:1,fontSize:15,color:'#333'}
+const rightStyle = {flex:1,fontSize:15,color:'#333',paddingLeft: 0}
 
 class AddInvestor extends React.Component {
 
