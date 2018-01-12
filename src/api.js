@@ -457,9 +457,9 @@ export function getUserBase(id) {
  * 获取单个用户详情
  * @param {Number} id - 用户id 
  */
-export const getUserDetailLang = id => r('/user/detail/' + id + '/')
+export const getUserDetailLang = id => r('/user/' + id + '/')
 
-export const getUserDetail = id => r2('/user/detail/' + id + '/')
+export const getUserDetail = id => r2('/user/' + id + '/')
 
 export function login(values) {
   const param = {

@@ -1,5 +1,12 @@
 import React from 'react'
-import { View, TouchableOpacity, Text, Image, TextInput } from 'react-native'
+import { 
+    View, 
+    TouchableOpacity, 
+    Text, 
+    Image, 
+    TextInput,
+    Alert, 
+} from 'react-native'
 import Toast from 'react-native-root-toast'
 import { connect } from 'react-redux'
 import FitImage from 'react-native-fit-image'
@@ -10,6 +17,8 @@ import Select from '../components/Select'
 import { 
     receiveTitles, 
     receiveTags, 
+    requestContents,
+    hideLoading,
 } from '../../actions';
 
 const cellStyle = {
@@ -65,10 +74,12 @@ class AddInvestor extends React.Component {
     }
 
     checkFields = () => {
-        const { name, title, mobile, email, company, tags } = this.state
+        const { name, title, mobile, email, company, tags, group } = this.state
         var errMsg = null
         if (!name) {
             errMsg = '请输入姓名'
+        } else if (!group) {
+            errMsg = '请选择角色'
         } else if (!title) {
             errMsg = '请选择职位'
         } else if (tags.length === 0) {
@@ -91,20 +102,35 @@ class AddInvestor extends React.Component {
             Toast.show(errMsg, {position: Toast.positions.CENTER})
             return
         }
-        this.addInvestor()
+        if (typeof this.state.company === 'string') {
+            Alert.alert(
+                '确定新增机构？',
+                `机构${this.state.company}目前不在库中，点击确定将新增该机构`,
+                [
+                  {text: '取消', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                  {text: '确定', onPress: this.addInvestor},
+                ],
+                { cancelable: false }
+              )
+        } else {
+            this.addInvestor();
+        }
     }
 
     addInvestor = () => {
+        this.props.dispatch(requestContents());
         const body = {
             'usernameC': this.state.name,
             'title': this.state.title,
             'email': this.state.email,
             'mobile': this.state.mobile,
-            'orgname': this.state.company,
+            'org': typeof this.state.company === 'object' ? this.state.company.id : null,
             'cardBucket': 'image',
+            'groups': [this.state.group], 
+            'tags': this.state.tags, 
         }
 
-        let existUser
+        let existUser, uploadCardResult;
         api.checkUserExist(this.state.mobile)
         .then(result => {
           console.log('checkMobileExist', result)
@@ -158,30 +184,37 @@ class AddInvestor extends React.Component {
             existUser = result
             cardKey = existUser.cardKey
           }
-          const formData = new FormData()
-          formData.append('file', this.state.file)
-          return cardKey ? api.coverUpload(cardKey, formData, 'image') : api.basicUpload(formData, 'image')
+          if (this.state.file) {
+            const formData = new FormData()
+            formData.append('file', this.state.file)
+            return cardKey ? api.coverUpload(cardKey, formData, 'image') : api.basicUpload(formData, 'image')
+          }
         })
         // 添加机构
         .then(result => {
+          console.log('uploadCard', result);
+          uploadCardResult = result;
           if (typeof this.state.company === 'string') {
-            return api.addOrg({ nameC: this.state.company });
+            return api.addOrg({ orgnameC: this.state.company });
           }
         })
         .then(result => {
-          console.log('uploadCard', result)
-          const cardKey = result.key
-          const cardUrl = result.url
+          console.log('addOrg', result)
+          let cardKey = uploadCardResult && uploadCardResult.key
+          let cardUrl = uploadCardResult && uploadCardResult.url
           const org = result ? result.id : this.state.company.id;
           if (existUser) {
             const title = this.state.title || (existUser.title ? existUser.title.id : null)
             const email = this.state.email || existUser.email
             const usernameC = this.state.name || existUser.username
             const mobile = this.state.mobile || existUser.mobile
-            return api.editUser([existUser.id], { org, title, email, usernameC, cardKey, cardUrl, mobile })
+            const tags = this.state.tags.length > 0 ? this.state.tags : existUser.tags;
+            cardKey = cardKey || existUser.cardKey
+            cardUrl = cardUrl || existUser.cardUrl
+            return api.editUser([existUser.id], { org, title, email, usernameC, cardKey, cardUrl, mobile, tags })
           } else {
             const partnerId = this.props.userId
-            return api.addUser({ ...body, partnerId, cardKey, cardUrl, userstatus: 2, groups: [1] })
+            return api.addUser({ ...body, partnerId, cardKey, cardUrl, userstatus: 2, org })
           }
         })
         .then(result => {
@@ -198,9 +231,12 @@ class AddInvestor extends React.Component {
         })
         .then(data => {
             Toast.show('新增投资人成功', {position: Toast.positions.CENTER})
-            this.props.navigation.goBack()
+            this.props.dispatch(hideLoading());
+            this.props.navigation.state.params.onGoBack();
+            this.props.navigation.goBack();
         })
         .catch(error => {
+            this.props.dispatch(hideLoading());
             Toast.show(error.message, {position: Toast.positions.CENTER})
         })
     }
@@ -310,7 +346,7 @@ class AddInvestor extends React.Component {
                 <View style={cellStyle}>
                     <Text style={leftStyle}>机构</Text>
                     <Text numberOfLines={1} onPress={this.handleOrgPressed} style={rightStyle}>
-                      { typeof company === 'string' ? company : company.orgname }
+                      { typeof company === 'object' && company !== null ? company.orgname : company }
                     </Text>
                 </View>
                 </View>

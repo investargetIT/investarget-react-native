@@ -46,6 +46,10 @@ class MyPartnerOrg extends React.Component {
     }
 
     componentDidMount() {
+      this.getData();
+    }
+
+    getData = () => {
       let org = [];
       api.getOrg({ trader: this.props.userInfo.id, page_size: 10000 })
       .then(data => {
@@ -133,13 +137,13 @@ class MyPartnerOrg extends React.Component {
           try {
             data = JSON.parse(data)
           } catch (e) {
-            this.props.navigation.navigate('AddInvestor', { file: _file })
+            this.props.navigation.navigate('AddInvestor', { file: _file, imageData: response.data, onGoBack: this.getData })
             return
           }
           const parsedData = this.parseData(data)
-          this.props.navigation.navigate('AddInvestor', { ...parsedData, file: _file, imageData: response.data })
+          this.props.navigation.navigate('AddInvestor', { ...parsedData, file: _file, imageData: response.data, onGoBack: this.getData })
         }, error => {
-          this.props.navigation.navigate('AddInvestor', { file: _file })
+          this.props.navigation.navigate('AddInvestor', { file: _file, imageData: response.data, onGoBack: this.getData })
         })
       }
     }
@@ -153,7 +157,7 @@ class MyPartnerOrg extends React.Component {
           ImagePicker.launchImageLibrary({}, this.imagePickerCallback);
           break;
         case 2:
-          this.props.navigation.navigate('AddInvestor');
+          this.props.navigation.navigate('AddInvestor', {  onGoBack: this.getData });
           break;
       }
     }
