@@ -36,8 +36,8 @@ class TimelineManagement extends React.Component {
         }
     }
 
-    handleClickProject = (id) => {
-        this.props.navigation.navigate('ProjectDetail', { projectID: id })
+    handleClickProject = project => {
+        this.props.navigation.navigate('ProjectDetail', { project })
     }
     handleClickOrganizaiton = (id) => {
         this.props.navigation.navigate('OrganizationInfo', { orgId: id })
@@ -123,7 +123,7 @@ class TimelineManagement extends React.Component {
                             return (
                                 <Card
                                     {...timeline}
-                                    onClickProject={this.handleClickProject.bind(this, proj.id)}
+                                    onClickProject={this.handleClickProject.bind(this, proj)}
                                     onClickOrganizaiton={this.handleClickOrganizaiton.bind(this, org.id)}
                                     onClickInvestor={this.handleClickUser.bind(this, investor.id, investor.username)}
                                     onClickTrader={this.handleClickUser.bind(this, trader.id, trader.username)}

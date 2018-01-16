@@ -101,7 +101,9 @@ class Chat extends React.Component {
                     onChangeTab={({ ref }) => { this.handleChangeTab(ref.props.tabLabel) }}
                 >
                     { this.state.isFriend ? 
-                    <View tabLabel="聊天" style={{flex:1,backgroundColor:'#fff'}}><MessageScreen id={targetUserId} chatType="chat" /></View>
+                      <View tabLabel="聊天" style={{flex:1,backgroundColor:'#fff'}}>
+                        <MessageScreen id={targetUserId} chatType="chat" />
+                      </View>
                     : null }
                     <FavoriteProjectList tabLabel={isInvestor ? "感兴趣" : "Ta感兴趣"} navigation={navigation} favoritetype={5} userType={userType} userId={userId} targetUserId={targetUserId} />
                     <FavoriteProjectList tabLabel={isInvestor ? "我的收藏" : "Ta的收藏"} navigation={navigation} favoritetype={4} userType={userType} userId={userId} targetUserId={targetUserId} />
