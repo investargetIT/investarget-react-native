@@ -11,8 +11,6 @@ import {
     NavigationActions,
     DrawerNavigator,
 } from 'react-navigation';
-import Spinner from 'react-native-loading-spinner-overlay';
-import ProjectList from './src/components/ProjectList'
 import Posts from './src/components/Posts'
 import Events from './src/components/Events'
 import UserCenter from './src/components/UserCenter'
@@ -26,7 +24,6 @@ import MyTags from './src/containers/MyTags'
 import ModifyBusinessCard from './src/containers/ModifyBusinessCard';
 import ModifyPassword from './src/containers/ModifyPassword'
 import Avatar from './src/containers/Avatar'
-import Service from './src/containers/Service'
 import Notification from './src/containers/Notification'
 import EditTimeline from './src/containers/EditTimeline'
 import ProjectDetail from './src/containers/ProjectDetail';
@@ -38,7 +35,6 @@ import SelectUser from './src/components/SelectUser'
 import Filter from './src/containers/Filter'
 import AddInvestor from './src/containers/AddInvestor'
 import MyCalendar from './src/containers/MyCalendar';
-import CustomTabBar from './src/components/CustomTabBar';
 import CustomDrawerContentComponent from './src/components/CustomDrawerContentComponent'
 import TimelineManagement from './src/containers/TimelineManagement';
 import MyFavoriteProject from './src/containers/MyFavoriteProject';
@@ -50,65 +46,10 @@ import SelectProject from './src/containers/SelectProject';
 import SearchUser from './src/containers/SearchUser';
 import EditSchedule from './src/containers/EditSchedule';
 import SelectOrg from './src/containers/SelectOrg';
+import Home from './src/containers/Home';
 
-
-
-const CustomTabView = ({ router, navigation, isFetching }) => {
-    const { routes, index } = navigation.state;
-    const ActiveScreen = router.getComponentForRouteName(routes[index].routeName);
-    return (
-      <View style={{ flex: 1 }}>
-        { Platform.OS === 'ios' ? 
-        <View style={{ height: 24, backgroundColor: '#10458F' }} />
-        : null }
-        <Spinner visible={isFetching} />
-        <CustomTabBar navigation={navigation} />
-        <ActiveScreen
-          navigation={addNavigationHelpers({
-            ...navigation,
-            state: routes[index],
-          })}
-        />
-      </View>
-    );
-  };
-  function mapStateToProps1(state) {
-    const { isFetching } = state.app;
-    return { isFetching };
-  }
-
-  const CustomTabRouter = TabRouter(
-    {
-      project: {
-        screen: ProjectList,
-        navigationOptions: {
-          header: null,
-        }
-      },
-      service: {
-        screen: Service,
-        navigationOptions: {
-          header: null,
-        }
-      },
-    },
-    {
-      initialRouteName: 'project',
-    }
-  );
-  const CustomTabs = createNavigationContainer(
-    createNavigator(CustomTabRouter)(connect(mapStateToProps1)(CustomTabView))
-  );
-  
   const AppNavigator = StackNavigator({
-    Home: { 
-      screen:  CustomTabs,
-      navigationOptions: ({navigation}) => ({
-        title: '首页',
-        headerBackTitle: null,
-        headerTintColor: '#fff',
-      }),
-    },
+    Home: { screen:  Home },
     Contact: { screen: Contact },
     Login: { screen: Login },
     Register: { screen: Register },
@@ -127,7 +68,6 @@ const CustomTabView = ({ router, navigation, isFetching }) => {
     ModifyPassword: { screen: ModifyPassword },
     MyFavoriteProject: { screen: MyFavoriteProject },
     Avatar: { screen: Avatar },
-    Service: { screen: Service },
     Notification: { screen: Notification },
     EditTimeline: { screen: EditTimeline },
     ProjectDetail: { screen: ProjectDetail },
@@ -152,7 +92,6 @@ const CustomTabView = ({ router, navigation, isFetching }) => {
   const DrawerApp = DrawerNavigator(
     {
       App: {
-        path: '/',
         screen: AppNavigator,
       },
       MyCalendar: {
