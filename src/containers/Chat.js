@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import MessageScreen from '../easemob/Containers/MessageScreen';
 import * as api from '../api';
 import FavoriteProjectList from '../components/FavoriteProjectList'
-
+import PersonalInfo from '../components/PersonalInfo'
 const headerRightStyle = {
     marginRight: 16,
 }
@@ -15,7 +15,10 @@ const tabStyle = {
     paddingRight: 10,
 }
 
-
+const containerStyle = {
+    backgroundColor: '#fff',
+    flex:1
+}
 
 class Chat extends React.Component {
 
@@ -87,7 +90,6 @@ class Chat extends React.Component {
         const { userType, userId, navigation } = this.props
         const { targetUserId } = this.props.navigation.state.params
         const isInvestor = userType == 1
-
         return (
             <View style={{flex:1}}>
                 { this.state.isFriend !== null ? 
@@ -105,6 +107,7 @@ class Chat extends React.Component {
                         <MessageScreen id={targetUserId} chatType="chat" />
                       </View>
                     : null }
+                    <PersonalInfo tabLabel="个人信息" userId={targetUserId} style={containerStyle}/>
                     <FavoriteProjectList tabLabel={isInvestor ? "感兴趣" : "Ta感兴趣"} navigation={navigation} favoritetype={5} userType={userType} userId={userId} targetUserId={targetUserId} />
                     <FavoriteProjectList tabLabel={isInvestor ? "我的收藏" : "Ta的收藏"} navigation={navigation} favoritetype={4} userType={userType} userId={userId} targetUserId={targetUserId} />
                     <FavoriteProjectList tabLabel={isInvestor ? "交易师推荐" : "推荐Ta的"} navigation={navigation} favoritetype={3} userType={userType} userId={userId} targetUserId={targetUserId} />
@@ -115,10 +118,6 @@ class Chat extends React.Component {
         )
     }
 }
-
-
-
-
 
 function mapStateToProps(state) {
     const { id, userType } = state.app.userInfo
