@@ -41,26 +41,26 @@ class PersonalInfo extends React.Component{
     getTraders = investor =>{
     const param = { investoruser: investor}
     api.getUserRelation(param).then(result => {
-    if(result.data){
-        const data = result.data.sort((a, b) => Number(b.relationtype) - Number(a.relationtype))
-        const list = []
-        data.forEach(item => {
-            const trader = item.traderuser
-            if (trader) {
-                list.push({ label: trader.username, value: trader.id, onjob: trader.onjob })
-            }
-            this.setState({ traders:list });
-        })
-    }
+    const data = result.data.sort((a, b) => Number(b.relationtype) - Number(a.relationtype))
+    const list = []
+    data.forEach(item => {
+        const trader = item.traderuser
+        if (trader) {
+            list.push({ label: trader.username, value: trader.id, onjob: trader.onjob })
+        }
+        this.setState({ traders:list });
+    })
+    
     }).catch(error => {
         Toast.show(error.message, {position: Toast.positions.CENTER})
     })
     }
 
     componentDidMount(){
-    this.getTraders(this.props.userId)     
-    api.getUserBase(this.props.userId).then(result=>{
-        console.log(result)
+    console.log(this.props.userId)
+    if(this.props.userId){
+        this.getTraders(this.props.userId)     
+        api.getUserBase(this.props.userId).then(result=>{
         this.setState({
             mobile:result.mobile,
             email: result.email,
@@ -69,9 +69,10 @@ class PersonalInfo extends React.Component{
             org: result.org&&result.org.orgname,
             wechat: result.wechat
         })
-    }).catch(error => {
-        Toast.show(error.message, {position: Toast.positions.CENTER})
-    })
+        }).catch(error => {
+            Toast.show(error.message, {position: Toast.positions.CENTER})
+        })
+    }
     }
 
     render(){

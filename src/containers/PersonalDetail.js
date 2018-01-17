@@ -3,7 +3,7 @@ import { Image, Text, View, FlatList, RefreshControl, TouchableOpacity, DeviceEv
 import * as api from '../api'
 import Picker from '../components/Picker'
 import Toast from 'react-native-root-toast'
-
+import PersonalInfo from '../components/PersonalInfo'
 const containerStyle = {
     backgroundColor: '#fff',
     flex:1
@@ -28,7 +28,8 @@ const cellLabelStyle = {
     color: '#333'
 }
 const cellContentStyle = {
-    fontSize: 13
+    fontSize: 13,
+    width:'75%'
 }
 const status_options=[{label: '未BD',value: 1},{label: 'BD中',value: 2},{label: 'BD成功',value: 3},{label: '暂不BD',value: 4}]
 
@@ -48,13 +49,7 @@ class PersonalDetail extends React.Component{
 	constructor(props){
 		super(props)
 		this.state={
-			mobile:null,
-			email:null,
-			title:null,
-			proj:null,
-			org:null,
-			wechat:null,
-			tags:[],
+			id:this.props.navigation.state.params.item.bduser,
 			comments:[],
 			bd_status:null,
 			currentBD:null,
@@ -88,31 +83,9 @@ class PersonalDetail extends React.Component{
 		
 	}
 
-	getTraders = investor =>{
-	const param = { investoruser: investor}
-    api.getUserRelation(param).then(result => {
-    if(result.data){
-	    const data = result.data.sort((a, b) => Number(b.relationtype) - Number(a.relationtype))
-	    const list = []
-	    data.forEach(item => {
-		    const trader = item.traderuser
-		    if (trader) {
-			    list.push({ label: trader.username, value: trader.id, onjob: trader.onjob })
-			}
-			this.setState({ traders:list });
-		})
-	}
-    }).catch(error => {
-    	Toast.show(error.message, {position: Toast.positions.CENTER})
-    })
-	}
-
 	componentDidMount(){
 		this.props.navigation.setParams({ handleSubmit: this.handleSubmit })
 		const {item, source} = this.props.navigation.state.params
-		if(item.bduser){
-			this.getTraders(item.bduser)
-		}
 		if(source == 'projectBD'){
 			this.setState({
 				currentBD:item, 
@@ -120,29 +93,11 @@ class PersonalDetail extends React.Component{
 				bd_status: item.bd_status,
 				comments: item.BDComments
 			})
-			if(item.bduser){
-				api.getUserBase(item.bduser).then(result=>{
-		 			this.setState({
-		 				mobile:result.mobile,
-		 				email: result.email,
-		 				title: result.title&&result.title.name,
-		 				tags: result.tags&&result.tags.map(item=>item.name).join(','),
-		 				org: result.org&&result.org.orgname,
-		 				wechat: result.wechat
-		 			})
-		 		})
-			}
 		}
 		else if(source == 'orgBD'){
 			this.setState({
 				currentBD: item,
-				email: item.email,
-				mobile: item.usermobile,
-				wechat: item.wechat,
-				title: item.usertitle&&item.usertitle.name,
-				tags: item.useinfo&&item.useinfo.tags&&item.useinfo.tags.map(item=>item.name).join(','),
 				proj: item.proj&&item.proj.projtitle,
-				org: item.org&&item.org.orgname,
 				comments: item.BDComments,
 				bd_status: item.bd_status
 			})
@@ -150,22 +105,10 @@ class PersonalDetail extends React.Component{
 
 	}
 	render(){
-		let {mobile, email, title, proj, org, wechat, tags, comments,bd_status, currentBD } =this.state
-		const traders=this.state.traders.length>0 ? this.state.traders.map(m =>m.label).join(',') :'暂无'
-		mobile = mobile || '暂无'
-		email = email || '暂无'
-		title = title || '暂无'
-		wechat = wechat || '暂无'
-		tags = tags&&tags.length>0 ? tags : '暂无'		
+		let {proj, comments, bd_status, id } =this.state		
 		return(
 		<View style={containerStyle}>
-           <Cell label="电话" content={mobile} />
-           <Cell label="邮箱" content={email} />
-           <Cell label="职位" content={title} />
-           <Cell label="标签" content={tags} />
-           <Cell label="微信" content={wechat} />
-           <Cell label="交易师" content={traders} />
-           {org ? <Cell label="机构" content={org} /> : null}
+           <PersonalInfo userId={id} />
            {proj ? <Cell label="项目" content={proj} /> : null}
            {bd_status? 
            	<View style={cellStyle}>
@@ -206,12 +149,14 @@ class Cell extends React.Component {
     render() {
         const { label, content } = this.props
         return (
-            <View style={cellStyle}>
+            <View style={cellStyle} >
                 <Text style={cellLabelStyle}>{label}</Text>
-                <Text style={cellContentStyle}>{content}</Text>
+                <Text style={cellContentStyle} numberOfLines={2}>{content}</Text>
             </View>
         )
     }
 }
+
+
 
 export default PersonalDetail
