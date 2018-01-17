@@ -114,11 +114,14 @@ class PersonalDetail extends React.Component{
 			this.getTraders(item.bduser)
 		}
 		if(source == 'projectBD'){
-			this.setState({currentBD:item, proj: item.com_name, bd_status: item.bd_status})
+			this.setState({
+				currentBD:item, 
+				proj: item.com_name, 
+				bd_status: item.bd_status,
+				comments: item.BDComments
+			})
 			if(item.bduser){
 				api.getUserBase(item.bduser).then(result=>{
-					console.log(item)
-					console.log(result)
 		 			this.setState({
 		 				mobile:result.mobile,
 		 				email: result.email,
@@ -169,7 +172,7 @@ class PersonalDetail extends React.Component{
                 <Text style={cellLabelStyle}>当前状态</Text>
                 <Picker value={bd_status.id} options={status_options} onChange={this.handleChangeStatus}/>
             </View> : null}
-            {comments.length>0? <Remarks comments={comments} />:null}
+            {comments&&comments.length>0? <Remarks comments={comments} />:null}
 
         </View>
 		)
