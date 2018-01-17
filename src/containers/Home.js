@@ -18,7 +18,7 @@ class Home extends React.Component {
             title: '首页',
             headerBackTitle: null, 
             headerTitle: (
-                <View style={{ flexDirection: 'row' }}>
+                <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
                     <View style={{ borderBottomWidth: params.active === 'project' ? 2 : 0, borderBottomColor: 'white', padding: 10 }}>
                        <Text onPress={() => params.onItemPressed('project')} style={{fontSize: 18, color: params.active !== 'project' ? 'rgba(255, 255, 255, 0.8)' : 'white'}}>项目</Text>
                     </View>
