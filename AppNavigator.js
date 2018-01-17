@@ -47,7 +47,10 @@ import SearchUser from './src/containers/SearchUser';
 import EditSchedule from './src/containers/EditSchedule';
 import SelectOrg from './src/containers/SelectOrg';
 import Home from './src/containers/Home';
-
+import ProjectBD from './src/containers/ProjectBD';
+import OrganizationBD from './src/containers/OrganizationBD';
+import PersonalDetail from './src/containers/PersonalDetail';
+  
   const AppNavigator = StackNavigator({
     Home: { screen:  Home },
     Contact: { screen: Contact },
@@ -87,6 +90,9 @@ import Home from './src/containers/Home';
     SearchUser: { screen: SearchUser },
     EditSchedule: { screen: EditSchedule },
     SelectOrg: { screen: SelectOrg }, 
+    ProjectBD:{screen: ProjectBD},
+    OrganizationBD: {screen: OrganizationBD},
+    PersonalDetail: {screen: PersonalDetail}
   })
 
   const DrawerApp = DrawerNavigator(
@@ -96,6 +102,12 @@ import Home from './src/containers/Home';
       },
       MyCalendar: {
         screen: MyCalendar
+      },
+      ProjectBD: {
+        screen: ProjectBD
+      },
+      OrganizationBD:{
+        screen: OrganizationBD
       },
       MyTags: {
         screen: MyTags

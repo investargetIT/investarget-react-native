@@ -95,7 +95,15 @@ function r2(url, method, body) {
 /**
  * org
  */
-
+export const getOrgBdList = params => {
+  _.forIn(params, function(value, key) {
+    if (Array.isArray(value)) {
+      params[key] = value.join(',')
+    }
+  })
+  return r('/bd/orgbd/?' + qs.stringify(params))
+}
+export const modifyOrgBD = (id, body) => r(`/bd/orgbd/${id}/`, 'PUT', body);
 export function getOrg(param) {
   _.forIn(param, function(value, key) {
     if (Array.isArray(value)) {
@@ -188,6 +196,19 @@ export function getShareToken(id) {
 
 export function getShareProj(token) {
   return r(`/proj/shareproj/?token=${token}`)
+}
+
+export function getProjBDList(param) {
+  _.forIn(param, function(value, key) {
+    if (Array.isArray(value)) {
+      param[key] = value.join(',')
+    }
+  })
+  return r('/bd/projbd/?' + qs.stringify(param))
+}
+
+export const editProjBD = (id, data) => {
+  return r('/bd/projbd/' + id + '/', 'PUT', data)
 }
 
 /**
