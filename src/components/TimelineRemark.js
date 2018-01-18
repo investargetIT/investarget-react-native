@@ -55,7 +55,6 @@ class TimelineRemark extends React.Component {
         if(source == 'timeline'){
             const param = { timeline: this.state.id, createuser: this.props.userId }
             api.getTimelineRemark(param).then(data => {
-                console.log(data)
                 this.setState({ remarks: data.data })
             }).catch(error => {
                 Toast.show(error.message, {position: Toast.positions.CENTER})
@@ -124,9 +123,7 @@ class TimelineRemark extends React.Component {
        
 
         if (this.state.remarkId) {
-            console.log(this.state.remarkId, timelineParam)
             api.editTimelineRemark(this.state.remarkId, timelineParam).then((result) => {
-                console.log(result)
                 this.getRemark()
             }).catch(error => {
                 Toast.show(error.message, {position: Toast.positions.CENTER})
