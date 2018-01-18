@@ -70,7 +70,7 @@
   			page_index:isLoadingMore?this.state.page_index+1 : 1,
   			page_size
   		}
-  		api.getProjBDList(params).then((result)=>{  			
+  		api.getProjBDList(params).then((result)=>{			
 			this.setState({
 				total:result.count,
 				list: isLoadingMore?this.state.list.concat(result.data) :result.data,
@@ -146,30 +146,16 @@
  		super(props)
  		this.state={
  			id: props.bduser,
- 			user:null
+ 			currentBD:this.props
  		}
  	}
 
- 	componentDidMount(){
- 		const {id} =this.state
- 		const {username, usermobile:mobile, usertitle:title} = this.props
- 		let data={username, mobile, title}
- 		if(id){
-	 		api.getUserBase(id).then(result=>{
-	 			this.setState({user:{...result, ...data}})
-	 		})
-	 	}else{
-	 		this.setState({user:data})
-	 	}
- 	}
-
  	render(){
- 		const {id, user} = this.state
- 		const username = user&&user.username || ''
- 		const title = user&&user.title&&user.title.name || '暂无'
- 		const mobile = user&&user.mobile || '暂无'
- 		const email = user&&user.email || '暂无'
- 		const imgSource = user&&user.photourl ? { uri: user.photourl } : require('../images/userCenter/defaultAvatar.png')
+ 		const {id, currentBD} = this.state
+ 		const username = currentBD.username || ''
+ 		const title = currentBD.usertitle&&currentBD.usertitle.name || '暂无'
+ 		const mobile = currentBD.usermobile || '暂无'
+ 		const imgSource = require('../images/userCenter/defaultAvatar.png')
 	    return (
 	    <TouchableOpacity onPress={this.props.onSelect}>
 	        <View style={{flexDirection:'row',backgroundColor:'#fff',padding: 16,paddingTop: 24}}>
@@ -191,7 +177,7 @@
                   <TouchableOpacity onPress={() => Linking.openURL(`mailto:${email}`)}>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <Image source={require('../images/ic_email.png')} />
-                      <Text style={{ marginLeft: 10, width: '80%', color: '#999' }} numberOfLines={2}>{email}</Text>
+                      <Text style={{ marginLeft: 10, width: '80%', color: '#999' }} numberOfLines={2}>暂无</Text>
                     </View>
                   </TouchableOpacity>
                 </View>

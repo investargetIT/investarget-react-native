@@ -153,6 +153,13 @@ export function deleteOrgRemark(id) {
   return r('/org/remark/' + id + '/', 'DELETE')
 }
 
+export const addOrgBDComment = body => r('/bd/orgbd/comment/', 'POST', body);
+export const deleteOrgBDComment = id => r(`/bd/orgbd/comment/${id}/`, 'DELETE');
+
+export const getOrgBDCom = (id) => {
+  return r('/bd/orgbd/comment/?orgBD='+id)
+}
+
 /**
  * proj
  */
@@ -209,6 +216,18 @@ export function getProjBDList(param) {
 
 export const editProjBD = (id, data) => {
   return r('/bd/projbd/' + id + '/', 'PUT', data)
+}
+
+export const addProjBDCom = (data) => {
+  return r('/bd/projbd/comment/', 'POST', data)
+}
+
+export const getProjBDCom = (id) => {
+  return r('/bd/projbd/comment/?projectBD='+id)
+}
+
+export const deleteProjBDCom = (id) => {
+  return r('/bd/projbd/comment/' + id + '/', 'DELETE')
 }
 
 /**

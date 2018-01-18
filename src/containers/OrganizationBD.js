@@ -56,7 +56,7 @@ class OrganizationBDList extends React.Component{
   	}
 
   handleClick = (item) =>{
-    this.props.navigation.navigate('PersonalDetail', {item, source:'orgBD', updateFunc:this.getData})
+    this.props.navigation.navigate('PersonalDetail', {item, source:'orgBD'})
     
   }
 

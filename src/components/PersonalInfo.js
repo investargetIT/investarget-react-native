@@ -57,6 +57,7 @@ class PersonalInfo extends React.Component{
     }
 
     componentDidMount(){
+    const currentBD = this.props.currentBD
     if(this.props.userId){
         this.getTraders(this.props.userId)     
         api.getUserBase(this.props.userId).then(result=>{
@@ -72,6 +73,16 @@ class PersonalInfo extends React.Component{
             Toast.show(error.message, {position: Toast.positions.CENTER})
         })
     }
+    else if(currentBD){
+        this.setState({
+            mobile:currentBD.usermobile,
+            email:currentBD.email,
+            title:currentBD.usertitle&&currentBD.usertitle.name,
+            org:currentBD.org&&currentBD.org.orgname,
+            wechat:currentBD.wechat,
+            tags:currentBD.useinfo&&currentBD.useinfo.tags&&currentBD.useinfo.tags.map(item=>item.name).join(','),
+        })
+    }
     }
 
     render(){
@@ -82,7 +93,7 @@ class PersonalInfo extends React.Component{
         title = title || '暂无'
         wechat = wechat || '暂无'
         tags = tags&&tags.length>0 ? tags : '暂无'
-        org = this.props.org || org || null    
+        org =  org || null    
         return(
         <View style={this.props.style}>
            <Cell label="电话" content={mobile} />

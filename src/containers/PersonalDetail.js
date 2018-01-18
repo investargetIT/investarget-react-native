@@ -4,6 +4,7 @@ import * as api from '../api'
 import Picker from '../components/Picker'
 import Toast from 'react-native-root-toast'
 import PersonalInfo from '../components/PersonalInfo'
+import TimelineRemark from '../components/TimelineRemark'
 const containerStyle = {
     backgroundColor: '#fff',
     flex:1
@@ -104,20 +105,22 @@ class PersonalDetail extends React.Component{
 				bd_status: item.bd_status
 			})
 		}
-
+ 
 	}
 	render(){
-		let {proj, comments, bd_status, id, org } =this.state		
+		let {proj, comments, bd_status, id, org, currentBD } =this.state
+		const {item, source} = this.props.navigation.state.params		
 		return(
 		<View style={containerStyle}>
-           <PersonalInfo userId={id} org={org}/>
+           <PersonalInfo currentBD={item} />
            {proj ? <Cell label="项目" content={proj} /> : null}
            {bd_status? 
            	<View style={cellStyle}>
                 <Text style={cellLabelStyle}>当前状态</Text>
                 <Picker value={bd_status.id} options={status_options} onChange={this.handleChangeStatus}/>
             </View> : null}
-            {comments&&comments.length>0? <Remarks comments={comments} />:null}
+            <TimelineRemark style={{flex: 1}} source={source} id={item.id} comments={item.BDComments}/>
+            
 
         </View>
 		)

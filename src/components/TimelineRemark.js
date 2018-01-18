@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, ScrollView, Text, TextInput, TouchableOpacity, Modal, Image, Alert } from 'react-native'
+import { View, ScrollView, Text, TextInput, TouchableOpacity, Modal, Image, Alert, DeviceEventEmitter } from 'react-native'
 import Swipeout from 'react-native-swipeout'
 import { connect } from 'react-redux'
 import Toast from 'react-native-root-toast'
@@ -26,7 +26,8 @@ class TimelineRemark extends React.Component {
     constructor(props) { // props.timelineId
         super(props)
         this.state = {
-            id: props.timelineId,
+            id: props.timelineId || props.id,
+            source: this.props.source || 'timeline',
             remarks: [],
             visible: false,
             remark: '',
@@ -49,12 +50,33 @@ class TimelineRemark extends React.Component {
     }
 
     getRemark = () => {
-        const param = { timeline: this.state.id, createuser: this.props.userId }
-        api.getTimelineRemark(param).then(data => {
-            this.setState({ remarks: data.data })
-        }).catch(error => {
-            Toast.show(error.message, {position: Toast.positions.CENTER})
-        })
+        const {source, id} = this.state
+
+        if(source == 'timeline'){
+            const param = { timeline: this.state.id, createuser: this.props.userId }
+            api.getTimelineRemark(param).then(data => {
+                console.log(data)
+                this.setState({ remarks: data.data })
+            }).catch(error => {
+                Toast.show(error.message, {position: Toast.positions.CENTER})
+            })
+        }
+        else {
+            let promise
+            if(source=='projectBD'){
+                promise = api.getProjBDCom(id)
+            }
+            else if(source=='orgBD'){
+                promise = api.getOrgBDCom(id)
+            }
+            promise.then(result=>{
+                this.setState({remarks: result.data})
+            }).catch(error => {
+                console.error(error)
+                Toast.show(error.message, {position: Toast.positions.CENTER})
+            })
+            
+        }
     }
 
     addRemark = () => {
@@ -76,7 +98,17 @@ class TimelineRemark extends React.Component {
     }
 
     confirmDeleteRemark = (id) => {
-        api.deleteTimelineRemark(id).then(() => {
+        const {source} =this.state
+        if(source == 'projectBD'){
+            promise = api.deleteProjBDCom(id)
+        }
+        else if(source == 'orgBD'){
+            promise = api.deleteOrgBDComment(id)
+        }
+        else if(source == 'timeline'){
+            promise = api.deleteTimelineRemark(id)
+        }
+        promise.then(() => {
             this.getRemark()
         }).catch(error => {
             Toast.show(error.message, {position: Toast.positions.CENTER})
@@ -85,15 +117,31 @@ class TimelineRemark extends React.Component {
 
     confirmSaveRemark = () => {
         this.setState({ visible: false })
-        const param = { timeline: this.state.id, remark: this.state.remark }
+        const {source, id} =this.state
+        let promise
+        const timelineParam = { [source]: id, remark: this.state.remark }
+        const BDParam ={[source]: id, comments: this.state.remark}
+       
+
         if (this.state.remarkId) {
-            api.editTimelineRemark(this.state.remarkId, param).then(() => {
+            console.log(this.state.remarkId, timelineParam)
+            api.editTimelineRemark(this.state.remarkId, timelineParam).then((result) => {
+                console.log(result)
                 this.getRemark()
             }).catch(error => {
                 Toast.show(error.message, {position: Toast.positions.CENTER})
             })
         } else {
-            api.addTimelineRemark(param).then(data => {
+            if(source == 'projectBD'){
+                promise = api.addProjBDCom(BDParam)
+            }
+            else if(source == 'orgBD'){
+                promise = api.addOrgBDComment(BDParam)
+            }
+            else if(source == 'timeline'){
+                promise = api.addTimelineRemark(timelineParam)
+            }      
+            promise.then(data => {
                 this.getRemark()
             }).catch(error => {
                 Toast.show(error.message, {position: Toast.positions.CENTER})
@@ -110,10 +158,11 @@ class TimelineRemark extends React.Component {
     }
 
     render() {
+        const {source, remarks} = this.state
         return (
             <View style={this.props.style || {}}>
                 <View style={headStyle}>
-                    <Text style={{width: 120, fontSize: 15, color:'#333'}}>时间轴备注</Text>
+                    <Text style={{width: 120, fontSize: 15, color:'#333'}}>{source=='timeline'?'时间轴备注':'备注'}</Text>
                     <TouchableOpacity onPress={this.addRemark} style={{flex:0}}>
                         <Text style={{fontSize: 15,color:'#333'}}>添加备注</Text>
                     </TouchableOpacity>
@@ -121,7 +170,7 @@ class TimelineRemark extends React.Component {
 
                 <ScrollView style={{flex:1}}>
                     <View>
-                        {this.state.remarks.map(item => {
+                        {remarks&&remarks.map(item => {
                             var time = item.lastmodifytime || item.createdtime
                             time = time.slice(0,19).replace('T',' ')
                             return (
@@ -132,9 +181,9 @@ class TimelineRemark extends React.Component {
                                     style={{marginBottom: 12}}
                                 >
                                     <TouchableOpacity 
-                                        onPress={this.editRemark.bind(this, item.id)}
+                                        onPress={source=='timeline'?this.editRemark.bind(this, item.id):null}
                                         style={{backgroundColor: '#f8f8f8', paddingLeft: 16,paddingRight: 16, paddingTop: 8, paddingBottom: 8}}>
-                                        <Text style={{fontSize: 14,color: '#333',marginBottom: 8}} numberOfLines={1} >{item.remark}</Text>
+                                        <Text style={{fontSize: 14,color: '#333',marginBottom: 8}} numberOfLines={5} >{source=='timeline'?item.remark:item.comments}</Text>
                                         <Text style={{fontSize: 12,color: '#999',textAlign:'right'}}>{time}</Text>
                                     </TouchableOpacity>
                                 </Swipeout>
@@ -181,7 +230,7 @@ class TimelineRemark extends React.Component {
         )
     }
 }
-
+  
 function mapStateToProps(state) {
     const { id } = state.app.userInfo
     return { userId: id }
