@@ -57,7 +57,6 @@ class PersonalInfo extends React.Component{
     }
 
     componentDidMount(){
-    console.log(this.props.userId)
     if(this.props.userId){
         this.getTraders(this.props.userId)     
         api.getUserBase(this.props.userId).then(result=>{
@@ -82,7 +81,8 @@ class PersonalInfo extends React.Component{
         email = email || '暂无'
         title = title || '暂无'
         wechat = wechat || '暂无'
-        tags = tags&&tags.length>0 ? tags : '暂无'    
+        tags = tags&&tags.length>0 ? tags : '暂无'
+        org = this.props.org || org || null    
         return(
         <View style={this.props.style}>
            <Cell label="电话" content={mobile} />

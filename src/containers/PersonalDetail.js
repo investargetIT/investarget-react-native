@@ -53,7 +53,8 @@ class PersonalDetail extends React.Component{
 			comments:[],
 			bd_status:null,
 			currentBD:null,
-			traders:[]
+			org:null,
+			proj:null
 		}
 	}
 
@@ -98,6 +99,7 @@ class PersonalDetail extends React.Component{
 			this.setState({
 				currentBD: item,
 				proj: item.proj&&item.proj.projtitle,
+				org: item.org&&item.org.orgname,
 				comments: item.BDComments,
 				bd_status: item.bd_status
 			})
@@ -105,10 +107,10 @@ class PersonalDetail extends React.Component{
 
 	}
 	render(){
-		let {proj, comments, bd_status, id } =this.state		
+		let {proj, comments, bd_status, id, org } =this.state		
 		return(
 		<View style={containerStyle}>
-           <PersonalInfo userId={id} />
+           <PersonalInfo userId={id} org={org}/>
            {proj ? <Cell label="项目" content={proj} /> : null}
            {bd_status? 
            	<View style={cellStyle}>
