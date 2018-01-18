@@ -48,16 +48,17 @@ AsyncStorage.getItem('userInfo').then(data => {
       });
     }
     JPushModule.setAlias(String(userInfo.id), ()=>{})
-    JPushModule.addReceiveNotificationListener((map) => {
-      onNotification(map.alertContent)
-    })
-    JPushModule.addReceiveOpenNotificationListener((message) => {
-      // todo?
-    })
+    JPushModule.addReceiveNotificationListener(
+      notification => onNotification(notification.alertContent || notification.aps.alert)
+    );
+    JPushModule.addReceiveOpenNotificationListener(
+      notification => onNotification(notification.alertContent || notification.aps.alert)
+    )
     // iOS Only 监听：应用没有启动的状态点击推送打开应用
-    JPushModule.addOpenNotificationLaunchAppListener(() => {
-      // todo？
-    })
+    JPushModule.addOpenNotificationLaunchAppListener(
+      notification => onNotification(notification.alertContent || notification.aps.alert)
+    );
+    JPushModule.setBadge(0, () => {});
   }).catch(error => {
     // Toast.show(error.message, { position: Toast.positions.CENTER })
     AsyncStorage.removeItem('userInfo')

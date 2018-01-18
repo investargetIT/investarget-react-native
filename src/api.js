@@ -61,7 +61,7 @@ function r2(url, method, body) {
             headers: {
               "Accept": "application/json",
               "Content-Type": "application/json",
-              "clienttype": "3",
+              "clienttype": Platform.OS === 'ios' ? 1 : 2, 
               "source": source
             }
           }
