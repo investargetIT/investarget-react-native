@@ -18,14 +18,20 @@ class Home extends React.Component {
             title: '首页',
             headerBackTitle: null, 
             headerTitle: (
-                <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
-                    <View style={{ borderBottomWidth: params.active === 'project' ? 2 : 0, borderBottomColor: 'white', padding: 10 }}>
-                       <Text onPress={() => params.onItemPressed('project')} style={{fontSize: 18, color: params.active !== 'project' ? 'rgba(255, 255, 255, 0.8)' : 'white'}}>项目</Text>
-                    </View>
-                    <View style={{ borderBottomWidth: params.active === 'service' ? 2 : 0, borderBottomColor: 'white', padding: 10 }}>
-                        <Text onPress={() => params.onItemPressed('service')} style={{fontSize: 18, color: params.active !== 'service' ? 'rgba(255, 255, 255, 0.8)' : 'white'}}>服务</Text>
-                    </View>
+              <View style={{ alignSelf: 'center', backgroundColor: undefined, width: 100, flex: 1 }}>
+                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: undefined }}>
+                  <Text onPress={() => params.onItemPressed('project')} style={{fontSize: 18, color: params.active !== 'project' ? 'rgba(255, 255, 255, 0.6)' : 'white'}}>项目</Text>
+                  <View style={{ flexBasis: 10, height: '100%', backgroundColor: undefined }} />
+                  <Text onPress={() => params.onItemPressed('service')} style={{fontSize: 18, color: params.active !== 'service' ? 'rgba(255, 255, 255, 0.6)' : 'white'}}>服务</Text>
                 </View>
+                <View style={{ flexBasis: 2, backgroundColor: undefined, flexDirection: 'row' }}>
+                  <View style={{ flexBasis: 11 }} />
+                  <View style={{ flex: 1, backgroundColor: undefined, alignItems: params.active === 'project' ? 'flex-start' : 'flex-end' }}>
+                    <View style={{ flex: 1, width: 32, backgroundColor: 'white' }} />
+                  </View>
+                  <View style={{ flexBasis: 11 }} />
+                </View>
+              </View>
             ),
             headerStyle: {
                 backgroundColor: '#10458f',
