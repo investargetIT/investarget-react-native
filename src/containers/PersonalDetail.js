@@ -1,10 +1,11 @@
 import React from 'react'
-import { Image, Text, View, FlatList, RefreshControl, TouchableOpacity, DeviceEventEmitter, ScrollView} from 'react-native';
+import { Image, Text, View, TouchableOpacity, DeviceEventEmitter, ScrollView, Modal,TouchableHighlight} from 'react-native';
 import * as api from '../api'
-import Picker from '../components/Picker'
 import Toast from 'react-native-root-toast'
 import PersonalInfo from '../components/PersonalInfo'
 import TimelineRemark from '../components/TimelineRemark'
+import ModifyBDStatus from '../components/ModifyBDStatus'
+
 const containerStyle = {
     backgroundColor: '#fff',
     flex:1
@@ -32,7 +33,7 @@ const cellContentStyle = {
     fontSize: 13,
     width:'75%'
 }
-const status_options=[{label: '未BD',value: 1},{label: 'BD中',value: 2},{label: 'BD成功',value: 3},{label: '暂不BD',value: 4}]
+
 
 class PersonalDetail extends React.Component{
 	static navigationOptions=({navigation}) =>{
@@ -42,8 +43,7 @@ class PersonalDetail extends React.Component{
       headerStyle: {
         backgroundColor: '#10458f',
       },
-      headerTintColor: '#fff',
-      headerRight: <Text style={headerRightStyle} onPress={() => {params.handleSubmit && params.handleSubmit()}}>提交</Text>
+      headerTintColor: '#fff'
     }
  	}
 
@@ -55,34 +55,18 @@ class PersonalDetail extends React.Component{
 			bd_status:null,
 			currentBD:null,
 			org:null,
-			proj:null
+			proj:null,
+			visible:false,
 		}
 	}
 
-	handleSubmit = () =>{
-		const {currentBD, bd_status} = this.state
-		const {source} = this.props.navigation.state.params
-		if(source == 'orgBD'){
-			api.modifyOrgBD(currentBD.id, {bd_status:bd_status.id}).then(()=>{
-				DeviceEventEmitter.emit('updateOrgBD')
-				this.props.navigation.goBack()
-			}).catch(error => {
-	            Toast.show(error.message, {position: Toast.positions.CENTER})
-	        })
-	    }
-	    else if(source == 'projectBD'){
-	    	api.editProjBD(currentBD.id, { bd_status:bd_status.id }).then(()=>{
-				DeviceEventEmitter.emit('updateProjBD')
-				this.props.navigation.goBack()
-			}).catch(error => {
-	            Toast.show(error.message, {position: Toast.positions.CENTER})
-	        })
-	    }
-	}
-
 	handleChangeStatus = value =>{
-		this.setState({bd_status:{name:status_options.find(item=>item.value==value).label, id:value}})
+		this.setState({chosenStatus:{name:status_options.find(item=>item.value==value).label, id:value}})
 		
+	}
+	
+	setModalVisible = (visible) =>{
+	this.setState({visible:visible})
 	}
 
 	componentDidMount(){
@@ -108,8 +92,8 @@ class PersonalDetail extends React.Component{
  
 	}
 	render(){
-		let {proj, comments, bd_status, id, org, currentBD } =this.state
-		const {item, source} = this.props.navigation.state.params		
+		let {proj, comments, bd_status, id, org, currentBD, visible } =this.state
+		const {item, source} = this.props.navigation.state.params
 		return(
 		<View style={containerStyle}>
            <PersonalInfo currentBD={item} />
@@ -117,36 +101,20 @@ class PersonalDetail extends React.Component{
            {bd_status? 
            	<View style={cellStyle}>
                 <Text style={cellLabelStyle}>当前状态</Text>
-                <Picker value={bd_status.id} options={status_options} onChange={this.handleChangeStatus}/>
+                <Text>{bd_status.name}</Text>
+                <TouchableOpacity onPress={this.setModalVisible.bind(this,true)}>
+                	<Text style={{width:200,textAlign:'right'}}>修改</Text>
+                </TouchableOpacity>
             </View> : null}
             <TimelineRemark style={{flex: 1}} source={source} id={item.id} comments={item.BDComments}/>
+            {visible?
+            <ModifyBDStatus currentBD={item} source={source} setVisible={this.setModalVisible} {...this.props}/> :null}
             
-
+            
         </View>
+
 		)
 	}
-}
-
-function Remarks (props){
-	return(
-	<View style={{flex:1}}>
-	<View style={cellStyle}>
-    	<Text>备注</Text>    
-    </View>
-    <ScrollView style={{flex:1}}>
-        {props.comments.map(item => {       	
-            var time = item.createdtime
-            time = time.slice(0,19).replace('T',' ')
-            return (
-			<View key={item.id} style={{paddingLeft:16, marginBottom:8,backgroundColor: '#f8f8f8'}}>	               
-                <Text style={{fontSize: 14,color: '#333',marginBottom: 8}}  >{item.comments}</Text>
-                <Text style={{fontSize: 12,color: '#999',textAlign:'right'}}>{time}</Text>
-            </View>
-            )
-        })} 
-    </ScrollView>
-    </View>
-	)
 }
 
 class Cell extends React.Component {
