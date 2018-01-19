@@ -4,6 +4,7 @@ import { DrawerItems } from 'react-navigation';
 import { connect } from 'react-redux';
 import { logout } from '../../actions';
 import AsyncStorage from '../AsyncStorage';
+import { isIPhoneX } from '../utils';
 
 const CustomDrawerContentComponent = (props) => {
   function confirm() {
@@ -32,7 +33,7 @@ const CustomDrawerContentComponent = (props) => {
     <ScrollView style={{ flex: 1 }}>
       <ImageBackground
         source={require('../images/userCenter/ht-usercenterheaderbg.png')}
-        style={{ width: '100%', height: 200, alignItems: 'center', justifyContent: 'center' }}
+        style={{ width: '100%', height: 200, alignItems: 'center', paddingTop: isIPhoneX() ? 44 : undefined, justifyContent: isIPhoneX() ? undefined : 'center' }}
         blurRadius={2}>
         <TouchableOpacity onPress={() => { props.navigation.navigate('Avatar') }}>
           <Image

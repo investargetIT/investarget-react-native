@@ -3,7 +3,7 @@ import { Image, Text, View, FlatList, RefreshControl, TouchableOpacity, Alert } 
 import { connect } from 'react-redux'
 import Toast from 'react-native-root-toast'
 import Swipeout from 'react-native-swipeout'
-
+import { isIPhoneX } from '../utils';
 import ProjectItem from '../components/ProjectItem'
 import * as api from '../api'
 
@@ -237,6 +237,10 @@ class MyFavoriteProject extends React.Component {
                         </TouchableOpacity>
                     </View>
                 ):null}
+
+                { isIPhoneX() ? 
+                  <View style={{ height:34 }} />
+                : null }
             </View>
         )
     }

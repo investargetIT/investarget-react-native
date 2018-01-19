@@ -12,6 +12,7 @@ import Button from '../components/Button'
 import Select from '../components/BaseSelect'
 import * as api from '../api'
 import { receiveTags, modifyUserInfo } from '../../actions'
+import { isIPhoneX } from '../utils';
 
 const buttonContainerStyle = {
     borderWidth: 1,
@@ -111,7 +112,7 @@ class MyTags extends React.Component {
                 <Spinner visible={this.state.loading} />
 
                 <Text style={{fontSize: 16,padding: 16}}>请选择您关注的标签</Text>
-                <ScrollView style={{ marginBottom: 50 }}>
+                <ScrollView style={{ marginBottom: isIPhoneX() ? 50 + 34 : 50 }}>
                     <View style={{padding: 10,display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
                         {
                             this.props.tagOptions.map(option => {
@@ -132,7 +133,7 @@ class MyTags extends React.Component {
                 </ScrollView>
 
 
-            <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50 }}>
+            <View style={{ position: 'absolute', left: 0, right: 0, bottom: isIPhoneX() ? 34 : 0, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50 }}>
                     <TouchableOpacity activeOpacity={0.8} style={{ flex: 1, height: 50, backgroundColor: '#ccc', alignItems: 'center', justifyContent: 'center' }} onPress={this.handleReset}>
                         <Text style={{fontSize: 16, color: '#fff'}}>重置</Text>
                     </TouchableOpacity>

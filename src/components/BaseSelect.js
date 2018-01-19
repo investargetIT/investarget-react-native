@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, ScrollView, Text, TouchableOpacity } from 'react-native'
 import Button from './Button'
-
+import { isIPhoneX } from '../utils';
 
 const buttonContainerStyle = {
     borderWidth: 1,
@@ -94,6 +94,9 @@ class Select extends React.Component {
                         <Text style={{fontSize: 16, color: '#fff'}}>确定</Text>
                     </TouchableOpacity>
                 </View>
+                { isIPhoneX() ? 
+                  <View style={{ height:34 }} />
+                : null }
             </View>
         )
     }

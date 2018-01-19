@@ -19,6 +19,7 @@ import fs from 'react-native-fs';
 import * as api from '../api';
 import * as WeChat from 'react-native-wechat';
 import { baseUrl, mobileUrl } from '../request';
+import { isIPhoneX } from '../utils';
 
 class ProjectDetail extends React.Component {
     
@@ -262,7 +263,11 @@ class ProjectDetail extends React.Component {
 
           </View>
 
-          <View style={{ position: 'absolute', left: Dimensions.get('window').width / 2 - 21, bottom: 16 }}>
+          { isIPhoneX() ? 
+              <View style={{ height:34 }} />
+            : null }
+
+          <View style={{ position: 'absolute', left: Dimensions.get('window').width / 2 - 21, bottom: isIPhoneX() ? 34 + 16 : 16 }}>
               <TouchableOpacity onPress={this.handleSavePress}>
                 <Image source={imgSource} style={{ width: 42, height: 42 }} />
               </TouchableOpacity>
@@ -313,6 +318,9 @@ class ProjectDetail extends React.Component {
               </View>
 
               <Text style={{ padding: 12, textAlign: 'center', backgroundColor: 'rgb(250, 250, 250)', fontSize: 16 }}>取消</Text>
+              { isIPhoneX() ? 
+                <View style={{ height:34 }} />
+              : null }
             </View>
             
           </View>

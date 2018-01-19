@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, ScrollView, Text, TouchableOpacity, Image, TextInput } from 'react-native'
 import { connect } from 'react-redux'
-
+import { isIPhoneX } from '../utils';
 import Cascader from '../components/Cascader'
 import {
     receiveContinentsAndCountries, receiveIndustries, receiveTags,
@@ -165,6 +165,9 @@ class Filter extends React.Component {
                         <Text style={{fontSize:16,color:'#fff'}}>确定</Text>
                     </TouchableOpacity>
                 </View>
+                { isIPhoneX() ? 
+                  <View style={{ height:34 }} />
+                : null }
             </View>
         )
     }

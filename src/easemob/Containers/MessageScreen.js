@@ -28,7 +28,7 @@ import WebIMConfig from '../Lib/WebIMConfig'
 import debounce from 'lodash.debounce'
 import AsyncStorage from '../../AsyncStorage'
 import md5 from '../../md5'
-
+import { isIPhoneX } from '../../utils';
 const {width, height} = Dimensions.get('window')
 
 
@@ -870,6 +870,9 @@ class MessageScreen extends React.Component {
           {/*</TouchableOpacity>*/}
         </View>
         {this._renderEmoji()}
+        { isIPhoneX() ? 
+              <View style={{ height:34 }} />
+            : null }
       </View>
     )
   }
