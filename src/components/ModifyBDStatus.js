@@ -32,14 +32,13 @@ const buttonContainer={
 	justifyContent:'center'
 }
 
-const buttonStyle={
+let buttonStyle={
 	width:35,
 	borderRadius:5,
 	padding:2,
 	flex:0,
 	flexDirection:'row',
-	justifyContent:'center',
-	backgroundColor:'lightblue'
+	justifyContent:'center'
 }
 
 const cellStyle = {
@@ -258,6 +257,8 @@ componentDidMount(){
 render(){
 	const {bd_status, group, disabled, confirmModal, visible} = this.state
 	const {source, currentBD} = this.props
+    let color=disabled ? 'white' : 'lightblue'
+    buttonStyle={...buttonStyle,backgroundColor:color}
 	return(
     <View>
 	<Modal          
