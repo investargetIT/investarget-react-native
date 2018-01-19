@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, Text, TextInput, View, FlatList, RefreshControl, TouchableOpacity, DeviceEventEmitter, Modal} from 'react-native';
+import { Image, Text, TextInput, View, FlatList, RefreshControl, TouchableOpacity, DeviceEventEmitter, Modal, Alert} from 'react-native';
 import * as api from '../api'
 import Toast from 'react-native-root-toast'
 import Picker from '../components/Picker'
@@ -75,40 +75,163 @@ constructor(props){
 	    wechat: '', 
 	    email: '',
 	    group: '',
-	    disabled:false 
+	    disabled:true,
+        visible: true,
+        confirmModal:false
 	}
 }
 
-setModalVisible = (visible) =>{
-	this.props.setVisible(visible)
+setModalVisible = (visible) =>{              
+	this.props.setVisible(visible)    
 }
 
-wechatConfirm = () =>{
-	// const {bd_status} = this.state
-	// const {currentBD} = this.props
-	// if(bd_status==3 && currentBD.bd_status.id!=3 && currentBD.wechat &&currentBD.wechat.length>0){
+pressCancel = () =>{
+    this.handleConfirmAudit(false)
+}
 
-	// }
-	// else{
-	// 	this.handleConfirmAudit(true);
-	// }
+pressOk = () =>{
+    this.handleConfirmAudit(true)
+}
+
+checkInvalid = () =>{
+    const {username, mobile, wechat, email, bd_status, group} =this.state
+    const {currentBD} = this.props
+    let disabled = ((username.length === 0 || mobile.length === 0 || wechat.length === 0 || email.length === 0 || group.length === 0) && bd_status.id === 3 && currentBD.bduser === null && currentBD.bd_status.id !== 3)
+           || (wechat.length === 0 && bd_status.id === 3 && currentBD.bduser !== null && currentBD.bd_status.id !== 3);
+    this.setState({disabled})       
+}
+
+
+wechatConfirm = () =>{
+	const {bd_status, confirmModal} = this.state
+	const {currentBD} = this.props
+	if(bd_status.id==3 && currentBD.bd_status.id!=3 && currentBD.wechat &&currentBD.wechat.length>0){
+        this.setState({visible:false, confirmModal:true})
+	}
+	else{
+		this.handleConfirmAudit(true);
+	}
+}
+
+checkExistence = (mobile, email) =>{
+    return Promise.all([api.checkUserExist(mobile),api.checkUserExist(email)])
+    .then(result=>{
+        for(let item of result){
+            if(item.result==true)
+                return true
+        }
+        return false
+    })
+    .catch(err=>{
+        Toast.show(error.message, {position: Toast.positions.CENTER})
+    })
+}
+
+handleConfirmAudit = (isModifyWechat) =>{
+    const {bd_status, username,mobile,wechat,email,group} = this.state
+    const {currentBD} = this.props
+    const body={bd_status:bd_status.id}
+    api.modifyOrgBD(currentBD.id, body).then(()=>{
+        DeviceEventEmitter.emit('updateOrgBD')
+        if(bd_status.id!==3 || currentBD.bd_status.id===3) {
+        this.setState({visible:false})
+        this.props.navigation.goBack()
+        }        
+    }).catch(error => {
+        Toast.show(error.message, {position: Toast.positions.CENTER})
+    })
+    
+    if(bd_status.id!==3 || currentBD.bd_status.id===3) {
+        return;
+    }
+
+    if(currentBD.bduser){
+
+        this.addRelation(currentBD.bduser);
+        api.addUserRelation({
+        relationtype: false,
+        investoruser: currentBD.bduser,
+        traderuser: currentBD.manager.id
+        })
+        .then(result => {
+          if (isModifyWechat) {
+            api.editUser([currentBD.bduser], { wechat });
+          }
+        })
+        .catch(error => {
+        if (isModifyWechat) {
+            api.editUser([currentBD.bduser], { wechat });
+          }   
+        });
+        api.addOrgBDComment({
+        orgBD: currentBD.id,
+        comments: `微信: ${wechat}`
+      }).then((data)=>{
+        DeviceEventEmitter.emit('updateOrgBD') 
+        this.props.navigation.goBack()
+      })
+    }
+    else{
+        api.addOrgBDComment({
+        orgBD: currentBD.id,
+        comments: `姓名: ${username} 手机号码: ${mobile} 微信: ${wechat} 邮箱: ${email}`
+      });
+        const newUser = { mobile, wechat, email, groups: [Number(group)], userstatus: 2 };
+        if (window.LANG === 'en') {
+            newUser.usernameE = username;
+        } else {
+            newUser.usernameC = username;
+        }
+
+        this.checkExistence(mobile,email).then(ifExist=>{
+        if(ifExist){
+            alert('用户已存在')         
+        }
+        else{
+        this.setState({visible:false})
+        api.addUser(newUser)
+        .then(result =>{
+          this.addRelation(result.id);
+          api.addUserRelation({
+          relationtype: false,
+          investoruser: result.id,
+          traderuser: currentBD.manager.id
+          }).then(data=>{
+            DeviceEventEmitter.emit('updateOrgBD') 
+            this.props.navigation.goBack()
+          })
+        })
+        }
+        });
+            
+        
+        
+    }
+}
+
+addRelation = investorID =>{
+    const {currentBD} = this.props
+    if(currentBD.makeUser && currentBD.proj){
+        api.addUserRelation({
+        relationtype: false,
+        investoruser: investorID,
+        traderuser: currentBD.makeUser,
+        proj: currentBD.proj.id,
+      }).catch(error => {
+            Toast.show(error.message, {position: Toast.positions.CENTER})
+        })
+    }
 }
 
 confirmModify = () =>{
 	const {bd_status, username,mobile,wechat,email,group} = this.state
 	const {source, currentBD} = this.props
-	this.setModalVisible(false)
 
 	if(source == 'orgBD'){
-		this.wechatConfirm()
-		// api.modifyOrgBD(currentBD.id, {bd_status:bd_status.id}).then(()=>{
-		// 	DeviceEventEmitter.emit('updateOrgBD')
-		// 	this.props.navigation.goBack()
-		// }).catch(error => {
-  //           Toast.show(error.message, {position: Toast.positions.CENTER})
-  //       })
+        this.wechatConfirm()
     }
     else if(source == 'projectBD'){
+        this.setModalVisible(false)
     	api.editProjBD(currentBD.id, { bd_status:bd_status.id }).then(()=>{
 			DeviceEventEmitter.emit('updateProjBD')
 			this.props.navigation.goBack()
@@ -119,21 +242,28 @@ confirmModify = () =>{
 }
 
 handleChangeStatus = value =>{
-	this.setState({bd_status:{name:status_options.find(item=>item.value==value).label, id:value}})	
+	this.setState({bd_status:{name:status_options.find(item=>item.value==value).label, id:value}},this.checkInvalid)	
+
 }
 
 changeGroup = value =>{
-	this.setState({group:value})
+	this.setState({group:value},this.checkInvalid)
+    
+}
+
+componentDidMount(){   
+    this.checkInvalid()
 }
 
 render(){
-	const {bd_status, group} = this.state
+	const {bd_status, group, disabled, confirmModal, visible} = this.state
 	const {source, currentBD} = this.props
 	return(
+    <View>
 	<Modal          
       animationType={"fade"}
       transparent={true}
-      visible={true}
+      visible={visible}
     >
     <View style={backgroundStyle}>
     	<View style={modalStyle}>
@@ -154,19 +284,19 @@ render(){
             <SelectInvestorGroup value={group} onChange={this.changeGroup.bind(this)}/>
 			<View style={cellStyle} >
                 <Text style={cellLabelStyle}>姓名</Text>
-                <TextInput style={cellContentStyle} onChangeText={username=>{this.setState({username})}}/>
+                <TextInput style={cellContentStyle} onChangeText={username=>{this.setState({username},this.checkInvalid);}}/>
             </View>
             <View style={cellStyle} >
                 <Text style={cellLabelStyle}>手机号码</Text>
-                <TextInput style={cellContentStyle} onChangeText={mobile=>{this.setState({mobile})}}/>
+                <TextInput style={cellContentStyle} onChangeText={mobile=>{this.setState({mobile},this.checkInvalid)}}/>
             </View>
             <View style={cellStyle} >
                 <Text style={cellLabelStyle}>微信</Text>
-                <TextInput style={cellContentStyle} onChangeText={wechat=>{this.setState({wechat})}}/>
+                <TextInput style={cellContentStyle} onChangeText={wechat=>{this.setState({wechat},this.checkInvalid)}}/>
             </View>
             <View style={cellStyle} >
                 <Text style={cellLabelStyle}>邮箱</Text>
-                <TextInput style={cellContentStyle} onChangeText={email=>{this.setState({email})}}/>
+                <TextInput style={cellContentStyle} onChangeText={email=>{this.setState({email},this.checkInvalid)}}/>
             </View>
     	</View>
     	:null}
@@ -174,17 +304,38 @@ render(){
     	{source=='orgBD'&&currentBD.bduser&&currentBD.bd_status.id!=3&&bd_status.id==3 ?
 			<View style={cellStyle} >
                 <Text style={cellLabelStyle}>微信</Text>
-                <TextInput style={cellContentStyle} onChangeText={wechat=>{this.setState({wechat})}}/>
+                <TextInput style={cellContentStyle} onChangeText={wechat=>{this.setState({wechat},this.checkInvalid)}}/>
             </View>
     	:null}
     	<View style={buttonContainer}>
-    		<TouchableOpacity style={buttonStyle} onPress={this.confirmModify.bind(this)}>
+    		<TouchableOpacity style={{...buttonStyle}} onPress={disabled ? null : this.confirmModify.bind(this)}>
 			<Text style={{width:30}}>确认</Text>
 			</TouchableOpacity>
     	</View>	
     	</View>
     </View>
     </Modal>
+    <Modal
+    animationType={"fade"}
+    transparent={true}
+    visible={confirmModal}>
+        <View style={backgroundStyle}>
+            <View style={modalStyle}>
+                <View style={{marginBottom:20}}>
+                    <Text style={{textAlign:'center'}}>联系人微信已存在，是否覆盖现有微信</Text>
+                </View>
+                <View style={{flex:0,flexDirection:'row',justifyContent:'center'}}>
+                <TouchableOpacity  style={{width:35,marginRight:20}} onPress={this.pressCancel.bind(this)}>
+                    <Text >取消</Text>
+                </TouchableOpacity>
+                <TouchableOpacity  style={{width:35}} onPress={this.pressOk.bind(this)}>
+                    <Text style={{color:'blue'}}>确认</Text>
+                </TouchableOpacity>
+                </View>
+            </View>
+        </View>
+    </Modal>
+    </View>
 	)
 }
 }
@@ -199,7 +350,9 @@ class SelectInvestorGroup extends React.Component {
       .then(result => {
         const options = result.data.map(m => ({ label: m.name, value: m.id }));
         this.setState({ options });
-      });
+      }).catch(error => {
+            Toast.show(error.message, {position: Toast.positions.CENTER})
+        })
   	}
 
   	render() {

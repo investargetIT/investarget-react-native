@@ -111,7 +111,7 @@ class Container extends React.Component {
 
 function mapStateToProp(state) {
       const { isFetching } = state.app;		
-      console.log('isFetching', isFetching);
+      //console.log('isFetching', isFetching);
       return { isFetching };		
     }
 

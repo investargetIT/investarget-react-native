@@ -50,7 +50,7 @@ export default async function request(url, options) {
 
   const data = await response.json();
 
-  // console.log(fullUrl, data);
+  console.log(fullUrl, data);
 
   if (isThirdPartyServer) return data;
 
