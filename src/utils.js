@@ -134,6 +134,7 @@ export function convertUserInfo(user_info, permissions) {
         // 好像没用到
         // username: user_info.username,
         weChat: user_info.wechat,
+        permissions
     }
 }
 
