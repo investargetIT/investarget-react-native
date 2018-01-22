@@ -74,7 +74,7 @@ constructor(props){
 	    wechat: '', 
 	    email: '',
 	    group: '',
-	    disabled: this.props.type === 'proj_bd' ? false : true,
+	    disabled: this.props.source === 'projectBD' ? false : true,
         visible: true,
         confirmModal:false
 	}
@@ -93,7 +93,7 @@ pressOk = () =>{
 }
 
 checkInvalid = () =>{
-    if (this.props.type === 'proj_bd') return;
+    if (this.props.source === 'projectBD') return;
     const {username, mobile, wechat, email, bd_status, group} =this.state
     const {currentBD} = this.props
     let disabled = ((username.length === 0 || mobile.length === 0 || wechat.length === 0 || email.length === 0 || group.length === 0) && bd_status.id === 3 && currentBD.bduser === null && currentBD.bd_status.id !== 3)
@@ -283,7 +283,10 @@ render(){
     	</View>
     	{source=='orgBD'&&!currentBD.bduser&&currentBD.bd_status.id!=3&&bd_status.id==3 ?
     	<View>
-            <SelectInvestorGroup value={group} onChange={this.changeGroup.bind(this)}/>
+            <SelectInvestorGroup 
+              value={group} 
+              onLoadData={ options => options.length > 0 ? this.setState({ group: options[0].value }) : null }
+              onChange={this.changeGroup.bind(this)}/>
 			<View style={cellStyle} >
                 <Text style={cellLabelStyle}>姓名</Text>
                 <TextInput style={cellContentStyle} onChangeText={username=>{this.setState({username},this.checkInvalid);}}/>
@@ -352,6 +355,7 @@ class SelectInvestorGroup extends React.Component {
       .then(result => {
         const options = result.data.map(m => ({ label: m.name, value: m.id }));
         this.setState({ options });
+        this.props.onLoadData(options);
       }).catch(error => {
             Toast.show(error.message, {position: Toast.positions.CENTER})
         })

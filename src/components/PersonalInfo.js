@@ -81,6 +81,7 @@ class PersonalInfo extends React.Component{
             org:currentBD.org&&currentBD.org.orgname,
             wechat:currentBD.wechat,
             tags:currentBD.useinfo&&currentBD.useinfo.tags&&currentBD.useinfo.tags.map(item=>item.name).join(','),
+            traders: currentBD.manager && [{ label: currentBD.manager.username }],
         })
     }
     }

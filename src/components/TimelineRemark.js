@@ -160,9 +160,11 @@ class TimelineRemark extends React.Component {
             <View style={this.props.style || {}}>
                 <View style={headStyle}>
                     <Text style={{width: 120, fontSize: 15, color:'#333'}}>{source=='timeline'?'时间轴备注':'备注'}</Text>
+                    { this.props.disableAdd ? null :
                     <TouchableOpacity onPress={this.addRemark} style={{flex:0}}>
                         <Text style={{fontSize: 15,color:'#333'}}>添加备注</Text>
                     </TouchableOpacity>
+                    }
                 </View>
 
                 <ScrollView style={{flex:1}}>

@@ -5,6 +5,7 @@ import Toast from 'react-native-root-toast'
 import PersonalInfo from '../components/PersonalInfo'
 import TimelineRemark from '../components/TimelineRemark'
 import ModifyBDStatus from '../components/ModifyBDStatus'
+import { connect } from 'react-redux';
 
 const containerStyle = {
     backgroundColor: '#fff',
@@ -102,13 +103,26 @@ class PersonalDetail extends React.Component{
            	<View style={cellStyle}>
                 <Text style={cellLabelStyle}>当前状态</Text>
                 <Text>{bd_status.name}</Text>
+				{ (source === 'orgBD' && (this.props.userInfo.permissions.includes('BD.manageOrgBD') || this.props.userInfo.id === item.manager.id)) || (source === 'projectBD') ? 
                 <TouchableOpacity onPress={this.setModalVisible.bind(this,true)}>
                 	<Text style={{width:200,textAlign:'right'}}>修改</Text>
                 </TouchableOpacity>
+				: null }
             </View> : null}
-            <TimelineRemark style={{flex: 1}} source={source} id={item.id} comments={item.BDComments}/>
+			<TimelineRemark 
+			  disableAdd={source === 'orgBD' && !this.props.userInfo.permissions.includes('BD.manageOrgBD') && this.props.userInfo.id !== item.manager.id} 
+			  style={{flex: 1}} 
+			  source={source} 
+			  id={item.id} 
+			  comments={item.BDComments} 
+			/>
             {visible?
-            <ModifyBDStatus type="proj_bd" currentBD={item} source={source} setVisible={this.setModalVisible} {...this.props}/> :null}
+			<ModifyBDStatus 
+			  currentBD={item} 
+			  source={source} 
+			  setVisible={this.setModalVisible} 
+			  {...this.props}/> 
+			:null}
             
             
         </View>
@@ -130,6 +144,9 @@ class Cell extends React.Component {
     }
 }
 
+function mapStateToProps(state) {
+  const { userInfo } = state.app;
+  return { userInfo };
+}
 
-
-export default PersonalDetail
+export default connect(mapStateToProps)(PersonalDetail);
