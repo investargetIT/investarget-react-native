@@ -74,7 +74,7 @@ constructor(props){
 	    wechat: '', 
 	    email: '',
 	    group: '',
-	    disabled:true,
+	    disabled: this.props.type === 'proj_bd' ? false : true,
         visible: true,
         confirmModal:false
 	}
@@ -93,6 +93,7 @@ pressOk = () =>{
 }
 
 checkInvalid = () =>{
+    if (this.props.type === 'proj_bd') return;
     const {username, mobile, wechat, email, bd_status, group} =this.state
     const {currentBD} = this.props
     let disabled = ((username.length === 0 || mobile.length === 0 || wechat.length === 0 || email.length === 0 || group.length === 0) && bd_status.id === 3 && currentBD.bduser === null && currentBD.bd_status.id !== 3)

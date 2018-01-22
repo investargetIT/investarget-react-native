@@ -12,7 +12,8 @@
       headerStyle: {
         backgroundColor: '#10458f',
       },
-      headerTintColor: '#fff'
+			headerTintColor: '#fff',
+			headerBackTitle: null
     }
  	}
 
@@ -154,7 +155,7 @@
  		const {id, currentBD} = this.state
  		const username = currentBD.username || ''
  		const title = currentBD.usertitle&&currentBD.usertitle.name || '暂无'
- 		const mobile = currentBD.usermobile || '暂无'
+ 		const mobile = currentBD.usermobile ? (currentBD.usermobile.indexOf('-') > -1 ? '+' + currentBD.usermobile : currentBD.usermobile) : '暂无';
  		const imgSource = require('../images/userCenter/defaultAvatar.png')
 	    return (
 	    <TouchableOpacity onPress={this.props.onSelect}>

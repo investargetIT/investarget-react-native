@@ -39,7 +39,7 @@ class PersonalDetail extends React.Component{
 	static navigationOptions=({navigation}) =>{
 	const { params } = navigation.state
  	return {
-      title: params.item.username|| '',
+      title: params.item.username|| '暂无',
       headerStyle: {
         backgroundColor: '#10458f',
       },
@@ -108,7 +108,7 @@ class PersonalDetail extends React.Component{
             </View> : null}
             <TimelineRemark style={{flex: 1}} source={source} id={item.id} comments={item.BDComments}/>
             {visible?
-            <ModifyBDStatus currentBD={item} source={source} setVisible={this.setModalVisible} {...this.props}/> :null}
+            <ModifyBDStatus type="proj_bd" currentBD={item} source={source} setVisible={this.setModalVisible} {...this.props}/> :null}
             
             
         </View>
