@@ -157,7 +157,7 @@ export const addOrgBDComment = body => r('/bd/orgbd/comment/', 'POST', body);
 export const deleteOrgBDComment = id => r(`/bd/orgbd/comment/${id}/`, 'DELETE');
 
 export const getOrgBDCom = (id) => {
-  return r('/bd/orgbd/comment/?orgBD='+id)
+  return r('/bd/orgbd/comment/?orgBD='+id+'&page_size=100')
 }
 
 /**
@@ -223,7 +223,7 @@ export const addProjBDCom = (data) => {
 }
 
 export const getProjBDCom = (id) => {
-  return r('/bd/projbd/comment/?projectBD='+id)
+  return r('/bd/projbd/comment/?projectBD='+id+'&page_size=100')
 }
 
 export const deleteProjBDCom = (id) => {

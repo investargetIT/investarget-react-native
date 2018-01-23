@@ -102,29 +102,45 @@ checkInvalid = () =>{
 }
 
 
-wechatConfirm = () =>{
-	const {bd_status, confirmModal} = this.state
-	const {currentBD} = this.props
-	if(bd_status.id==3 && currentBD.bd_status.id!=3 && currentBD.wechat &&currentBD.wechat.length>0){
-        this.setState({visible:false, confirmModal:true})
-	}
-	else{
-		this.handleConfirmAudit(true);
-	}
-}
-
-checkExistence = (mobile, email) =>{
-    return Promise.all([api.checkUserExist(mobile),api.checkUserExist(email)])
-    .then(result=>{
-        for(let item of result){
-            if(item.result==true)
-                return true
+    wechatConfirm = () => {
+        const { bd_status, confirmModal } = this.state
+        const { currentBD } = this.props
+        if (bd_status.id == 3 && currentBD.bd_status.id != 3) {
+            if (!currentBD.bduser) {
+                this.checkExistence(this.state.mobile, this.state.email).then(ifExist => {
+                    if (ifExist) {
+                        Alert.alert('用户已存在');
+                    } else {
+                        this.handleConfirmAudit(true);
+                    }
+                })
+            } else {
+                // 已经有联系人时
+                if (currentBD.wechat && currentBD.wechat.length > 0) {
+                    // 该联系人已经有微信
+                    this.setState({ visible: false, confirmModal: true })
+                } else {
+                    // 该联系人没有微信
+                    this.setState({ visible: false }, () => this.handleConfirmAudit(true));
+                }
+            }
+        } else {
+            this.handleConfirmAudit(true)
         }
-        return false
-    })
-    .catch(err=>{
-        Toast.show(error.message, {position: Toast.positions.CENTER})
-    })
+    }
+
+checkExistence = (mobile, email) => {
+    return new Promise((resolve, reject) => {
+      Promise.all([api.checkUserExist(mobile),api.checkUserExist(email)])
+        .then(result => {
+          for(let item of result) {
+            if(item.result === true)
+                resolve(true);
+          }
+          resolve(false);
+        })
+        .catch(err => reject(err));
+    });
 }
 
 handleConfirmAudit = (isModifyWechat) =>{
@@ -217,10 +233,8 @@ addRelation = investorID =>{
         investoruser: investorID,
         traderuser: currentBD.makeUser,
         proj: currentBD.proj.id,
-      }).catch(error => {
-            Toast.show(error.message, {position: Toast.positions.CENTER})
-        })
-    }
+      }) 
+       }
 }
 
 confirmModify = () =>{
