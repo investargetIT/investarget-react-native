@@ -21,16 +21,16 @@ class Home extends React.Component {
             headerTitle: (
               <View style={{ alignSelf: 'center', backgroundColor: undefined, width: 100, height: Platform.OS === 'ios' ? 45 : 56 }}>
                 <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: undefined }}>
-                  <Text onPress={() => params.onItemPressed('project')} style={{fontSize: 20, color: params.active !== 'project' ? 'rgba(255, 255, 255, 0.6)' : 'white'}}>项目</Text>
+                  <Text onPress={() => params.onItemPressed('project')} style={{fontSize: 18, color: params.active !== 'project' ? 'rgba(255, 255, 255, 0.6)' : 'white'}}>项目</Text>
                   <View style={{ flexBasis: 10, height: '100%', backgroundColor: undefined }} />
-                  <Text onPress={() => params.onItemPressed('service')} style={{fontSize: 20, color: params.active !== 'service' ? 'rgba(255, 255, 255, 0.6)' : 'white'}}>服务</Text>
+                  <Text onPress={() => params.onItemPressed('service')} style={{fontSize: 18, color: params.active !== 'service' ? 'rgba(255, 255, 255, 0.6)' : 'white'}}>服务</Text>
                 </View>
                 <View style={{ flexBasis: 2, backgroundColor: undefined, flexDirection: 'row' }}>
-                  <View style={{ flexBasis: 8 }} />
+                  <View style={{ flexBasis: 10 }} />
                   <View style={{ flex: 1, backgroundColor: undefined, alignItems: params.active === 'project' ? 'flex-start' : 'flex-end' }}>
-                    <View style={{ flex: 1, width: 32, backgroundColor: 'white' }} />
+                    <View style={{ flex: 1, width: 30, backgroundColor: 'white' }} />
                   </View>
-                  <View style={{ flexBasis: 9 }} />
+                  <View style={{ flexBasis: 12 }} />
                 </View>
               </View>
             ),
@@ -38,7 +38,7 @@ class Home extends React.Component {
                 backgroundColor: '#10458f',
             },
             headerTintColor: '#fff',
-            // headerRight: <View style={{ width: 24, height: 24 }}></View>,
+            headerRight: <View style={{ width: 24, height: 24 }}></View>,
             headerLeft: <TouchableOpacity style={{ marginLeft: 18 }} onPress={params.onIconPressed}>
               <Image source={require('../images/usericon.png')} style={{ width: 18, height: 22 }} />
             </TouchableOpacity>
