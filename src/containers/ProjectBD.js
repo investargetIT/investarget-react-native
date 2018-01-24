@@ -32,10 +32,10 @@
                     tabBarInactiveTextColor="#666"                
                 >
                     
-                    <View tabLabel="未BD"><ProjectBDList status="1" {...this.props}/></View>
-                    <View tabLabel="BD中"><ProjectBDList status="2" {...this.props}/></View>
-                    <View tabLabel="BD成功"><ProjectBDList status="3" {...this.props}/></View>
-                    <View tabLabel="暂不BD"><ProjectBDList status="4" {...this.props}/></View>
+                    <View style={{ flex: 1 }} tabLabel="未BD"><ProjectBDList status="1" {...this.props}/></View>
+                    <View style={{ flex: 1 }} tabLabel="BD中"><ProjectBDList status="2" {...this.props}/></View>
+                    <View style={{ flex: 1 }} tabLabel="BD成功"><ProjectBDList status="3" {...this.props}/></View>
+                    <View style={{ flex: 1 }} tabLabel="暂不BD"><ProjectBDList status="4" {...this.props}/></View>
                 </ScrollableTabView>
             </View>)
   	}
