@@ -96,7 +96,7 @@ class PersonalDetail extends React.Component{
 		let {proj, comments, bd_status, id, org, currentBD, visible } =this.state
 		const {item, source} = this.props.navigation.state.params
 		return(
-		<View style={containerStyle}>
+		<ScrollView style={containerStyle}>
            <PersonalInfo currentBD={item} />
            {proj ? <Cell label="项目" content={proj} /> : null}
            {bd_status? 
@@ -125,7 +125,7 @@ class PersonalDetail extends React.Component{
 			:null}
             
             
-        </View>
+        </ScrollView>
 
 		)
 	}

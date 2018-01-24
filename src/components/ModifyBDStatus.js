@@ -303,19 +303,19 @@ render(){
               onChange={this.changeGroup.bind(this)}/>
 			<View style={cellStyle} >
                 <Text style={cellLabelStyle}>姓名</Text>
-                <TextInput style={cellContentStyle} onChangeText={username=>{this.setState({username},this.checkInvalid);}}/>
+                <TextInput style={cellContentStyle} underlineColorAndroid="transparent" onChangeText={username=>{this.setState({username},this.checkInvalid);}}/>
             </View>
             <View style={cellStyle} >
                 <Text style={cellLabelStyle}>手机号码</Text>
-                <TextInput style={cellContentStyle} onChangeText={mobile=>{this.setState({mobile},this.checkInvalid)}}/>
+                <TextInput style={cellContentStyle} underlineColorAndroid="transparent" onChangeText={mobile=>{this.setState({mobile},this.checkInvalid)}}/>
             </View>
             <View style={cellStyle} >
                 <Text style={cellLabelStyle}>微信</Text>
-                <TextInput style={cellContentStyle} onChangeText={wechat=>{this.setState({wechat},this.checkInvalid)}}/>
+                <TextInput style={cellContentStyle} underlineColorAndroid="transparent" onChangeText={wechat=>{this.setState({wechat},this.checkInvalid)}}/>
             </View>
             <View style={cellStyle} >
                 <Text style={cellLabelStyle}>邮箱</Text>
-                <TextInput style={cellContentStyle} onChangeText={email=>{this.setState({email},this.checkInvalid)}}/>
+                <TextInput style={cellContentStyle} underlineColorAndroid="transparent" onChangeText={email=>{this.setState({email},this.checkInvalid)}}/>
             </View>
     	</View>
     	:null}
