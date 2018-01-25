@@ -11,12 +11,18 @@ import {
     HIDE_LOADING,
     RECEIVE_CONTINENTS_AND_COUNTRIES,
     TOGGLE_FILTER,
+    TOGGLE_ORG_FILTER,
     RECEIVE_INDUSTRIES,
     RECEIVE_TAGS,
     RECEIVE_TITLES,
+    RECEIVE_CURRENCYTYPE,
+    RECEIVE_ORGTYPES,
+    RECEIVE_TRANSACTIONPHASES,
     SEARCH_PROJECT,
     CLEAR_FILTER,
+    CLEAR_ORG_FILTER,
     CLONE_TRUE_FILTER,
+    CLONE_TRUE_ORG_FILTER,
     SET_NEED_REFRESH_FALSE,
     MODIFY_USER_INFO,
     SET_RECOMMEND_INVESTORS,
@@ -28,19 +34,25 @@ import {
     UPDATE_PROJECT_STRUCTURE,
   } from '../actions'
   import AsyncStorage from '../src/AsyncStorage'
-  
+   
   const initialState = {
     isLogin: false,
     isFetching: false,
     isError: false,
+    ifOverseas:null,
     projects: [],
     projectStructure: [],
     posts: [],
     eventUrl: 'https://www.baidu.com/',
     continentsAndCountries: [],
     filter: [],
+    orgFilter:[],
+    trueOrgFilter:[],
     industries: [],
     tags: [],
+    currencyType:[],
+    orgTypes:[],
+    transactionPhases:[],
     titles: [],
     trueFilter: [],
     needRefresh: false,
@@ -143,6 +155,35 @@ import {
             filter: state.filter.concat(action.filter)
           })
         }
+      case TOGGLE_ORG_FILTER:
+        const orgFilterIndex = state.orgFilter.map(item => item.type + item.id).indexOf(action.filter.type + action.filter.id)
+        if (orgFilterIndex > -1) {
+          var newFilter = state.orgFilter.slice()
+          if(action.filter.type=='overseas'){
+            newFilter[orgFilterIndex].value=action.filter.value
+
+            if(action.filter.value==true)
+              newFilter[orgFilterIndex].label='投资海外项目'
+            else
+              newFilter[orgFilterIndex].label='未投资海外项目'
+          }else{
+            newFilter.splice(orgFilterIndex, 1)           
+          }
+          return Object.assign({}, state, {
+              orgFilter: newFilter
+          })
+        } else {
+          if(action.filter.type=='overseas'){
+            return Object.assign({}, state, {
+              orgFilter: state.orgFilter.concat({...action.filter,label:'投资海外项目'})
+            })
+          }
+          else{
+            return Object.assign({}, state, {
+              orgFilter: state.orgFilter.concat(action.filter)
+            }) 
+          }         
+        }
       case RECEIVE_INDUSTRIES:
         return Object.assign({}, state, {
           industries: action.industries
@@ -150,6 +191,18 @@ import {
       case RECEIVE_TAGS:
         return Object.assign({}, state, {
           tags: action.tags
+        })
+      case RECEIVE_CURRENCYTYPE:
+        return Object.assign({}, state, {
+          currencyType: action.currencyType
+        })
+      case RECEIVE_ORGTYPES:
+        return Object.assign({}, state, {
+          orgTypes: action.orgTypes
+        })
+      case RECEIVE_TRANSACTIONPHASES:
+        return Object.assign({}, state, {
+          transactionPhases: action.transactionPhases
         })
       case RECEIVE_TITLES:
         return Object.assign({}, state, {
@@ -167,11 +220,21 @@ import {
         return Object.assign({}, state, {
           filter: []
         })
+      case CLEAR_ORG_FILTER:
+        return Object.assign({}, state, {
+          orgFilter: []
+        })
       case CLONE_TRUE_FILTER:
         var filter = state.trueFilter.filter(item => item.type !== 'title')
         return Object.assign({}, state, {
           trueFilter: filter,
           filter: filter
+        })
+      case CLONE_TRUE_ORG_FILTER:
+        var orgfilter = state.trueOrgFilter.filter(item => item.type !== 'title')
+        return Object.assign({}, state, {
+          trueOrgFilter: orgfilter,
+          orgFilter: orgfilter
         })
       case SET_NEED_REFRESH_FALSE:
         return Object.assign({}, state, {

@@ -10,13 +10,19 @@ export const HANDLE_ERROR = 'HANDLE_ERROR'
 export const HIDE_LOADING = 'HIDE_LOADING'
 export const RECEIVE_CONTINENTS_AND_COUNTRIES = 'RECEIVE_CONTINENTS_AND_COUNTRIES'
 export const TOGGLE_FILTER = 'TOGGLE_FILTER'
+export const TOGGLE_ORG_FILTER = 'TOGGLE_ORG_FILTER'
 export const RECEIVE_INDUSTRIES = 'RECEIVE_INDUSTRIES'
 export const RECEIVE_TITLES = 'RECEIVE_TITLES'
 export const RECEIVE_TAGS = 'RECEIVE_TAGS'
+export const RECEIVE_CURRENCYTYPE = 'RECEIVE_CURRENCYTYPE'
+export const RECEIVE_ORGTYPES = 'RECEIVE_ORGTYPES'
+export const RECEIVE_TRANSACTIONPHASES='RECEIVE_TRANSACTIONPHASES'
 export const SEARCH_PROJECT = 'SEARCH_PROJECT'
 export const CLEAR_FILTER = 'CLEAR_FILTER'
+export const CLEAR_ORG_FILTER = 'CLEAR_ORG_FILTER'
 export const SET_NEED_REFRESH_FALSE = 'SET_NEED_REFRESH_FALSE'
 export const CLONE_TRUE_FILTER = 'CLONE_TRUE_FILTER'
+export const CLONE_TRUE_ORG_FILTER = 'CLONE_TRUE_ORG_FILTER'
 export const MODIFY_USER_INFO = 'MODIFY_USER_INFO'
 export const SET_RECOMMEND_INVESTORS = 'SET_RECOMMEND_INVESTORS'
 export const SET_RECOMMEND_PROJECTS = 'SET_RECOMMEND_PROJECTS'
@@ -116,6 +122,13 @@ export function toggleFilter(filter) {
   }
 }
 
+export function toggleOrgFilter(filter) {
+  return {
+    type: TOGGLE_ORG_FILTER,
+    filter
+  }
+}
+
 export function receiveIndustries(industries) {
   return {
     type: RECEIVE_INDUSTRIES,
@@ -127,6 +140,27 @@ export function receiveTags(tags) {
   return {
     type: RECEIVE_TAGS,
     tags
+  }
+}
+
+export function receiveCurrencyType(currencyType) {
+  return {
+    type: RECEIVE_CURRENCYTYPE,
+    currencyType
+  }
+}
+
+export function receiveTransactionPhases(transactionPhases) {
+  return {
+    type: RECEIVE_TRANSACTIONPHASES,
+    transactionPhases
+  }
+}
+
+export function receiveOrgTypes(orgTypes) {
+  return {
+    type: RECEIVE_ORGTYPES,
+    orgTypes
   }
 }
 
@@ -149,8 +183,16 @@ export function clearFilter() {
   return { type: CLEAR_FILTER }
 }
 
+export function clearOrgFilter() {
+  return { type: CLEAR_ORG_FILTER }
+}
+
 export function cloneTrueFilter() {
   return { type: CLONE_TRUE_FILTER }
+}
+
+export function cloneTrueOrgFilter() {
+  return { type: CLONE_TRUE_ORG_FILTER }
 }
 
 export function modifyUserInfo(userInfo) {

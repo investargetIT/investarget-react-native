@@ -30,15 +30,22 @@ function MyPartnerOrgCell (props) {
     </TouchableHighlight>
   )
 }
-
+  
 class MyPartnerOrg extends React.Component {
-    static navigationOptions = {
+    static navigationOptions = ({ navigation }) =>{
+        const { params } = navigation.state
+        return {
         title: '我的投资人',
         headerStyle: {
             backgroundColor: '#10458f',
         },
         headerTintColor: '#fff',
         headerBackTitle: null,
+        headerRight:<View  style={{marginRight:8, display:'flex',flexDirection:'row',alignItems:'center'}}>
+                        <Image source={require('../images/home/filter.png')} style={{width:14,height:15,marginRight:7}} />
+                        <Text style={{color:'white'}} onPress={()=>{params.filter&&params.filter()}}>筛选</Text>
+                    </View>
+        }
     }
 
     constructor (props) {
@@ -52,7 +59,12 @@ class MyPartnerOrg extends React.Component {
       }
     }
 
+    handleFilter = () =>{
+      this.props.navigation.navigate('OrgFilter')
+    }
+
     componentDidMount() {
+      this.props.navigation.setParams({ filter: this.handleFilter })
       this.getData();
     }
 
