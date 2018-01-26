@@ -14,9 +14,9 @@ import * as api from '../api';
 import { connect } from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
 import Toast from 'react-native-root-toast';
-import { requestContents, hideLoading } from '../../actions';
+import { requestContents, hideLoading, SET_INVESTOR_REFRESH_FALSE } from '../../actions';
 import ActionSheet from '../ActionSheet';
-
+ 
 const PAGE_SIZE = 10;
 
 function MyPartnerOrgCell (props) {
@@ -55,7 +55,8 @@ class MyPartnerOrg extends React.Component {
         loading: false,
         isLoadingAll: false,
         isLoadingMore: false, 
-        page: 0, 
+        page: 0,
+        filter:null
       }
     }
 
@@ -64,11 +65,52 @@ class MyPartnerOrg extends React.Component {
     }
 
     componentDidMount() {
+      const {trueOrgFilter} =this.props
+      if(trueOrgFilter){
+        let filter = this.transoformParams(trueOrgFilter)
+        this.setState({filter},this.getData)
+      }else{
+        this.getData();
+      }
       this.props.navigation.setParams({ filter: this.handleFilter })
-      this.getData();
+      
+    }
+
+    transoformParams = (filters)=>{
+      let area=[],currencys=[],industrys=[],isOversea=null,orgtransactionphases=[],orgtypes=[],search=null,tags=[]
+        filters.forEach(item=>{
+          if(item.type=='currency')
+            currencys.push(item.value)
+          if(item.type=='area')
+            area.push(item.value)
+          if(item.type=='industry')
+            industrys.push(item.value)
+          if(item.type=='tag')
+            tags.push(item.value)
+          if(item.type=='phase')
+            orgtransactionphases.push(item.value)
+          if(item.type=='orgTypes')
+            orgtypes.push(item.value)
+          if(item.type=='overseas')
+            isOversea=item.value
+          if(item.type=='title')
+            search=item.title
+        })
+        let newFilter={area, currencys,industrys,isOversea,orgtransactionphases,orgtypes,search,tags}
+        return newFilter
+    }
+
+    componentWillReceiveProps(nextProps){
+      let { myInvestorRefresh, trueOrgFilter } = nextProps     
+      if (myInvestorRefresh) {
+        let filter = this.transoformParams(trueOrgFilter)
+        this.setState({filter},this.getData)
+        this.props.dispatch({ type: SET_INVESTOR_REFRESH_FALSE })
+      }
     }
 
     getData = isLoadingMore => {
+      const {filter} = this.state
       if (isLoadingMore === undefined) {
         this.setState({ loading: true });
       }
@@ -76,7 +118,8 @@ class MyPartnerOrg extends React.Component {
       api.getOrg({ 
         trader: this.props.userInfo.id, 
         page_size: PAGE_SIZE, 
-        page_index: isLoadingMore ?  this.state.page + 1 : 1 
+        page_index: isLoadingMore ?  this.state.page + 1 : 1,
+        ...filter 
       })
       .then(data => {
         org = data.data;
@@ -268,8 +311,8 @@ class MyPartnerOrg extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { userInfo, titles } = state.app;
-  return { userInfo, titles };
+  const { userInfo, titles, myInvestorRefresh,trueOrgFilter } = state.app;
+  return { userInfo, titles, myInvestorRefresh,trueOrgFilter };
 }
 
 export default connect(mapStateToProps)(MyPartnerOrg);

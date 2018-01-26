@@ -5,7 +5,7 @@ import { isIPhoneX } from '../utils';
 import Cascader from '../components/Cascader'
 import {
     receiveContinentsAndCountries, receiveIndustries, receiveTags,receiveCurrencyType,receiveTransactionPhases,receiveOrgTypes,
-    toggleOrgFilter, searchProject, clearOrgFilter, cloneTrueOrgFilter } from '../../actions'
+    filterOrg,toggleOrgFilter, clearOrgFilter, cloneTrueOrgFilter } from '../../actions'
 import * as api from '../api'
 import Select from '../components/Select'
 
@@ -32,7 +32,9 @@ class OrgFilter extends React.Component {
                             selectionColor="#2269d4"
                             placeholderTextColor="#999"
                             style={{width:120,fontSize:15,padding:0}}
-                            placeholder="搜索机构标题"                            
+                            placeholder="搜索机构标题"  
+                            value={params.value}
+                            onChangeText={(value) => { params.onChange && params.onChange(value) }}                          
                         />
                     </View>
                 </View>
@@ -74,6 +76,19 @@ class OrgFilter extends React.Component {
             this.props.dispatch(receiveTags(data))
         })
 
+        this.props.navigation.setParams({ value: this.state.search, onChange: this.handleChangeSearch })
+
+    }
+
+    handleChangeSearch = (value) => {
+        this.setState({ search: value })
+        this.props.navigation.setParams({ value: value })
+    }
+
+    submit = () =>{
+    	this.props.dispatch(filterOrg(this.state.search))
+        this.props.navigation.goBack()
+
     }
 
     reset = () => {
@@ -100,13 +115,13 @@ class OrgFilter extends React.Component {
 
     handleChange = (type, values) => {
     	let items
-    	if(type=='currency'){
+    	if(type==CATEGORY_1){
     		items=this.props.currenyOptions.filter(data=>values.includes(data.value))
     	}
-    	if(type=='phase'){
+    	if(type==CATEGORY_5){
     		items=this.props.phasesOptions.filter(data=>values.includes(data.value))
     	}
-    	if(type=='orgTypes'){
+    	if(type==CATEGORY_6){
     		items=this.props.orgTypesOptions.filter(data=>values.includes(data.value))
     	}
     	items.forEach(item=>{
@@ -130,7 +145,6 @@ class OrgFilter extends React.Component {
 
     render(){
     	const {countryOptions,industryOptions, tagOptions, orgFilter, currenyOptions, phasesOptions, orgTypesOptions } = this.props
-    	console.log(orgFilter)
     	const {activeTab} = this.state
     	const filterDown = require('../images/home/filterDown.png')
         const filterUp = require('../images/home/filterUp.png')
@@ -196,7 +210,7 @@ class OrgFilter extends React.Component {
 			                /> 							
 						</View>
 						<View style={cellStyle}>
-							<Text style={cellLabelStyle}>轮次</Text>
+							<Text style={cellLabelStyle}>机构类型</Text>
 							<Select
 			                    title="请选择机构类型"
 			                    value={orgFilter.filter(item => item.type === CATEGORY_6).map(item => item.value)}
@@ -239,7 +253,7 @@ class OrgFilter extends React.Component {
                     <TouchableOpacity onPress={this.reset} style={{flex:1,justifyContent:'center',alignItems:'center',backgroundColor:'#71a2e5'}}>
                         <Text style={{fontSize:16,color:'#fff'}}>清空</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity  style={{flex:1,justifyContent:'center',alignItems:'center',backgroundColor:'#10458f'}}>
+                    <TouchableOpacity onPress={this.submit} style={{flex:1,justifyContent:'center',alignItems:'center',backgroundColor:'#10458f'}}>
                         <Text style={{fontSize:16,color:'#fff'}}>确定</Text>
                     </TouchableOpacity>
                 </View>
@@ -278,7 +292,7 @@ function TagList({ chosenItem, onItemClick, options }) {
 }
 
 function mapStateToProps(state) {
-    const { continentsAndCountries,industries, tags, currencyType, orgFilter, transactionPhases, orgTypes } = state.app
+    const { continentsAndCountries,industries, tags, currencyType, orgFilter, transactionPhases, orgTypes} = state.app
     
     var countryOptions = continentsAndCountries.filter(item => item.parent == null)
         .map(item => ({ value: item.id, label: item.country }))
@@ -312,7 +326,7 @@ function mapStateToProps(state) {
     	tagOptions,
     	currenyOptions,
 		phasesOptions,
-		orgTypesOptions
+		orgTypesOptions,
     }
 }
 export default connect(mapStateToProps)(OrgFilter)

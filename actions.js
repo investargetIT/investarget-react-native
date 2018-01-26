@@ -18,9 +18,11 @@ export const RECEIVE_CURRENCYTYPE = 'RECEIVE_CURRENCYTYPE'
 export const RECEIVE_ORGTYPES = 'RECEIVE_ORGTYPES'
 export const RECEIVE_TRANSACTIONPHASES='RECEIVE_TRANSACTIONPHASES'
 export const SEARCH_PROJECT = 'SEARCH_PROJECT'
+export const FILTER_ORG='FILTER_ORG'
 export const CLEAR_FILTER = 'CLEAR_FILTER'
 export const CLEAR_ORG_FILTER = 'CLEAR_ORG_FILTER'
 export const SET_NEED_REFRESH_FALSE = 'SET_NEED_REFRESH_FALSE'
+export const SET_INVESTOR_REFRESH_FALSE='SET_INVESTOR_REFRESH_FALSE'
 export const CLONE_TRUE_FILTER = 'CLONE_TRUE_FILTER'
 export const CLONE_TRUE_ORG_FILTER = 'CLONE_TRUE_ORG_FILTER'
 export const MODIFY_USER_INFO = 'MODIFY_USER_INFO'
@@ -175,6 +177,13 @@ export function receiveTitles(titles) {
 export function searchProject(title) {
   return { 
     type: SEARCH_PROJECT,
+    title
+  }
+}
+
+export function filterOrg(title) {
+  return { 
+    type: FILTER_ORG,
     title
   }
 }

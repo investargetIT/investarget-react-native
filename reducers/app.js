@@ -19,11 +19,13 @@ import {
     RECEIVE_ORGTYPES,
     RECEIVE_TRANSACTIONPHASES,
     SEARCH_PROJECT,
+    FILTER_ORG,
     CLEAR_FILTER,
     CLEAR_ORG_FILTER,
     CLONE_TRUE_FILTER,
     CLONE_TRUE_ORG_FILTER,
     SET_NEED_REFRESH_FALSE,
+    SET_INVESTOR_REFRESH_FALSE,
     MODIFY_USER_INFO,
     SET_RECOMMEND_INVESTORS,
     SET_RECOMMEND_PROJECTS,
@@ -55,6 +57,7 @@ import {
     transactionPhases:[],
     titles: [],
     trueFilter: [],
+    myInvestorRefresh:false,
     needRefresh: false,
     recommendProcess: {
       investorIds: [],
@@ -216,6 +219,14 @@ import {
           }),
           needRefresh: true
         })
+      case FILTER_ORG:
+        return Object.assign({}, state, {
+          trueOrgFilter: state.orgFilter.concat({
+            type: 'title',
+            title: action.title
+          }),
+          myInvestorRefresh: true
+        })
       case CLEAR_FILTER:
         return Object.assign({}, state, {
           filter: []
@@ -240,6 +251,10 @@ import {
         return Object.assign({}, state, {
           needRefresh: false,
         })
+      case SET_INVESTOR_REFRESH_FALSE:
+        return Object.assign({}, state, {
+          myInvestorRefresh: false,
+        })
       case MODIFY_USER_INFO:
         AsyncStorage.setItem('userInfo', JSON.stringify(action.userInfo))
         return Object.assign({}, state, {
@@ -251,7 +266,7 @@ import {
             investorIds: action.ids,
             projectIds: state.recommendProcess.projectIds
           }
-        })
+        })     
       case SET_RECOMMEND_PROJECTS:
         return Object.assign({}, state, {
           recommendProcess: {
