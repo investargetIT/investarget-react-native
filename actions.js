@@ -16,6 +16,7 @@ export const RECEIVE_TITLES = 'RECEIVE_TITLES'
 export const RECEIVE_TAGS = 'RECEIVE_TAGS'
 export const RECEIVE_CURRENCYTYPE = 'RECEIVE_CURRENCYTYPE'
 export const RECEIVE_ORGTYPES = 'RECEIVE_ORGTYPES'
+export const RECEIVE_ORGAREA = 'RECEIVE_ORGAREA'
 export const RECEIVE_TRANSACTIONPHASES='RECEIVE_TRANSACTIONPHASES'
 export const TOGGLE_ORGFILTER_MULTICHOICE = 'TOGGLE_ORGFILTER_MULTICHOICE'
 export const SEARCH_PROJECT = 'SEARCH_PROJECT'
@@ -115,6 +116,13 @@ export function receiveContinentsAndCountries(continentsAndCountries) {
   return { 
     type: RECEIVE_CONTINENTS_AND_COUNTRIES,
     continentsAndCountries
+  }
+}
+
+export function receiveOrgArea(orgarea){
+  return {
+    type:RECEIVE_ORGAREA,
+    orgarea
   }
 }
 

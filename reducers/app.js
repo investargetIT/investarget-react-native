@@ -22,6 +22,7 @@ import {
     SEARCH_PROJECT,
     FILTER_ORG,
     CLEAR_FILTER,
+    RECEIVE_ORGAREA,
     CLEAR_ORG_FILTER,
     CLONE_TRUE_FILTER,
     CLONE_TRUE_ORG_FILTER,
@@ -53,6 +54,7 @@ import {
     trueOrgFilter:[],
     industries: [],
     tags: [],
+    orgarea: [],
     currencyType:[],
     orgTypes:[],
     transactionPhases:[],
@@ -201,6 +203,10 @@ import {
       case RECEIVE_INDUSTRIES:
         return Object.assign({}, state, {
           industries: action.industries
+        })
+      case RECEIVE_ORGAREA:
+        return Object.assign({}, state, {
+          orgarea: action.orgarea
         })
       case RECEIVE_TAGS:
         return Object.assign({}, state, {

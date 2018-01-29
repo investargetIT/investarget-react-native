@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { isIPhoneX } from '../utils';
 import Cascader from '../components/Cascader'
 import {
-    receiveContinentsAndCountries, receiveIndustries, receiveTags,receiveCurrencyType,receiveTransactionPhases,receiveOrgTypes,
+    receiveOrgArea, receiveIndustries, receiveTags,receiveCurrencyType,receiveTransactionPhases,receiveOrgTypes,
     filterOrg,toggleOrgFilter, clearOrgFilter, cloneTrueOrgFilter, toggleOrgFilterMultiple } from '../../actions'
 import * as api from '../api'
 import Select from '../components/Select'
@@ -66,8 +66,8 @@ class OrgFilter extends React.Component {
     	api.getSource('orgtype').then(data=>{
     		this.props.dispatch(receiveOrgTypes(data))
     	})
-    	api.getSource('country').then(data => {
-            this.props.dispatch(receiveContinentsAndCountries(data))
+    	api.getSource('orgarea').then(data => {
+            this.props.dispatch(receiveOrgArea(data))
         })
         api.getSource('industry').then(data => {
             this.props.dispatch(receiveIndustries(data))
@@ -138,7 +138,7 @@ class OrgFilter extends React.Component {
     }
 
     render(){
-    	const {countryOptions,industryOptions, tagOptions, orgFilter, currenyOptions, phasesOptions, orgTypesOptions } = this.props
+    	const {orgareaOptions,industryOptions, tagOptions, orgFilter, currenyOptions, phasesOptions, orgTypesOptions } = this.props
     	const {activeTab} = this.state
     	const filterDown = require('../images/home/filterDown.png')
         const filterUp = require('../images/home/filterUp.png')
@@ -220,10 +220,10 @@ class OrgFilter extends React.Component {
                     
                 ) : null}
                 {activeTab == 1 ? (
-                    <Cascader
+                    <TagList
                         chosenItem={orgFilter.filter(item => item.type === CATEGORY_2).map(item => item.value)} 
                         onItemClick={this.handleItemClick.bind(this, CATEGORY_2)} 
-                        options={countryOptions} />
+                        options={orgareaOptions} />
                 ) : null}
                 {activeTab == 2 ? (
                     <Cascader
@@ -286,14 +286,7 @@ function TagList({ chosenItem, onItemClick, options }) {
 }
 
 function mapStateToProps(state) {
-    const { continentsAndCountries,industries, tags, currencyType, orgFilter, transactionPhases, orgTypes} = state.app
-    
-    var countryOptions = continentsAndCountries.filter(item => item.parent == null)
-        .map(item => ({ value: item.id, label: item.country }))
-    countryOptions.forEach(pItem => {
-        pItem['children'] = continentsAndCountries.filter(item => item.parent == pItem.value)
-            .map(item => ({ value: item.id, label: item.country }))
-    })
+    const { orgarea,industries, tags, currencyType, orgFilter, transactionPhases, orgTypes} = state.app
 
     var industryOptions = industries.filter(item => item.isPindustry)
         .map(item => ({ value: item.id, label: item.industry }))
@@ -301,21 +294,21 @@ function mapStateToProps(state) {
         pItem['children'] = industries.filter(item => item.Pindustry == pItem.value)
             .map(item => ({ value: item.id, label: item.industry }))
     })
-
+	var orgareaOptions = orgarea.map(item => ({ value: item.id, label: item.name }))
     var tagOptions = tags.map(item => ({ value: item.id, label: item.name }))
     var currenyOptions = currencyType.map(item=>({value:item.id, label:item.currency}))
     var phasesOptions = transactionPhases.map(item => ({ value: item.id, label: item.name }))
     var orgTypesOptions = orgTypes.map(item => ({ value: item.id, label: item.name }))
 
     return {
-    	continentsAndCountries, 
+    	orgarea, 
     	transactionPhases,
     	industries, 
     	tags, 
     	orgTypes,
     	currencyType,
     	orgFilter,
-    	countryOptions,
+    	orgareaOptions,
     	industryOptions, 
     	tagOptions,
     	currenyOptions,
