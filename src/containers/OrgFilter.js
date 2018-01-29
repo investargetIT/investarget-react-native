@@ -5,7 +5,7 @@ import { isIPhoneX } from '../utils';
 import Cascader from '../components/Cascader'
 import {
     receiveContinentsAndCountries, receiveIndustries, receiveTags,receiveCurrencyType,receiveTransactionPhases,receiveOrgTypes,
-    filterOrg,toggleOrgFilter, clearOrgFilter, cloneTrueOrgFilter } from '../../actions'
+    filterOrg,toggleOrgFilter, clearOrgFilter, cloneTrueOrgFilter, toggleOrgFilterMultiple } from '../../actions'
 import * as api from '../api'
 import Select from '../components/Select'
 
@@ -124,14 +124,8 @@ class OrgFilter extends React.Component {
     	if(type==CATEGORY_6){
     		items=this.props.orgTypesOptions.filter(data=>values.includes(data.value))
     	}
-    	items.forEach(item=>{
-			this.props.dispatch(toggleOrgFilter({
-            ...item,
-            type,
-            id: item.value,
-            name: item.label,
-        }))
-    	})
+    	items=items.map(item=>({...item,type,id: item.value,name: item.label}))
+    	this.props.dispatch(toggleOrgFilterMultiple(items))
     }
 
     handleItemClick = (type, item) => {

@@ -17,6 +17,7 @@ export const RECEIVE_TAGS = 'RECEIVE_TAGS'
 export const RECEIVE_CURRENCYTYPE = 'RECEIVE_CURRENCYTYPE'
 export const RECEIVE_ORGTYPES = 'RECEIVE_ORGTYPES'
 export const RECEIVE_TRANSACTIONPHASES='RECEIVE_TRANSACTIONPHASES'
+export const TOGGLE_ORGFILTER_MULTICHOICE = 'TOGGLE_ORGFILTER_MULTICHOICE'
 export const SEARCH_PROJECT = 'SEARCH_PROJECT'
 export const FILTER_ORG='FILTER_ORG'
 export const CLEAR_FILTER = 'CLEAR_FILTER'
@@ -127,6 +128,13 @@ export function toggleFilter(filter) {
 export function toggleOrgFilter(filter) {
   return {
     type: TOGGLE_ORG_FILTER,
+    filter
+  }
+}
+
+export function toggleOrgFilterMultiple(filter){
+  return {
+    type: TOGGLE_ORGFILTER_MULTICHOICE,
     filter
   }
 }

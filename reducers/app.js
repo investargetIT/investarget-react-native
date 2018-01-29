@@ -12,6 +12,7 @@ import {
     RECEIVE_CONTINENTS_AND_COUNTRIES,
     TOGGLE_FILTER,
     TOGGLE_ORG_FILTER,
+    TOGGLE_ORGFILTER_MULTICHOICE,
     RECEIVE_INDUSTRIES,
     RECEIVE_TAGS,
     RECEIVE_TITLES,
@@ -158,6 +159,16 @@ import {
             filter: state.filter.concat(action.filter)
           })
         }
+      case TOGGLE_ORGFILTER_MULTICHOICE:
+        let orgfilter = [...state.orgFilter]
+        while(orgfilter.findIndex(item=>action.filter[0].type==item.type)>-1){
+          let index=orgfilter.findIndex(item=>action.filter[0].type==item.type)
+          orgfilter.splice(index,1)
+        }
+        return Object.assign({}, state, {
+              orgFilter: orgfilter.concat(action.filter)
+        })
+
       case TOGGLE_ORG_FILTER:
         const orgFilterIndex = state.orgFilter.map(item => item.type + item.id).indexOf(action.filter.type + action.filter.id)
         if (orgFilterIndex > -1) {
