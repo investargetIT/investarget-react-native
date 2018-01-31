@@ -154,6 +154,8 @@
  	render(){
  		const {id, currentBD} = this.state
  		const username = currentBD.username || ''
+    const proj = currentBD.com_name|| '暂无'
+    const useremail = currentBD.useremail || '暂无'
  		const title = currentBD.usertitle&&currentBD.usertitle.name || '暂无'
  		const mobile = currentBD.usermobile ? (currentBD.usermobile.indexOf('-') > -1 ? '+' + currentBD.usermobile : currentBD.usermobile) : '暂无';
  		const imgSource = require('../images/userCenter/defaultAvatar.png')
@@ -162,7 +164,7 @@
 	        <View style={{flexDirection:'row',backgroundColor:'#fff',padding: 16,paddingTop: 24}}>
                 <Image source={imgSource} style={{width:60,height:60,marginRight:16,borderRadius:30}} />
                 <View style={{justifyContent:'space-between', flex: 0.5}}>
-                    <Text style={{fontSize:16,color:'#333'}} numberOfLines={1}>暂无</Text>
+                    <Text style={{fontSize:16,color:'#333'}} numberOfLines={1}>{proj}</Text>
                     <Text style={{fontSize:16,color:'#333'}} numberOfLines={1}>
                         {username + ' '}
                         <Text style={{fontSize:13,color:'#999'}} numberOfLines={1}>{title}</Text>
@@ -175,10 +177,10 @@
                       <Text style={{ marginLeft: 10, width: '80%', color: '#999' }}>{mobile}</Text>
                     </View>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => Linking.openURL(`mailto:${email}`)}>
+                  <TouchableOpacity onPress={() => Linking.openURL(`mailto:${useremail}`)}>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <Image source={require('../images/ic_email.png')} />
-                      <Text style={{ marginLeft: 10, width: '80%', color: '#999' }} numberOfLines={2}>暂无</Text>
+                      <Text style={{ marginLeft: 10, width: '80%', color: '#999' }} numberOfLines={2}>{useremail}</Text>
                     </View>
                   </TouchableOpacity>
                 </View>
