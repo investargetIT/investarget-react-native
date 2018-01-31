@@ -26,6 +26,7 @@
 		22627AA960734C5DA4A9336A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F41F5514B2EA4E72A07C4BA7 /* CoreGraphics.framework */; };
 		22BE86B4273841FEA04B42EA /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B46B9FC19EB84482AC8D9A51 /* libz.tbd */; };
 		25EF2B11D8064E61B4854115 /* libyoga.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EAEDB73E5D6E437D9EEC9797 /* libyoga.a */; };
+		454E98D1D89A472498BF87EA /* libRNCalendarEvents.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CBAC455CBE7B4B22AD1D8BFF /* libRNCalendarEvents.a */; };
 		4F2444B644204A8A87D23BE2 /* libjschelpers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B7F83A6C782A4A14B45EA836 /* libjschelpers.a */; };
 		53351C09E4C546798876E41A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51E775E56457492A834DF1EB /* Foundation.framework */; };
 		5595305522A24910A020B4B8 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B56891FC1D3146C38FDED4A7 /* libRNFS.a */; };
@@ -291,6 +292,13 @@
 			remoteGlobalIDString = 014A3B5C1C6CF33500B6D375;
 			remoteInfo = RNImagePicker;
 		};
+		FF023AD72021B3E500282C9B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4C5D10AAF4154B97B2C883B8 /* RNCalendarEvents.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BEC43C6A1C723089001221C6;
+			remoteInfo = RNCalendarEvents;
+		};
 		FF0E793720048E4C0023B78A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 32D038DFD348439EBD424AF5 /* RNDeviceInfo.xcodeproj */;
@@ -367,6 +375,7 @@
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		1A73E4AC810A42219022CE66 /* libRNDeviceInfo.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNDeviceInfo.a; sourceTree = "<group>"; };
 		32D038DFD348439EBD424AF5 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
+		4C5D10AAF4154B97B2C883B8 /* RNCalendarEvents.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNCalendarEvents.xcodeproj; path = "../node_modules/react-native-calendar-events/RNCalendarEvents.xcodeproj"; sourceTree = "<group>"; };
 		51E775E56457492A834DF1EB /* Foundation.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		5D7F8006C6F14C518C772F9E /* libRNDeviceInfo-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNDeviceInfo-tvOS.a"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
@@ -386,6 +395,7 @@
 		C5BF5BC8C78D41FA96D36C9F /* Security.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		C7A76E75F99B4021AE107BDC /* libthird-party.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libthird-party.a"; sourceTree = "<group>"; };
 		CB78774DC2C54CA88AADF2AE /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNImagePicker.xcodeproj; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; };
+		CBAC455CBE7B4B22AD1D8BFF /* libRNCalendarEvents.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCalendarEvents.a; sourceTree = "<group>"; };
 		D03EFBF31F8DCB47008B8282 /* investargetnative.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = investargetnative.entitlements; path = investargetnative/investargetnative.entitlements; sourceTree = "<group>"; };
 		D494F9FA64BC43828FDF3834 /* RCTWeChat.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTWeChat.xcodeproj; path = "../node_modules/react-native-wechat/ios/RCTWeChat.xcodeproj"; sourceTree = "<group>"; };
 		E454D3705AAC41D9A85734E0 /* libRCTJCoreModule.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTJCoreModule.a; sourceTree = "<group>"; };
@@ -451,6 +461,7 @@
 				A7B2156FB2B24E98B1171F0E /* libdouble-conversion.a in Frameworks */,
 				5595305522A24910A020B4B8 /* libRNFS.a in Frameworks */,
 				DDE02883EFC94762B0AE037D /* libRNDeviceInfo.a in Frameworks */,
+				454E98D1D89A472498BF87EA /* libRNCalendarEvents.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -607,6 +618,7 @@
 				D494F9FA64BC43828FDF3834 /* RCTWeChat.xcodeproj */,
 				06B27206AF3E47D883191AC6 /* RNFS.xcodeproj */,
 				32D038DFD348439EBD424AF5 /* RNDeviceInfo.xcodeproj */,
+				4C5D10AAF4154B97B2C883B8 /* RNCalendarEvents.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -668,6 +680,7 @@
 				B56891FC1D3146C38FDED4A7 /* libRNFS.a */,
 				1A73E4AC810A42219022CE66 /* libRNDeviceInfo.a */,
 				5D7F8006C6F14C518C772F9E /* libRNDeviceInfo-tvOS.a */,
+				CBAC455CBE7B4B22AD1D8BFF /* libRNCalendarEvents.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -714,6 +727,14 @@
 				F41F5514B2EA4E72A07C4BA7 /* CoreGraphics.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FF023AD42021B3E500282C9B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FF023AD82021B3E500282C9B /* libRNCalendarEvents.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		FF0E793320048E4C0023B78A /* Products */ = {
@@ -878,6 +899,10 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+				},
+				{
+					ProductGroup = FF023AD42021B3E500282C9B /* Products */;
+					ProjectRef = 4C5D10AAF4154B97B2C883B8 /* RNCalendarEvents.xcodeproj */;
 				},
 				{
 					ProductGroup = FF0E793320048E4C0023B78A /* Products */;
@@ -1132,6 +1157,13 @@
 			remoteRef = D03EFBF11F8DCA90008B8282 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		FF023AD82021B3E500282C9B /* libRNCalendarEvents.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNCalendarEvents.a;
+			remoteRef = FF023AD72021B3E500282C9B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		FF0E793820048E4C0023B78A /* libRNDeviceInfo.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1277,12 +1309,14 @@
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-calendar-events",
 				);
 				INFOPLIST_FILE = investargetnativeTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1319,12 +1353,14 @@
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-calendar-events",
 				);
 				INFOPLIST_FILE = investargetnativeTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1366,6 +1402,7 @@
 					"$(SRCROOT)/../node_modules/react-native/Libraries/LinkingIOS",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-calendar-events",
 				);
 				INFOPLIST_FILE = investargetnative/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1399,6 +1436,7 @@
 					"$(SRCROOT)/../node_modules/react-native/Libraries/LinkingIOS",
 					"$(SRCROOT)/../node_modules/react-native-fs/**",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
+					"$(SRCROOT)/../node_modules/react-native-calendar-events",
 				);
 				INFOPLIST_FILE = investargetnative/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

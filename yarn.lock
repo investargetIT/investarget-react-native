@@ -3912,6 +3912,10 @@ react-devtools@^2.5.2:
     react-devtools-core "^2.5.2"
     update-notifier "^2.1.0"
 
+react-native-calendar-events@^1.4.3:
+  version "1.4.3"
+  resolved "http://registry.npm.taobao.org/react-native-calendar-events/download/react-native-calendar-events-1.4.3.tgz#29804e8b44d6946e69ab5a20902d9449ed315c47"
+
 react-native-calendars@^1.7.1:
   version "1.9.2"
   resolved "http://registry.npm.taobao.org/react-native-calendars/download/react-native-calendars-1.9.2.tgz#283c2fdcda5c9c37e31f02f621f3b659bb574337"

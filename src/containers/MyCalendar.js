@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Agenda } from 'react-native-calendars';
 import * as api from '../api';
+import RNCalendarEvents from 'react-native-calendar-events';
 
 class MyCalendar extends React.Component {
   
@@ -39,6 +40,22 @@ class MyCalendar extends React.Component {
 
   componentDidMount() {
     this.props.navigation.setParams({ onPress: this.handleAddIconPressed });
+   
+    RNCalendarEvents.authorizationStatus()
+      .then(status => {
+        console.log('status', status);
+        return RNCalendarEvents.saveEvent('小游侠来了', {
+          location: 'location',
+          notes: 'notes',
+          startDate: '2018-01-31T11:26:00.000Z',
+          endDate: '2018-01-31T12:26:00.000Z'
+        })
+      })
+      .then(events => {
+        console.log('events', events);
+      })
+      .catch(error => console.error(error));
+    
   }
 
   handleAddIconPressed = () => {

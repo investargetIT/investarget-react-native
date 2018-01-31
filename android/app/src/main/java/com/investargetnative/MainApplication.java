@@ -3,6 +3,7 @@ package com.investargetnative;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.calendarevents.CalendarEventsPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.heyao216.react_native_installapk.InstallApkPackager;
 import com.investargetnative.modules.actionsheet.ActionSheetPackage;
@@ -34,6 +35,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+            new CalendarEventsPackage(),
             new RNDeviceInfo(),
             new InstallApkPackager(),
               new RNFSPackage(),

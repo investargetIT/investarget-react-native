@@ -10,6 +10,7 @@ import AsyncStorage from '../AsyncStorage';
 import ProjectList from '../components/ProjectList';
 import Service from './Service';
 import { connect } from 'react-redux';
+import RNCalendarEvents from 'react-native-calendar-events';
 
 class Home extends React.Component {
 
@@ -55,6 +56,9 @@ class Home extends React.Component {
       onItemPressed: this.handleItemPressed,
       active: this.state.active
     });
+
+    // 请求日历权限
+    RNCalendarEvents.authorizeEventStore();
   }
 
   handleIconPressed = () => AsyncStorage.getItem('userInfo')
