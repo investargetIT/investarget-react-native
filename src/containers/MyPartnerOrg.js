@@ -42,7 +42,6 @@ class MyPartnerOrg extends React.Component {
         headerTintColor: '#fff',
         headerBackTitle: null,
         headerRight:<View  style={{marginRight:8, display:'flex',flexDirection:'row',alignItems:'center'}}>
-                        <Image source={require('../images/home/filter.png')} style={{width:14,height:15,marginRight:7}} />
                         <Text style={{color:'white'}} onPress={()=>{params.filter&&params.filter()}}>筛选</Text>
                     </View>
         }
