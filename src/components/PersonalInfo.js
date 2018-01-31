@@ -76,7 +76,7 @@ class PersonalInfo extends React.Component{
     else if(currentBD){
         this.setState({
             mobile:currentBD.usermobile,
-            email:currentBD.email,
+            email:currentBD.email||currentBD.useremail,
             title:currentBD.usertitle&&currentBD.usertitle.name,
             org:currentBD.org&&currentBD.org.orgname,
             wechat:currentBD.wechat,
@@ -89,7 +89,13 @@ class PersonalInfo extends React.Component{
     render(){
         let {mobile, email, title, org, wechat, tags, traders} =this.state
         traders=traders.length>0 ? traders.map(m =>m.label).join(',') :'暂无'
-        mobile = mobile || '暂无'
+        if(mobile){
+            if(/^\d{2}-/.test(mobile))
+                mobile=mobile.padStart(mobile.length+1,'+')
+        }else{
+            mobile='暂无'
+        }
+        
         email = email || '暂无'
         title = title || '暂无'
         wechat = wechat || '暂无'
