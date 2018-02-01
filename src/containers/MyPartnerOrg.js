@@ -122,6 +122,7 @@ class MyPartnerOrg extends React.Component {
         ...filter 
       })
       .then(data => {
+        data.data.push({orgname:'暂无',id:'none'})
         org = data.data;
         return Promise.all(
           org.map(item => api.getUserRelation({ traderuser: this.props.userInfo.id, orgs: item.id, page_size: 10 }))
