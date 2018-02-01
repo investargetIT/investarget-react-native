@@ -240,7 +240,7 @@ function UserItem(props) {
             <View style={{flexDirection:'row',backgroundColor:'#fff',padding: 16,paddingTop: 24}}>
                 <Image source={imgSource} style={{width:60,height:60,marginRight:16,borderRadius:30}} />
                 <View style={{justifyContent:'space-between', flex: 0.5}}>
-                    <Text style={{fontSize:16,color:'#333'}} numberOfLines={1}>{org}</Text>
+                    <Text style={{fontSize:16,color:'#333'}} numberOfLines={1}>{org || '暂无机构'}</Text>
                     <Text style={{fontSize:16,color:'#333'}} numberOfLines={1}>
                         {username + ' '}
                         <Text style={{fontSize:13,color:'#999'}} numberOfLines={1}>{title}</Text>

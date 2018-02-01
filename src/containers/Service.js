@@ -93,7 +93,7 @@ class Service extends React.Component {
                                         key={item.id}
                                         style={{marginRight: 16}}
                                         photoUrl={item.photoUrl}
-                                        orgName={item.orgname||'暂无'}
+                                        orgName={item.orgname || '暂无机构'}
                                         userName={item.username}
                                         onPress={this.handleClickPartner.bind(this, item.id, item.username)} />
                                 ))
