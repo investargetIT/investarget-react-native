@@ -10,6 +10,9 @@ import {
 import { Agenda } from 'react-native-calendars';
 import * as api from '../api';
 import RNCalendarEvents from 'react-native-calendar-events';
+import { saveScheduleToLocal } from '../../actions';
+import { connect } from 'react-redux';
+import AsyncStorage from '../AsyncStorage';
 
 class MyCalendar extends React.Component {
   
@@ -40,22 +43,6 @@ class MyCalendar extends React.Component {
 
   componentDidMount() {
     this.props.navigation.setParams({ onPress: this.handleAddIconPressed });
-   
-    RNCalendarEvents.authorizationStatus()
-      .then(status => {
-        console.log('status', status);
-        return RNCalendarEvents.saveEvent('小游侠来了', {
-          location: 'location',
-          notes: 'notes',
-          startDate: '2018-01-31T11:26:00.000Z',
-          endDate: '2018-01-31T12:26:00.000Z'
-        })
-      })
-      .then(events => {
-        console.log('events', events);
-      })
-      .catch(error => console.error(error));
-    
   }
 
   handleAddIconPressed = () => {
@@ -95,6 +82,43 @@ class MyCalendar extends React.Component {
     });
   }
 
+  saveScheduleToLocal = schedule => {
+    let scheduleRelation;
+    RNCalendarEvents.authorizationStatus()
+      .then(status => {
+        if (status === 'authorized') {
+          return RNCalendarEvents.saveEvent(schedule.comments, {
+            location: schedule.address,
+            notes: schedule.projtitle || '',
+            startDate: '2018-02-02T18:47:00.000Z',
+            endDate: '2018-02-02T22:26:00.000Z',
+            alarms: [{
+              date: -1 * 60 * 24
+            }]
+          });
+        } else {
+          throw new Error();
+        }
+      })
+      .then(id => {
+        scheduleRelation = {
+          remote: schedule.id,
+          local: id
+        }
+        return AsyncStorage.getItem('schedule');
+      })
+      .then(data => {
+        let localSchedule;
+        if (data) {
+          localSchedule = JSON.parse(data).concat([scheduleRelation]);
+        } else {
+          localSchedule = [scheduleRelation];
+        }
+        AsyncStorage.setItem('schedule', JSON.stringify(localSchedule));
+      })
+      .catch(error => console.error(error));
+  }
+
   loadItems(day) {
     const items = Object.assign({}, this.state.items);
     const markedDates = Object.assign({}, this.state.markedDates);
@@ -115,7 +139,7 @@ class MyCalendar extends React.Component {
           const color = dateToColor(new Date(element.scheduledtime + element.timezone));
           markedDates[date] = [{startingDay: true, color}, {endingDay: true, color}];
         }
-
+        this.saveScheduleToLocal(element);
       }, this);
 
       // 加上前后30天内没有日程的日期
@@ -198,4 +222,9 @@ function dateToColor(date) {
   return color;
 }
 
-export default MyCalendar;
+function mapStateToProps(state) {
+  const { schedule } = state.app;
+  return { schedule };
+}
+
+export default connect(mapStateToProps)(MyCalendar);

@@ -98,6 +98,11 @@ class Container extends React.Component {
         })
       })
     })
+
+    // AsyncStorage.removeItem('schedule'); return
+    AsyncStorage.getItem('schedule')
+      .then(data => console.log('schedule', data))
+
   }
   render() {
     return (
