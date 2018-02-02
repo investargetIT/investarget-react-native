@@ -83,40 +83,41 @@ class MyCalendar extends React.Component {
   }
 
   saveScheduleToLocal = schedule => {
-    let scheduleRelation;
+    let localSchedule = [];
     RNCalendarEvents.authorizationStatus()
       .then(status => {
         if (status === 'authorized') {
-          return RNCalendarEvents.saveEvent(schedule.comments, {
-            location: schedule.address,
-            notes: schedule.projtitle || '',
-            startDate: '2018-02-02T18:47:00.000Z',
-            endDate: '2018-02-02T22:26:00.000Z',
-            alarms: [{
-              date: -1 * 60 * 24
-            }]
-          });
+          return AsyncStorage.getItem('schedule');
         } else {
-          throw new Error();
+          throw new Error('未授权');
         }
       })
+      .then(data => {
+        if (data) {
+          localSchedule = JSON.parse(data);
+        }
+        // 如果该日程已经同步过了就不需要再同步了
+        if (localSchedule.map(m => m.remote).includes(schedule.id)) {
+          throw new Error('已经存在该日程');
+        }
+        return RNCalendarEvents.saveEvent(schedule.comments, {
+          location: schedule.address,
+          notes: schedule.projtitle || '',
+          startDate: '2018-02-02T18:47:00.000Z',
+          endDate: '2018-02-02T22:26:00.000Z',
+          alarms: [{
+            date: -1 * 60 * 24
+          }]
+        });
+      })
       .then(id => {
-        scheduleRelation = {
+        const scheduleRelation = {
           remote: schedule.id,
           local: id
         }
-        return AsyncStorage.getItem('schedule');
+        AsyncStorage.setItem('schedule', JSON.stringify(localSchedule.concat([scheduleRelation])));
       })
-      .then(data => {
-        let localSchedule;
-        if (data) {
-          localSchedule = JSON.parse(data).concat([scheduleRelation]);
-        } else {
-          localSchedule = [scheduleRelation];
-        }
-        AsyncStorage.setItem('schedule', JSON.stringify(localSchedule));
-      })
-      .catch(error => console.error(error));
+      .catch(error => console.log(error));
   }
 
   loadItems(day) {
