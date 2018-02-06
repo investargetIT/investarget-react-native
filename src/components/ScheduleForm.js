@@ -23,6 +23,9 @@ class ScheduleForm extends React.Component {
         this.state = {
             showDatePickerIOS: false,
         }
+      
+      const now = new Date();
+      this.minimumDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     }
 
     handleDatePressed = async () => {
@@ -33,7 +36,7 @@ class ScheduleForm extends React.Component {
             const {action, year, month, day} = await DatePickerAndroid.open({
               // Use `new Date()` for current date.
               // May 25 2020. Month 0 is January.
-              date: this.state.date,
+              date: new Date(),
               minDate: this.minimumDate,
             });
             if (action !== DatePickerAndroid.dismissedAction) {
@@ -143,9 +146,9 @@ class ScheduleForm extends React.Component {
                             <View style={{ position: 'absolute', bottom: 0, top: 0, left: 0, right: 0, backgroundColor: 'rgba(0, 0, 0, 0.1)' }}>
                                 <DatePickerIOS
                                     style={{ position: 'absolute', bottom: 0, left: 0, right: 0, backgroundColor: 'white' }}
-                                    date={props.date}
+                                    date={new Date()}
                                     mode="datetime"
-                                    minimumDate={props.minimumDate}
+                                    minimumDate={this.minimumDate}
                                     onDateChange={props.onDateChange}
                                 />
                             </View>

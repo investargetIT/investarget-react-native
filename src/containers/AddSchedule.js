@@ -47,16 +47,13 @@ class AddSchedule extends React.Component {
   constructor (props) {
     super (props);
 
-    // 一小时以后
-    this.minimumDate = new Date(new Date().getTime() + 1 * 60 * 60 * 1000);
-
     this.timeline = null;
 
     this.state = {
       title: '',
       address: '',
       showDatePickerIOS: false,
-      date: this.minimumDate,
+      date: new Date(),
       project: null,
       user: null,
       area: null,
@@ -197,7 +194,6 @@ class AddSchedule extends React.Component {
           address={this.state.address}
           handleAddressChange={this.handleAddressChange}
           date={this.state.date}
-          minimumDate={this.minimumDate}
           onDateChange={date => this.setState({ date })}
           project={this.state.project}
           handleProjectPressed={this.handleProjectPressed}
