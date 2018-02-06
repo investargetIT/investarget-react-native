@@ -100,13 +100,18 @@ class MyCalendar extends React.Component {
         if (localSchedule.map(m => m.remote).includes(schedule.id)) {
           throw new Error('已经存在该日程');
         }
+
+        const startDate = new Date(schedule.scheduledtime + schedule.timezone);
+        // set endDate 2 hours later
+        const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
+
         return RNCalendarEvents.saveEvent(schedule.comments, {
           location: schedule.address,
           notes: schedule.projtitle || '',
-          startDate: '2018-02-02T18:47:00.000Z',
-          endDate: '2018-02-02T22:26:00.000Z',
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(),
           alarms: [{
-            date: -1 * 60 * 24
+            date: -1 * 24 * 60
           }]
         });
       })
