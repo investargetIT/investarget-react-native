@@ -111,7 +111,7 @@ class ScheduleForm extends React.Component {
                     { isChina ? 
                     <Picker
                         style={{flex: 1, height: 44, paddingLeft: 2}}
-                        value={props.area}
+                        value={props.location}
                         onChange={props.handleChangeArea}
                         placeholder="地区"
                         options={props.areaOptions} />

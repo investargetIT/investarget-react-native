@@ -56,7 +56,7 @@ class AddSchedule extends React.Component {
       date: new Date(),
       project: null,
       user: null,
-      area: null,
+      location: null,
       areaOptions: [],
       country: null,
     }
@@ -97,7 +97,8 @@ class AddSchedule extends React.Component {
       proj: this.state.project && this.state.project.id,
       address: this.state.address,
       user: this.state.user && this.state.user.id,
-      country: this.state.area,
+      country: this.state.country.value,
+      location: ['中国', 'China'].includes(this.state.country.label) ? this.state.location : null,
     };
     api.addSchedule(body)
     .then(data => {
@@ -201,8 +202,8 @@ class AddSchedule extends React.Component {
           user={this.state.user}
           handleUserPressed={this.handleUserPressed}
           areaOptions={this.state.areaOptions}
-          area={this.state.area}
-          handleChangeArea={ area => this.setState({ area })}
+          location={this.state.location}
+          handleChangeArea={ location => this.setState({ location }) }
           country={this.state.country}
           onSelectCountry={country => this.setState({ country })}
         />
