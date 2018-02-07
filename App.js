@@ -19,6 +19,7 @@ import * as api from './src/api'
 import { receiveCurrentUserInfo, logout } from './actions'
 import * as WeChat from 'react-native-wechat';
 import Spinner from 'react-native-loading-spinner-overlay';
+import InitialSwiper from './src/components/InitialSwiper';
 
 AsyncStorage.setItem('source', '1')
 window.LANG = 'cn'
@@ -42,7 +43,8 @@ function onNotification(msg) {
 
 class Container extends React.Component {
   state = {
-    isShowApp: false
+    isShowApp: false,
+    isShowSwiper: null,
   }
   componentDidMount() {
     AsyncStorage.getItem('userInfo').then(data => {
@@ -103,12 +105,31 @@ class Container extends React.Component {
     AsyncStorage.getItem('schedule')
       .then(data => console.log('schedule', data))
 
+    // AsyncStorage.removeItem('is_first_time'); return;
+    // 检查是否是首次打开App
+    AsyncStorage.getItem('is_first_time')
+      .then(data => this.setState({ isShowSwiper: data ? false : true }));
   }
+
+  handleFinishInitialSwiper = () => {
+    this.setState({ isShowSwiper: false });
+    AsyncStorage.setItem('is_first_time', 'false');
+  }
+
   render() {
     return (
       <View style={{ flex: 1 }}>
+
         <Spinner visible={this.props.isFetching} />
-        { this.state.isShowApp ? <AppWithNavigationState />  : null }
+
+        { this.state.isShowSwiper ? 
+          <InitialSwiper onFinish={this.handleFinishInitialSwiper} />
+        : null }
+
+        { this.state.isShowApp && this.state.isShowSwiper === false ? 
+          <AppWithNavigationState />  
+        : null }
+
       </View>
     )
   }
