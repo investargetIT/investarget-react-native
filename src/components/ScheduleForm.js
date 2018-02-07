@@ -78,6 +78,7 @@ class ScheduleForm extends React.Component {
     render() {
 
         const props = this.props;
+        const isChina = this.props.country && ['中国', 'China'].includes(this.props.country.label);
         return (
             <View>
                 <View style={{ backgroundColor: 'white', marginTop: 20 }}>
@@ -99,7 +100,7 @@ class ScheduleForm extends React.Component {
                       underlayColor={'lightgray'}
                     >
                       <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <Text style={{ fontSize: 16, color: props.country ? undefined : 'gray' }}>
+                        <Text style={{ fontSize: 16, color: props.country ? undefined : 'lightgray' }}>
                           {props.country ? props.country.label : '国家'}
                         </Text>
                       </View>
@@ -107,15 +108,19 @@ class ScheduleForm extends React.Component {
 
                     <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
 
+                    { isChina ? 
                     <Picker
                         style={{flex: 1, height: 44, paddingLeft: 2}}
                         value={props.area}
                         onChange={props.handleChangeArea}
                         placeholder="地区"
                         options={props.areaOptions} />
-                    
+                   : null }
+
+                    { isChina ? 
                     <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
-                    
+                    : null }
+
                     <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, justifyContent: 'center' }}>
                         <TextInput
                             style={{ fontSize: 16, paddingLeft: 0 }}
