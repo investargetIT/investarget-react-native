@@ -181,7 +181,7 @@ class ScheduleForm extends React.Component {
                             <View style={{ position: 'absolute', bottom: 0, top: 0, left: 0, right: 0, backgroundColor: 'rgba(0, 0, 0, 0.1)' }}>
                                 <DatePickerIOS
                                     style={{ position: 'absolute', bottom: 0, left: 0, right: 0, backgroundColor: 'white' }}
-                                    date={new Date()}
+                                    date={props.date}
                                     mode="datetime"
                                     minimumDate={this.minimumDate}
                                     onDateChange={props.onDateChange}
