@@ -21,17 +21,17 @@ class InitialSwiper extends Component {
         return (
             <Swiper showsPagination={false} loop={false}>
                 <View style={styles.slide}>
-                    <Image source={require('../images/swiper1.png')} />
+                    <Image source={require('../images/swiper1.png')} style={{ width: '100%', height: '100%' }} />
                 </View>
                 <View style={styles.slide}>
-                    <Image source={require('../images/swiper2.png')} />
+                    <Image source={require('../images/swiper2.png')} style={{ width: '100%', height: '100%' }} />
                 </View>
                 <View style={styles.slide}>
-                    <Image source={require('../images/swiper3.png')} />
+                    <Image source={require('../images/swiper3.png')} style={{ width: '100%', height: '100%' }} />
                 </View>
                 <View style={styles.slide3}>
                     <TouchableWithoutFeedback onPress={this.props.onFinish}>
-                        <Image source={require('../images/swiper4.png')} />
+                        <Image source={require('../images/swiper4.png')} style={{ width: '100%', height: '100%' }} />
                     </TouchableWithoutFeedback>
                 </View>
             </Swiper>
