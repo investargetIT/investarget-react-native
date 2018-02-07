@@ -14,6 +14,10 @@ import {
 import ProjectItem from './ProjectItem';
 import UserItem from './UserItem';
 import Picker from './Picker';
+import Cascader from './Cascader';
+import { connect } from 'react-redux';
+import * as api from '../api';
+import { receiveContinentsAndCountries } from '../../actions';
 
 class ScheduleForm extends React.Component {
 
@@ -22,10 +26,17 @@ class ScheduleForm extends React.Component {
 
         this.state = {
             showDatePickerIOS: false,
+            showSelectCountry: false,
         }
       
       const now = new Date();
       this.minimumDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    }
+
+    componentDidMount() {
+        api.getSource('country').then(data => {
+            this.props.dispatch(receiveContinentsAndCountries(data))
+        })
     }
 
     handleDatePressed = async () => {
@@ -59,6 +70,11 @@ class ScheduleForm extends React.Component {
       }
 
 
+    handleSelectCountry = country => {
+      this.setState({ showSelectCountry: false });
+      this.props.onSelectCountry(country);
+    }
+
     render() {
 
         const props = this.props;
@@ -74,6 +90,20 @@ class ScheduleForm extends React.Component {
                             underlineColorAndroid="transparent"
                         />
                     </View>
+
+                    <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
+
+                    <TouchableHighlight
+                      style={{ backgroundColor: 'white' }}
+                      onPress={() => this.setState({ showSelectCountry: true })}
+                      underlayColor={'lightgray'}
+                    >
+                      <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Text style={{ fontSize: 16, color: props.country ? undefined : 'gray' }}>
+                          {props.country ? props.country.label : '国家'}
+                        </Text>
+                      </View>
+                    </TouchableHighlight>
 
                     <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
 
@@ -155,6 +185,24 @@ class ScheduleForm extends React.Component {
                         </TouchableWithoutFeedback>
                     </Modal>
                     : null}
+
+                <Modal
+                  transparent={true}
+                  visible={this.state.showSelectCountry}
+                >
+                  <TouchableWithoutFeedback style={{ backgroundColor: 'cyan' }} onPress={() => this.setState({ showSelectCountry: false })}>
+                    <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0, 0, 0, .2)' }}>
+                      <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '50%' }}>
+                        <Cascader
+                          chosenItem={[]}
+                          onItemClick={this.handleSelectCountry} 
+                          options={props.countryOptions} 
+                        />
+                      </View>
+                    </View>
+                  </TouchableWithoutFeedback>
+                </Modal>
+
             </View>
         );
     }
@@ -176,5 +224,16 @@ function pad(number) {
     ':' + pad(date.getMinutes()) +
     ':' + pad(date.getSeconds());
   }
-  
-export default ScheduleForm;
+ 
+function mapStateToProps(state) {
+    const { continentsAndCountries } = state.app;
+    const countryOptions = continentsAndCountries.filter(item => item.parent == null)
+        .map(item => ({ value: item.id, label: item.country }))
+    countryOptions.forEach(pItem => {
+        pItem['children'] = continentsAndCountries.filter(item => item.parent == pItem.value)
+            .map(item => ({ value: item.id, label: item.country }))
+    });
+    return { countryOptions };
+}
+
+export default connect(mapStateToProps)(ScheduleForm);

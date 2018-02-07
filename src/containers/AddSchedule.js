@@ -58,6 +58,7 @@ class AddSchedule extends React.Component {
       user: null,
       area: null,
       areaOptions: [],
+      country: null,
     }
   }
 
@@ -202,6 +203,8 @@ class AddSchedule extends React.Component {
           areaOptions={this.state.areaOptions}
           area={this.state.area}
           handleChangeArea={ area => this.setState({ area })}
+          country={this.state.country}
+          onSelectCountry={country => this.setState({ country })}
         />
         
       </ScrollView>
