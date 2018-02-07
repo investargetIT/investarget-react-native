@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   TouchableHighlight,
+  Platform,
 } from 'react-native';
 import { Agenda } from 'react-native-calendars';
 import * as api from '../api';
@@ -83,6 +84,9 @@ class MyCalendar extends React.Component {
   }
 
   saveScheduleToLocal = schedule => {
+    if (Platform.OS === 'android') {
+      return;
+    }
     let localSchedule = [];
     RNCalendarEvents.authorizationStatus()
       .then(status => {
