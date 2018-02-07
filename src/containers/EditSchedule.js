@@ -56,8 +56,9 @@ class EditSchedule extends React.Component {
       date: new Date(),
       project: null,
       user: null,
-      area: null,
+      country: null,
       areaOptions: [],
+      location: null,
     }
   }
 
@@ -99,16 +100,17 @@ class EditSchedule extends React.Component {
         date: new Date(result.scheduledtime + result.timezone),
         project: obj,
         user: investor,
-        area: result.country && result.country.id,
+        country: result.country ? { value: result.country.id, label: result.country.country } : null,
+        location: result.location && result.location.id,
       });
       this.props.navigation.setParams({ onPress: this.handleSubmit });
     })
     .catch(error => console.error(error));
 
-    api.getSource('country')
+    api.getSource('orgarea')
       .then(result => {
-        const areaOptions = result.filter(f => f.level === 3).map(m => ({ value: m.id, label: m.country }));
-        this.setState({ areaOptions });
+        const areaOptions = result.map(m => ({ value: m.id, label: m.name}));
+        this.setState({ areaOptions }); 
       })
   }
 
@@ -139,7 +141,8 @@ class EditSchedule extends React.Component {
       proj: this.state.project && this.state.project.id,
       address: this.state.address,
       user: this.state.user && this.state.user.id,
-      country: this.state.area,
+      country: this.state.country.value,
+      location: ['中国', 'China'].includes(this.state.country.label) ? this.state.location : null,
     };
     api.editSchedule(this.id, body)
     .then(data => {
@@ -243,8 +246,10 @@ class EditSchedule extends React.Component {
           user={this.state.user}
           handleUserPressed={this.handleUserPressed}
           areaOptions={this.state.areaOptions}
-          area={this.state.area}
-          handleChangeArea={ area => this.setState({ area })}
+          country={this.state.country}
+          handleChangeArea={ location => this.setState({ location })}
+          onSelectCountry={country => this.setState({ country })}
+          location={this.state.location}
         />
         
       </ScrollView>
