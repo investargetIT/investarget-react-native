@@ -175,7 +175,7 @@ class OrgFilter extends React.Component {
                 	<View style={{flex:1,width:'100%'}}>
 						<View style={cellStyle}>
 							<Text style={cellLabelStyle}>投海外项目</Text>
-							<Switch value={overseasItem ? overseasItem.value:null} onValueChange={this.changeSwitch.bind(this)}></Switch>
+							<Switch value={overseasItem ? overseasItem.value : false} onValueChange={this.changeSwitch.bind(this)}></Switch>
 						</View>
 						<View style={cellStyle}>
 							<Text style={cellLabelStyle}>货币</Text>
