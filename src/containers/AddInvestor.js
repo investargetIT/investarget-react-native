@@ -65,6 +65,7 @@ class AddInvestor extends React.Component {
             tags: [],
             group: null, 
             investorGroupOptions: [],
+            mobileAreaCode: '86',
         }
         this.org = null;
     }
@@ -74,7 +75,7 @@ class AddInvestor extends React.Component {
     }
 
     checkFields = () => {
-        const { name, title, mobile, email, company, tags, group } = this.state
+        const { name, title, mobile, email, company, tags, group, mobileAreaCode } = this.state
         var errMsg = null
         if (!name) {
             errMsg = '请输入姓名'
@@ -92,7 +93,9 @@ class AddInvestor extends React.Component {
             errMsg = '请输入格式正确的邮箱'
         } else if (!company) {
             errMsg = '请输入公司'
-        } 
+        } else if (!mobileAreaCode) {
+            errMsg = '请填写区号';
+        }
         return errMsg
     }
 
@@ -128,6 +131,7 @@ class AddInvestor extends React.Component {
             'cardBucket': 'image',
             'groups': [this.state.group], 
             'tags': this.state.tags, 
+            'mobileAreaCode': this.state.mobileAreaCode,
         }
 
         let existUser, uploadCardResult;
@@ -208,10 +212,11 @@ class AddInvestor extends React.Component {
             const email = this.state.email || existUser.email
             const usernameC = this.state.name || existUser.username
             const mobile = this.state.mobile || existUser.mobile
+            const mobileAreaCode = this.state.mobileAreaCode || existUser.mobileAreaCode;
             const tags = this.state.tags.length > 0 ? this.state.tags : existUser.tags;
             cardKey = cardKey || existUser.cardKey
             cardUrl = cardUrl || existUser.cardUrl
-            return api.editUser([existUser.id], { org, title, email, usernameC, cardKey, cardUrl, mobile, tags })
+            return api.editUser([existUser.id], { org, title, email, usernameC, cardKey, cardUrl, mobile, tags, mobileAreaCode })
           } else {
             const partnerId = this.props.userId
             return api.addUser({ ...body, partnerId, cardKey, cardUrl, userstatus: 2, org })
@@ -337,7 +342,9 @@ class AddInvestor extends React.Component {
                 </View>
                 <View style={cellStyle}>
                     <Text style={leftStyle}>手机</Text>
-                    <TextInput style={rightStyle} {...textInputProps} value={mobile} onChangeText={this.handleChange.bind(this, 'mobile')} />
+                    <Text>+</Text>
+                    <TextInput placeholder="区号" style={{ width: 40, fontSize: 15, color: '#333' }} {...textInputProps} value={this.state.mobileAreaCode} onChangeText={this.handleChange.bind(this, 'mobileAreaCode')} />
+                    <TextInput placeholder="手机" style={rightStyle} {...textInputProps} value={mobile} onChangeText={this.handleChange.bind(this, 'mobile')} />
                 </View>
                 <View style={cellStyle}>
                     <Text style={leftStyle}>邮箱</Text>
