@@ -89,12 +89,7 @@ class PersonalInfo extends React.Component{
     render(){
         let {mobile, email, title, org, wechat, tags, traders} =this.state
         traders=traders.length>0 ? traders.map(m =>m.label).join(',') :'暂无'
-        if(mobile){
-            if(/^\d{2}-/.test(mobile))
-                mobile=mobile.padStart(mobile.length+1,'+')
-        }else{
-            mobile='暂无'
-        }
+        mobile = mobile && /^\d{2}-/.test(mobile) ? mobile = '+' + mobile : '暂无';
         
         email = email || '暂无'
         title = title || '暂无'
