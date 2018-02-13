@@ -45,6 +45,7 @@ JPUSHRegisterEntity * entity = [[JPUSHRegisterEntity alloc] init];
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  sleep(1);
   return YES;
 }
 
