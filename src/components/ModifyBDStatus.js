@@ -163,22 +163,31 @@ handleConfirmAudit = (isModifyWechat) =>{
 
     if(currentBD.bduser){
 
-        this.addRelation(currentBD.bduser);
-        api.addUserRelation({
-        relationtype: false,
-        investoruser: currentBD.bduser,
-        traderuser: currentBD.manager.id
-        })
+      api.checkUserRelation(currentBD.bduser, currentBD.manager.id)
         .then(result => {
-          if (isModifyWechat) {
-            api.editUser([currentBD.bduser], { wechat });
+          if (result.data || hasPerm('usersys.admin_changeuser') && isModifyWechat) {
+            api.editUser([currentBD.bduser], { wechat }); 
+          } else {
+            api.addUserRelation({
+              relationtype: false,
+              investoruser: currentBD.bduser,
+              traderuser: currentBD.manager.id
+            })
+              .then(result => {
+                if (isModifyWechat) {
+                  api.editUser([currentBD.bduser], { wechat });
+                }
+              })
+              .catch(error => {
+                if (isModifyWechat && error.code === 2025) {
+                  Alert.alert('该用户正处于保护期，无法建立联系，因此暂时无法修改微信');
+                }
+              }); 
           }
-        })
-        .catch(error => {
-        if (isModifyWechat) {
-            api.editUser([currentBD.bduser], { wechat });
-          }   
         });
+
+        this.addRelation(currentBD.bduser);
+        
         api.addOrgBDComment({
         orgBD: currentBD.id,
         comments: `微信: ${wechat}`
@@ -207,7 +216,6 @@ handleConfirmAudit = (isModifyWechat) =>{
         this.setState({visible:false})
         api.addUser(newUser)
         .then(result =>{
-          this.addRelation(result.id);
           api.addUserRelation({
           relationtype: false,
           investoruser: result.id,
