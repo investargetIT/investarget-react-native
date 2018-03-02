@@ -36,6 +36,9 @@ class ProjectDetail extends React.Component {
         headerBackTitle: null,
         headerRight: <TouchableOpacity style={{ marginRight: 12 }} onPress={params.onPress}>
           <Image source={require('../images/share.png')} style={{ width: 24, height: 24 }} />
+        </TouchableOpacity>,
+        headerLeft: <TouchableOpacity onPress={params.goBack}>
+          <Image source={require('../images/login/backButton.png')} style={{ marginLeft: 10, width: 16, height: 18 }} />
         </TouchableOpacity>
       }
     };
@@ -52,11 +55,16 @@ class ProjectDetail extends React.Component {
         showShareDialog: false,
         showShareContentDialog: false,
         sharingContent: -1,
+        canGoBack: false,
       }
     }
 
     componentDidMount() {
-      this.props.navigation.setParams({ onPress: this.handleShareIconPressed })
+      this.props.navigation.setParams({ 
+        onPress: this.handleShareIconPressed,
+        goBack: this.handleNavGoBack,
+      });
+
       api.getShareToken(this.id)
       .then(token => this.setState({ url: `${mobileUrl}/project_for_rn/${this.id}?token=${token}` }))
       .catch(error => {
@@ -73,6 +81,14 @@ class ProjectDetail extends React.Component {
         console.log('@@@', error)
         Toast.show(error.message, {position: Toast.positions.CENTER})
       })
+    }
+    
+    handleNavGoBack = () => {
+      if (this.state.canGoBack) {
+        this.webView.goBack();
+      } else {
+        this.props.navigation.goBack();
+      }
     }
 
     handleTimelinePress = () => {
@@ -243,7 +259,10 @@ class ProjectDetail extends React.Component {
       return (
         <View style={{ flex: 1 }}>
 
-          <WebView source={{ uri: this.state.url }} />
+          <WebView
+            ref={ref => this.webView = ref}
+            onNavigationStateChange={navState => this.setState({ canGoBack: navState.canGoBack })} 
+            source={{ uri: this.state.url + '&userToken=' + this.props.userInfo.token }} />
 
           <View style={{ height: 42, backgroundColor: '#10458F', flexDirection: 'row' }}>
             <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center' }}>
