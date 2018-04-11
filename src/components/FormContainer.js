@@ -24,7 +24,7 @@ class FormContainer extends React.Component {
                     <View style={{ height: 50 }} />
                     <Image style={{width: 200,height:52}} source={require('../images/login/logo.png')} />
                     <View style={{ height: 10 }} />
-                    <Text style={{ fontSize: 16, fontWeight: '100', color: 'gray', backgroundColor: 'transparent' }}>中国跨境投资生态系统</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '100', color: 'gray', backgroundColor: 'transparent' }}>产业 · 跨境 · 赋能</Text>
                     <View style={{width: '76.27%',marginTop: isIPhoneX() ? 88 : 48}}>
                         { this.props.children }
                     </View>

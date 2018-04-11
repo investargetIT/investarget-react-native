@@ -64,7 +64,7 @@ class Timeline extends React.Component {
   }
 
   componentDidMount() {
-    newApi.getTimeline({ proj: this.props.navigation.state.params.id, page_size: 10000 })
+    newApi.getTimelineBasic({ proj: this.props.navigation.state.params.id, page_size: 10000 })
     .then(data => {
       const timelines = data.data.map(m => {
         const transactionStatusId = m.transationStatu.transationStatus.index;
