@@ -174,6 +174,10 @@ class MyCalendar extends React.Component {
       <TouchableHighlight style={[styles.item, { height: item.height, backgroundColor: color }]} onPress={this.handleSchedulePressed.bind(this, item)} underlayColor="lightgray">
       <View>
         <Text>{item.comments}</Text>
+
+        { item.createuser.id !== this.props.userInfo.id ?
+        <Text style={{ fontSize: 12, textAlign: 'right' }}>{item.createuser.username}</Text>
+        : null }
       </View>
       </TouchableHighlight>
     );
@@ -233,8 +237,8 @@ function dateToColor(date) {
 }
 
 function mapStateToProps(state) {
-  const { schedule } = state.app;
-  return { schedule };
+  const { schedule, userInfo } = state.app;
+  return { schedule, userInfo };
 }
 
 export default connect(mapStateToProps)(MyCalendar);
