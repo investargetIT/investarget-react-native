@@ -169,7 +169,13 @@ class MyCalendar extends React.Component {
   }
 
   handleSchedulePressed (schedule) {
-    this.props.navigation.navigate('EditSchedule', { id: schedule.id, onEditEventCompleted: this.onEditEventCompleted });
+    this.props.navigation.navigate(
+      'EditSchedule', 
+      {
+        schedule,
+        onEditEventCompleted: this.onEditEventCompleted 
+      }
+    );
   }
 
   renderItem(item) {

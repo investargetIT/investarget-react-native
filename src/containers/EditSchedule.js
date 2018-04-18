@@ -33,6 +33,7 @@ class EditSchedule extends React.Component {
       headerTintColor: '#fff',
       headerBackTitle: null,
       headerRight: (
+        params.onPress === undefined ? null : (
         params.onPress ? 
         <TouchableOpacity 
           style={{ marginRight: 16 }} 
@@ -40,6 +41,7 @@ class EditSchedule extends React.Component {
           <Text style={{ fontSize: 15, color: 'white' }}>保存</Text>
         </TouchableOpacity>
         : <Text style={{ marginRight: 16, fontSize: 15, color: 'rgba(255, 255, 255, .5)' }}>保存</Text>
+        )
       )
     }
   }
@@ -63,9 +65,9 @@ class EditSchedule extends React.Component {
   }
 
   componentDidMount () {
-    this.id = this.props.navigation.state.params.id;
+    this.schedule = this.props.navigation.state.params.schedule;
     this.props.dispatch(requestContents());
-    api.getScheduleDetail(this.id)
+    api.getScheduleDetail(this.schedule.id)
     .then(result => {
       console.log('result', result)
       this.props.dispatch(hideLoading());
@@ -103,7 +105,7 @@ class EditSchedule extends React.Component {
         country: result.country ? { value: result.country.id, label: result.country.country } : null,
         location: result.location && result.location.id,
       });
-      this.props.navigation.setParams({ onPress: this.handleSubmit });
+      this.props.navigation.setParams({ onPress: this.isModifiable() ? this.handleSubmit : undefined });
     })
     .catch(error => console.error(error));
 
@@ -112,6 +114,13 @@ class EditSchedule extends React.Component {
         const areaOptions = result.map(m => ({ value: m.id, label: m.name}));
         this.setState({ areaOptions }); 
       })
+  }
+
+  isModifiable = () => {
+    if (this.props.userInfo.id !== this.schedule.createuser.id) {
+      return false;
+    }
+    return true;
   }
 
   handleSubmit = () => {
@@ -144,7 +153,7 @@ class EditSchedule extends React.Component {
       country: this.state.country.value,
       location: ['中国', 'China'].includes(this.state.country.label) ? this.state.location : null,
     };
-    api.editSchedule(this.id, body)
+    api.editSchedule(this.schedule.id, body)
     .then(data => {
       this.props.dispatch(hideLoading());
       const { navigation } = this.props;
@@ -167,7 +176,7 @@ class EditSchedule extends React.Component {
         remark: this.state.title,
         timeline: this.timeline.id
       }),
-      api.editSchedule(this.id, body),
+      api.editSchedule(this.schedule.id, body),
     ]
     Promise.all(request)
     .then(result => {
