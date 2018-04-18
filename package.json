@@ -24,6 +24,7 @@
     "jpush-react-native": "^2.0.9",
     "lodash": "^4.17.4",
     "lodash.debounce": "^4.0.8",
+    "moment": "^2.22.1",
     "qs": "^6.5.1",
     "react": "16.0.0-alpha.12",
     "react-native": "0.48.4",

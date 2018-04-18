@@ -20,6 +20,7 @@ import * as api from '../api';
 import { requestContents, hideLoading } from '../../actions';
 import { connect } from 'react-redux';
 import ScheduleForm from '../components/ScheduleForm';
+import moment from 'moment';
 
 class EditSchedule extends React.Component {
   
@@ -118,6 +119,9 @@ class EditSchedule extends React.Component {
 
   isModifiable = () => {
     if (this.props.userInfo.id !== this.schedule.createuser.id) {
+      return false;
+    }
+    if (moment(this.schedule.scheduledtime + this.schedule.timezone) < moment().startOf('day')) {
       return false;
     }
     return true;
