@@ -58,7 +58,7 @@ class AddSchedule extends React.Component {
       user: null,
       location: null,
       areaOptions: [],
-      country: null,
+      country: { label: '中国', value: 42 },
     }
   }
 
