@@ -11,7 +11,6 @@ import {
 import { Agenda } from 'react-native-calendars';
 import * as api from '../api';
 import RNCalendarEvents from 'react-native-calendar-events';
-import { saveScheduleToLocal } from '../../actions';
 import { connect } from 'react-redux';
 import AsyncStorage from '../AsyncStorage';
 
@@ -40,6 +39,7 @@ class MyCalendar extends React.Component {
       items: {},
       markedDates: {},
     };
+    this.loadingOrLoadedDate = [];
   }
 
   componentDidMount() {
@@ -84,7 +84,7 @@ class MyCalendar extends React.Component {
   }
 
   saveScheduleToLocal = schedule => {
-    if (Platform.OS === 'android') {
+    if (Platform.OS === 'android' || schedule.createuser.id !== this.props.userInfo.id) {
       return;
     }
     let localSchedule = [];
@@ -130,6 +130,10 @@ class MyCalendar extends React.Component {
   }
 
   loadItems(day) {
+    // 如果已经加载过这个日期之后的日程的话就不要再加载一次了
+    if (this.loadingOrLoadedDate.includes(day.dateString)) return;
+    
+    this.loadingOrLoadedDate.push(day.dateString);
     const items = Object.assign({}, this.state.items);
     const markedDates = Object.assign({}, this.state.markedDates);
 
