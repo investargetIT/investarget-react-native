@@ -83,9 +83,9 @@ class MyCalendar extends React.Component {
     });
   }
 
-  saveScheduleToLocal = schedule => {
+  saveScheduleToLocal = schedule => new Promise((resolve, reject) => {
     if (Platform.OS === 'android' || schedule.createuser.id !== this.props.userInfo.id) {
-      return;
+      throw new Error('Android无法同步日程！')
     }
     let localSchedule = [];
     RNCalendarEvents.authorizationStatus()
@@ -101,10 +101,10 @@ class MyCalendar extends React.Component {
           localSchedule = JSON.parse(data);
         }
         // 如果该日程已经同步过了就不需要再同步了
-        if (localSchedule.map(m => m.remote).includes(schedule.id)) {
-          throw new Error('已经存在该日程');
-        }
-
+        if (localSchedule.map(m => m && m.remote).includes(schedule.id)) {
+          // throw new Error('已经存在该日程');
+          return undefined;
+        } else {
         const startDate = new Date(schedule.scheduledtime + schedule.timezone);
         // set endDate 2 hours later
         const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
@@ -118,29 +118,35 @@ class MyCalendar extends React.Component {
             date: -1 * 24 * 60
           }]
         });
+      }
       })
       .then(id => {
-        const scheduleRelation = {
-          remote: schedule.id,
-          local: id
+        if (id) {
+          const scheduleRelation = {
+            remote: schedule.id,
+            local: id
+          }
+          resolve(scheduleRelation);
+        } else {
+          resolve(undefined);
         }
-        AsyncStorage.setItem('schedule', JSON.stringify(localSchedule.concat([scheduleRelation])));
+
+        // setTimeout(() => AsyncStorage.setItem('schedule', JSON.stringify(localSchedule.concat([scheduleRelation]))), time);
       })
       .catch(error => console.log(error));
-  }
+  })
 
   loadItems(day) {
     // 如果已经加载过这个日期之后的日程的话就不要再加载一次了
     if (this.loadingOrLoadedDate.includes(day.dateString)) return;
-    
     this.loadingOrLoadedDate.push(day.dateString);
     const items = Object.assign({}, this.state.items);
     const markedDates = Object.assign({}, this.state.markedDates);
-
+    let newItems;
     api.getSchedule({ date: day.dateString, page_size: 10000 })
     .then(result => {
       // 从服务端加载日程
-      result.data.forEach(function(element) {
+      result.data.forEach(function(element, index) {
         const date = element.scheduledtime.slice(0, 10)
         
         if (date in items && !items[date].map(m => m.id).includes(element.id)) {
@@ -153,10 +159,9 @@ class MyCalendar extends React.Component {
           const color = dateToColor(new Date(element.scheduledtime + element.timezone));
           markedDates[date] = [{startingDay: true, color}, {endingDay: true, color}];
         }
-        this.saveScheduleToLocal(element);
+        // this.saveScheduleToLocal(element, index * 1000);
       }, this);
 
-      // 加上前后30天内没有日程的日期
       for (const i = -30; i < 30; i++) {
         const newDate = addDaysToDate(day.dateString, i);
         const newDateString = newDate.toISOString().slice(0, 10);
@@ -165,7 +170,29 @@ class MyCalendar extends React.Component {
         }
       }
       this.setState({ items, markedDates });
-    });
+
+      return Promise.all(result.data.map(m => this.saveScheduleToLocal(m)));
+
+    })
+    .then(data => {
+      newItems = data;
+      return AsyncStorage.getItem('schedule');
+    })
+    .then(data => {
+      let localSchedule = [];
+      if (data) {
+        localSchedule = JSON.parse(data);
+      }
+      return AsyncStorage.setItem('schedule', JSON.stringify(localSchedule.concat(newItems.filter(f => f !== undefined))));
+    })
+    .then(data => {
+
+      // 加上前后30天内没有日程的日期
+
+      // setTimeout(() => this.setState({ items, markedDates }), 700);
+    })
+    .catch(err => console.error(err));
+    
   }
 
   handleSchedulePressed (schedule) {
