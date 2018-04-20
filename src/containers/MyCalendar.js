@@ -84,8 +84,12 @@ class MyCalendar extends React.Component {
   }
 
   saveScheduleToLocal = schedule => new Promise((resolve, reject) => {
-    if (Platform.OS === 'android' || schedule.createuser.id !== this.props.userInfo.id) {
+    if (Platform.OS === 'android') {
       throw new Error('Android无法同步日程！')
+    }
+    if (schedule.createuser.id !== this.props.userInfo.id) {
+      resolve(undefined);
+      return;
     }
     let localSchedule = [];
     RNCalendarEvents.authorizationStatus()
