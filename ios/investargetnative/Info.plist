@@ -34,7 +34,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>3.2.4.2</string>
+	<string>3.2.4.3</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>weixin</string>
@@ -58,11 +58,11 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>同步日程</string>
 	<key>NSCameraUsageDescription</key>
-	<string>cameraDescription</string>
+	<string>Investarget would like to use your camera</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>locationDescription</string>
+	<string>Investarget would like access to your location</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>photoLibraryDescription</string>
+	<string>Investarget would like access to your photo gallery</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
