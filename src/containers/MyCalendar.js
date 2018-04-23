@@ -142,8 +142,10 @@ class MyCalendar extends React.Component {
 
   loadItems(day) {
     // 如果已经加载过这个日期之后的日程的话就不要再加载一次了
-    if (this.loadingOrLoadedDate.includes(day.dateString)) return;
-    this.loadingOrLoadedDate.push(day.dateString);
+    // if (this.loadingOrLoadedDate.includes(day.dateString)) return;
+    // this.loadingOrLoadedDate.push(day.dateString);
+    if (this.isLoading) return;
+    this.isLoading = true;
     const items = Object.assign({}, this.state.items);
     const markedDates = Object.assign({}, this.state.markedDates);
     let newItems;
@@ -190,12 +192,15 @@ class MyCalendar extends React.Component {
       return AsyncStorage.setItem('schedule', JSON.stringify(localSchedule.concat(newItems.filter(f => f !== undefined))));
     })
     .then(data => {
-
+      this.isLoading = false;
       // 加上前后30天内没有日程的日期
 
       // setTimeout(() => this.setState({ items, markedDates }), 700);
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+      console.log(err)
+      this.isLoading = false;
+    });
     
   }
 
