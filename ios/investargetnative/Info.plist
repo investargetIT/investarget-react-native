@@ -34,7 +34,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>3.2.4.3</string>
+	<string>3.2.4.4</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>weixin</string>
@@ -58,11 +58,11 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>同步日程</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Investarget would like to use your camera</string>
+	<string>You can use your device’s camera to take a selfie as avatar, scan business card  or take a photo and send to your friend.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Investarget would like access to your location</string>
+	<string>You can send your location to your friend</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Investarget would like access to your photo gallery</string>
+	<string>You can select a photo from your photo gallery to upload as avatar, upload as business card or send to your friend directly.</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
