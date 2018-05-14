@@ -63,10 +63,12 @@ class EditSchedule extends React.Component {
       areaOptions: [],
       location: null,
     }
+
+    this.schedule = this.props.navigation.state.params.schedule;
   }
 
   componentDidMount () {
-    this.schedule = this.props.navigation.state.params.schedule;
+    
     this.props.dispatch(requestContents());
     api.getScheduleDetail(this.schedule.id)
     .then(result => {
@@ -243,6 +245,22 @@ class EditSchedule extends React.Component {
     this.setState({ address });
   }
 
+  handleDeleteBtnPressed = () => {
+    Alert.alert(
+      '确定要删除该日程吗？',
+      '该操作不可恢复',
+      [
+        {text: '取消', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: '确定', onPress: this.deleteSchedule},
+      ],
+      { cancelable: true }
+    )
+  }
+
+  deleteSchedule = () => {
+
+  }
+
   render () {
     return (
       <ScrollView>
@@ -264,7 +282,17 @@ class EditSchedule extends React.Component {
           onSelectCountry={country => this.setState({ country })}
           location={this.state.location}
         />
-        
+
+        { this.props.userInfo.id === this.schedule.createuser.id ? 
+        <TouchableHighlight
+          style={{ marginTop: 20 }}
+          onPress={this.handleDeleteBtnPressed}
+          underlayColor="lightgray"
+        >
+          <Text style={{ lineHeight: 44, fontSize: 16, color: 'red', textAlign: 'center', backgroundColor: 'white' }}>删除</Text>
+        </TouchableHighlight>
+        : null }
+
       </ScrollView>
     );
   }
