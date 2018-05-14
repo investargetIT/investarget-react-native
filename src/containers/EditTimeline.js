@@ -108,7 +108,7 @@ class EditTimeline extends React.Component {
                 <View style={rowStyle}>
                     <Text style={{width: 120, fontSize: 15, color:'#333'}}>提醒周期/天</Text>
                     <TextInput
-                        style={{flex:1,color:'#333',fontSize:15,height:28}}
+                        style={{flex:1,color:'#333',fontSize:15,height:28,paddingVertical:0}}
                         underlineColorAndroid="transparent"
                         selectionColor="#2269d4"
                         value={this.state.alertCycle}
