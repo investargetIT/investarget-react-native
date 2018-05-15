@@ -66,7 +66,7 @@ class AddSchedule extends React.Component {
     api.getSource('orgarea')
     .then(result => {
       const areaOptions = result.map(m => ({ value: m.id, label: m.name}));
-      this.setState({ areaOptions });
+      this.setState({ areaOptions, location: areaOptions[0].value });
     })
   }
 
