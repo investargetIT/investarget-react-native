@@ -51,7 +51,8 @@ class MyCalendar extends React.Component {
   }
 
   onEditEventCompleted = event => {
-    console.log('event', event);
+    const dateString = event.scheduledtime.slice(0, 10);
+    this.loadItems({ dateString });
   };
 
   render() {
@@ -155,7 +156,11 @@ class MyCalendar extends React.Component {
       result.data.forEach(function(element, index) {
         const date = element.scheduledtime.slice(0, 10)
         
-        if (date in items && !items[date].map(m => m.id).includes(element.id)) {
+        if (date in items) {
+          const index = items[date].map(m => m.id).indexOf(element.id);
+          if (index > -1) {
+            items[date].splice(index, 1);
+          }
           items[date].push(element);
         } else {
           items[date] = [element];
@@ -236,7 +241,7 @@ class MyCalendar extends React.Component {
   }
 
   rowHasChanged(r1, r2) {
-    return r1.name !== r2.name;
+    return r1.comments !== r2.comments;
   }
 
   timeToString(time) {
