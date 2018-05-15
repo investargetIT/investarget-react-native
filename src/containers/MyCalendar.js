@@ -13,6 +13,7 @@ import * as api from '../api';
 import RNCalendarEvents from 'react-native-calendar-events';
 import { connect } from 'react-redux';
 import AsyncStorage from '../AsyncStorage';
+import moment from 'moment';
 
 class MyCalendar extends React.Component {
   
@@ -152,26 +153,94 @@ class MyCalendar extends React.Component {
     let newItems;
     api.getSchedule({ date: day.dateString, page_size: 10000 })
     .then(result => {
-      // 从服务端加载日程
-      result.data.forEach(function(element, index) {
-        const date = element.scheduledtime.slice(0, 10)
-        
-        if (date in items) {
-          const index = items[date].map(m => m.id).indexOf(element.id);
-          if (index > -1) {
-            items[date].splice(index, 1);
-          }
-          items[date].push(element);
-        } else {
-          items[date] = [element];
-        }
+      
+      console.log('data from result', result);
 
-        if (date in markedDates === false) {
-          const color = dateToColor(new Date(element.scheduledtime + element.timezone));
-          markedDates[date] = [{startingDay: true, color}, {endingDay: true, color}];
+      const loadDate = moment(day.dateString);
+      const startOfMonth = loadDate.clone().startOf('month');
+      const dayNumOfTheMonth = loadDate.clone().endOf('month').date();
+      const dateOfTheMonth = [];
+      for (const i = 0; i < dayNumOfTheMonth; i++) {
+        const currentDate = startOfMonth.clone().add(i, 'd').format('YYYY-MM-DD');
+        dateOfTheMonth.push(currentDate);
+      }
+      console.log('dateOfTheMonth', dateOfTheMonth);
+
+      dateOfTheMonth.forEach(element => {
+        const cachedEvent = items[element] && items[element].slice();
+        console.log('cachedEvent', cachedEvent);
+        const eventFromServer = result.data.filter(f => f.scheduledtime.slice(0, 10) === element);
+
+        if (cachedEvent && cachedEvent.length > 0 && eventFromServer.length === 0) {
+          items[element] = [];
+        } else if (eventFromServer.length > 0 && (!cachedEvent || cachedEvent.length === 0)) {
+          items[element] = eventFromServer;
+        } else if (cachedEvent && cachedEvent.length > 0 && eventFromServer.length > 0) {
+          const cachedEventID = cachedEvent.map(m => m.id);
+          const eventFromServerID = eventFromServer.map(m => m.id);
+
+          const cacheYesServerNo = cachedEventID.filter(f => !eventFromServerID.includes(f));
+          const cacheNoServerYes = eventFromServerID.filter(f => !cachedEventID.includes(f));
+          const bothHas = cachedEventID.filter(f => eventFromServerID.includes(f));
+
+          // Remove from cache
+          cacheYesServerNo.forEach(e => {
+            const index = items[element].map(m => m.id).indexOf(e);
+            items[element].splice(index, 1);
+          });
+
+          // Add new event
+          cacheNoServerYes.forEach(e => {
+            items[element].push(eventFromServer.filter(f => f.id === e)[0]);
+          });
+
+          // Update events on both sides
+          bothHas.forEach(e => {
+            const index = items[element].map(m => m.id).indexOf(e);
+            items[element].splice(index, 1);
+            items[element].push(eventFromServer.filter(f => f.id === e)[0]);
+          });
+
         }
-        // this.saveScheduleToLocal(element, index * 1000);
-      }, this);
+      });
+
+      const dateOnServer = result.data.map(m => m.scheduledtime.slice(0, 10));
+      const markedDatesKeys = Object.keys(markedDates);
+
+      const serverYesCacheNo = dateOnServer.filter(f => !markedDatesKeys.includes(f));
+      const serverNoCacheYes = markedDatesKeys.filter(f => !dateOnServer.includes(f));
+
+      serverYesCacheNo.forEach(element => {
+        const schedule = result.data.filter(f => f.scheduledtime.slice(0, 10) === element)[0];
+        const color = dateToColor(new Date(schedule.scheduledtime + schedule.timezone));
+        markedDates[element] = [{startingDay: true, color}, {endingDay: true, color}];
+      });
+
+      serverNoCacheYes.forEach(element => {
+        delete markedDates[element];
+      });
+
+
+      // // 从服务端加载日程
+      // result.data.forEach(function(element, index) {
+      //   const date = element.scheduledtime.slice(0, 10)
+         
+      //   if (date in items) {
+      //     const index = items[date].map(m => m.id).indexOf(element.id);
+      //     if (index > -1) {
+      //       items[date].splice(index, 1);
+      //     }
+      //     items[date].push(element);
+      //   } else {
+      //     items[date] = [element];
+      //   }
+
+      //   if (date in markedDates === false) {
+      //     const color = dateToColor(new Date(element.scheduledtime + element.timezone));
+      //     markedDates[date] = [{startingDay: true, color}, {endingDay: true, color}];
+      //   }
+      //   // this.saveScheduleToLocal(element, index * 1000);
+      // }, this);
 
       for (const i = -30; i < 30; i++) {
         const newDate = addDaysToDate(day.dateString, i);
