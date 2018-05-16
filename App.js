@@ -137,7 +137,7 @@ class Container extends React.Component {
       // 根据本地纪录删除iOS日历中的日程后删除本地记录
       if (localRecords) {
         const allLocalSchedule = await Promise.all(JSON.parse(localRecords).map(m => RNCalendarEvents.findEventById(m.local)));
-        const deleteAll = await Promise.all(allLocalSchedule.filter(f => f !== null).map(m => RNCalendarEvents.removeEvent(m.id)));
+        await Promise.all(allLocalSchedule.filter(f => f !== null).map(m => RNCalendarEvents.removeEvent(m.id)));
         await AsyncStorage.removeItem('schedule');
       }
 

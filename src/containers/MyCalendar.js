@@ -85,63 +85,6 @@ class MyCalendar extends React.Component {
     });
   }
 
-  saveScheduleToLocal = schedule => new Promise((resolve, reject) => {
-    if (Platform.OS === 'android') {
-      throw new Error('Android无法同步日程！')
-    }
-    if (schedule.createuser.id !== this.props.userInfo.id) {
-      resolve(undefined);
-      return;
-    }
-    let localSchedule = [];
-    RNCalendarEvents.authorizationStatus()
-      .then(status => {
-        if (status === 'authorized') {
-          return AsyncStorage.getItem('schedule');
-        } else {
-          throw new Error('未授权');
-        }
-      })
-      .then(data => {
-        if (data) {
-          localSchedule = JSON.parse(data);
-        }
-        // 如果该日程已经同步过了就不需要再同步了
-        if (localSchedule.map(m => m && m.remote).includes(schedule.id)) {
-          // throw new Error('已经存在该日程');
-          return undefined;
-        } else {
-        const startDate = new Date(schedule.scheduledtime + schedule.timezone);
-        // set endDate 2 hours later
-        const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
-
-        return RNCalendarEvents.saveEvent(schedule.comments, {
-          location: schedule.address,
-          notes: schedule.projtitle || '',
-          startDate: startDate.toISOString(),
-          endDate: endDate.toISOString(),
-          alarms: [{
-            date: -1 * 24 * 60
-          }]
-        });
-      }
-      })
-      .then(id => {
-        if (id) {
-          const scheduleRelation = {
-            remote: schedule.id,
-            local: id
-          }
-          resolve(scheduleRelation);
-        } else {
-          resolve(undefined);
-        }
-
-        // setTimeout(() => AsyncStorage.setItem('schedule', JSON.stringify(localSchedule.concat([scheduleRelation]))), time);
-      })
-      .catch(error => console.log(error));
-  })
-
   loadItems(day) {
     // 如果已经加载过这个日期之后的日程的话就不要再加载一次了
     // if (this.loadingOrLoadedDate.includes(day.dateString)) return;
@@ -202,45 +145,17 @@ class MyCalendar extends React.Component {
           });
 
         }
+
+        const isDateHasEvent = result.data.filter(m => m.scheduledtime.slice(0, 10) === element).length > 0;
+        const isDateInCache = element in markedDates;
+        if (isDateHasEvent && !isDateInCache) {
+          const schedule = result.data.filter(f => f.scheduledtime.slice(0, 10) === element)[0];
+          const color = dateToColor(new Date(schedule.scheduledtime + schedule.timezone));
+          markedDates[element] = [{startingDay: true, color}, {endingDay: true, color}];
+        } else if (!isDateHasEvent && isDateInCache) {
+          delete markedDates[element]; 
+        }
       });
-
-      const dateOnServer = result.data.map(m => m.scheduledtime.slice(0, 10));
-      const markedDatesKeys = Object.keys(markedDates);
-
-      const serverYesCacheNo = dateOnServer.filter(f => !markedDatesKeys.includes(f));
-      const serverNoCacheYes = markedDatesKeys.filter(f => !dateOnServer.includes(f));
-
-      serverYesCacheNo.forEach(element => {
-        const schedule = result.data.filter(f => f.scheduledtime.slice(0, 10) === element)[0];
-        const color = dateToColor(new Date(schedule.scheduledtime + schedule.timezone));
-        markedDates[element] = [{startingDay: true, color}, {endingDay: true, color}];
-      });
-
-      serverNoCacheYes.forEach(element => {
-        delete markedDates[element];
-      });
-
-
-      // // 从服务端加载日程
-      // result.data.forEach(function(element, index) {
-      //   const date = element.scheduledtime.slice(0, 10)
-         
-      //   if (date in items) {
-      //     const index = items[date].map(m => m.id).indexOf(element.id);
-      //     if (index > -1) {
-      //       items[date].splice(index, 1);
-      //     }
-      //     items[date].push(element);
-      //   } else {
-      //     items[date] = [element];
-      //   }
-
-      //   if (date in markedDates === false) {
-      //     const color = dateToColor(new Date(element.scheduledtime + element.timezone));
-      //     markedDates[date] = [{startingDay: true, color}, {endingDay: true, color}];
-      //   }
-      //   // this.saveScheduleToLocal(element, index * 1000);
-      // }, this);
 
       for (const i = -30; i < 30; i++) {
         const newDate = addDaysToDate(day.dateString, i);
