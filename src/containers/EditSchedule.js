@@ -258,7 +258,15 @@ class EditSchedule extends React.Component {
   }
 
   deleteSchedule = () => {
-
+    this.props.dispatch(requestContents());
+    api.deleteSchedule(this.schedule.id)
+      .then(result => {
+        this.props.dispatch(hideLoading());
+        const { navigation } = this.props;
+        navigation.goBack();
+        navigation.state.params.onEditEventCompleted(this.schedule);
+      })
+      .catch(err => console.error(err));
   }
 
   render () {

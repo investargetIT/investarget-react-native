@@ -726,6 +726,7 @@ export const addSchedule = body => r('/msg/schedule/', 'POST', body);
 export const getSchedule = params => r('/msg/schedule/?' + qs.stringify(params));
 export const getScheduleDetail = id => r('/msg/schedule/' + id + '/');
 export const editSchedule = (id, body) => r('/msg/schedule/' + id + '/', 'PUT', body);
+export const deleteSchedule = id => r('/msg/schedule/' + id + '/', 'DELETE');
 
 export const getAndroidVersion = () => r('/source/android');
 export const addAndroidVersion = body => r('/source/android', 'POST', body); 
