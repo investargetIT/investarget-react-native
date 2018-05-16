@@ -35,6 +35,8 @@ export const SHOW_TOAST = 'SHOW_TOAST'
 export const HIDE_TOAST = 'HIDE_TOAST'
 export const SAVE_REDIRECT_URL = 'SAVE_REDIRECT_URL'
 export const UPDATE_PROJECT_STRUCTURE = 'UPDATE_PROJECT_STRUCTURE'
+export const SYNC_SCHEDULE = 'SYNC_SCHEDULE';
+export const SCHEDULE_SYNCED = 'SCHEDULE_SYNCED';
 
 export function updateProjectStructure(structure) {
   return {
@@ -265,4 +267,14 @@ export function saveRedirectUrl(url) {
     type: SAVE_REDIRECT_URL,
     url
   }
+}
+
+export function syncSchedule() {
+  return {
+    type: SYNC_SCHEDULE
+  };
+}
+
+export function scheduleSynced() {
+  return { type: SCHEDULE_SYNCED };
 }

@@ -190,7 +190,6 @@ class ProjectList extends React.Component {
           return Promise.all(requestArr)
         })
         .then(result => {
-          console.log('result', result);
           const projects = result.map(item => item.data).reduce((acc, val) => acc.concat(val), []).map(item => {
             var obj = {}
             obj['id'] = item.id

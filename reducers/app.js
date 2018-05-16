@@ -36,6 +36,8 @@ import {
     HIDE_TOAST,
     SAVE_REDIRECT_URL,
     UPDATE_PROJECT_STRUCTURE,
+    SYNC_SCHEDULE,
+    SCHEDULE_SYNCED,
   } from '../actions'
   import AsyncStorage from '../src/AsyncStorage'
    
@@ -77,7 +79,9 @@ import {
       byId: {},
       chat: {},
 		}
-  }
+  },
+    // 是否需要同步日程，用户在日程管理中修改了日程时，将该值设为true，触发同步操作，同步完成后设为false
+    isNeedSyncSchedule: false,
   
   }
   
@@ -316,6 +320,12 @@ import {
         return Object.assign({}, state, {
           projectStructure: action.structure
         })
+      case SYNC_SCHEDULE:
+        return Object.assign({}, state, {
+          isNeedSyncSchedule: true
+        });
+      case SCHEDULE_SYNCED:
+        return { ...state, isNeedSyncSchedule: false };
       default:
         return state
     }

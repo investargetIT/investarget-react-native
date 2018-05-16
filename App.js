@@ -16,7 +16,11 @@ import rootReducer from './reducers'
 import AppWithNavigationState from './AppNavigator'
 import * as utils from './src/utils'
 import * as api from './src/api'
-import { receiveCurrentUserInfo, logout } from './actions'
+import { 
+  receiveCurrentUserInfo, 
+  logout, 
+  scheduleSynced,
+} from './actions';
 import * as WeChat from 'react-native-wechat';
 import Spinner from 'react-native-loading-spinner-overlay';
 import InitialSwiper from './src/components/InitialSwiper';
@@ -104,14 +108,18 @@ class Container extends React.Component {
     })
 
     // 同步App日程到iOS日历
-    if (Platform.OS === 'ios') {
-      this.syncSchedule();
-    }
+    this.syncSchedule();
 
     // AsyncStorage.removeItem('is_first_time'); return;
     // 检查是否是首次打开App
     AsyncStorage.getItem('is_first_time')
       .then(data => this.setState({ isShowSwiper: data ? false : true }));
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.isNeedSyncSchedule) {
+      this.syncSchedule();
+    }
   }
 
   handleFinishInitialSwiper = () => {
@@ -121,6 +129,16 @@ class Container extends React.Component {
 
   syncSchedule = async () => {
     try {
+
+      if (Platform.OS !== 'ios') {
+        throw new Error('Schedule Sync Only on iOS');
+      }
+
+      const userInfo = await AsyncStorage.getItem('userInfo');
+      if (userInfo === null) {
+        throw new Error('Not Login');
+      }
+
       // 判断权限
       const status = await RNCalendarEvents.authorizationStatus();
       if (status !== 'authorized') {
@@ -129,7 +147,9 @@ class Container extends React.Component {
 
       // 网络加载数据
       const allData = await api.getSchedule({ page_size: 1000 });
-      const dataNeedToSync = allData.data.filter(f => moment(f.scheduledtime + f.timezone) > moment());
+      const dataNeedToSync = allData.data.filter(f => 
+        f.createuser.id === JSON.parse(userInfo).id && moment(f.scheduledtime + f.timezone) > moment()
+      );
 
       // 获取本地记录
       const localRecords = await AsyncStorage.getItem('schedule');
@@ -162,6 +182,7 @@ class Container extends React.Component {
       const records = sync.map((m, i) => ({ remote: dataNeedToSync[i].id, local: m }));
       await AsyncStorage.setItem('schedule', JSON.stringify(records));
 
+      this.props.dispatch(scheduleSynced());
     } catch (err) {
       console.log(err);
     }
@@ -187,9 +208,9 @@ class Container extends React.Component {
 }
 
 function mapStateToProp(state) {
-      const { isFetching } = state.app;		
+      const { isFetching, isNeedSyncSchedule } = state.app;		
       //console.log('isFetching', isFetching);
-      return { isFetching };		
+      return { isFetching, isNeedSyncSchedule };		
     }
 
 Container = connect(mapStateToProp)(Container)

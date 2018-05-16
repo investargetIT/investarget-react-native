@@ -14,6 +14,7 @@ import RNCalendarEvents from 'react-native-calendar-events';
 import { connect } from 'react-redux';
 import AsyncStorage from '../AsyncStorage';
 import moment from 'moment';
+import { syncSchedule } from '../../actions';
 
 class MyCalendar extends React.Component {
   
@@ -54,6 +55,7 @@ class MyCalendar extends React.Component {
   onEditEventCompleted = event => {
     const dateString = event.scheduledtime.slice(0, 10);
     this.loadItems({ dateString });
+    this.props.dispatch(syncSchedule());
   };
 
   render() {
