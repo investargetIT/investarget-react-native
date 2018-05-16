@@ -185,6 +185,7 @@ class ScheduleForm extends React.Component {
                                     mode="datetime"
                                     minimumDate={this.minimumDate}
                                     onDateChange={props.onDateChange}
+                                    minuteInterval={30}
                                 />
                             </View>
                         </TouchableWithoutFeedback>
@@ -226,8 +227,7 @@ function pad(number) {
     '-' + pad(date.getMonth() + 1) +
     '-' + pad(date.getDate()) +
     ' ' + pad(date.getHours()) +
-    ':' + pad(date.getMinutes()) +
-    ':' + pad(date.getSeconds());
+    ':' + pad(date.getMinutes());
   }
  
 function mapStateToProps(state) {
