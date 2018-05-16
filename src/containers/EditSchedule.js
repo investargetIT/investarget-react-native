@@ -297,7 +297,9 @@ class EditSchedule extends React.Component {
           onPress={this.handleDeleteBtnPressed}
           underlayColor="lightgray"
         >
-          <Text style={{ lineHeight: 44, fontSize: 16, color: 'red', textAlign: 'center', backgroundColor: 'white' }}>删除</Text>
+          <View style={{ height: 44, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
+            <Text style={{ fontSize: 16, color: 'red' }}>删除</Text>
+          </View>
         </TouchableHighlight>
         : null }
 
