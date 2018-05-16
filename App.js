@@ -20,6 +20,8 @@ import { receiveCurrentUserInfo, logout } from './actions'
 import * as WeChat from 'react-native-wechat';
 import Spinner from 'react-native-loading-spinner-overlay';
 import InitialSwiper from './src/components/InitialSwiper';
+import RNCalendarEvents from 'react-native-calendar-events';
+import moment from 'moment';
 
 AsyncStorage.setItem('source', '1')
 window.LANG = 'cn'
@@ -101,9 +103,10 @@ class Container extends React.Component {
       })
     })
 
-    // AsyncStorage.removeItem('schedule'); return
-    AsyncStorage.getItem('schedule')
-      .then(data => console.log('schedule', data))
+    // 同步App日程到iOS日历
+    if (Platform.OS === 'ios') {
+      this.syncSchedule();
+    }
 
     // AsyncStorage.removeItem('is_first_time'); return;
     // 检查是否是首次打开App
@@ -114,6 +117,54 @@ class Container extends React.Component {
   handleFinishInitialSwiper = () => {
     this.setState({ isShowSwiper: false });
     AsyncStorage.setItem('is_first_time', 'false');
+  }
+
+  syncSchedule = async () => {
+    try {
+      // 判断权限
+      const status = await RNCalendarEvents.authorizationStatus();
+      if (status !== 'authorized') {
+        throw new Error('Not Authorized');
+      }
+
+      // 网络加载数据
+      const allData = await api.getSchedule({ page_size: 1000 });
+      const dataNeedToSync = allData.data.filter(f => moment(f.scheduledtime + f.timezone) > moment());
+
+      // 获取本地记录
+      const localRecords = await AsyncStorage.getItem('schedule');
+
+      // 根据本地纪录删除iOS日历中的日程后删除本地记录
+      if (localRecords) {
+        const allLocalSchedule = await Promise.all(JSON.parse(localRecords).map(m => RNCalendarEvents.findEventById(m.local)));
+        const deleteAll = await Promise.all(allLocalSchedule.filter(f => f !== null).map(m => RNCalendarEvents.removeEvent(m.id)));
+        await AsyncStorage.removeItem('schedule');
+      }
+
+      // 将日程写入iOS的日历中
+      const sync = await Promise.all(dataNeedToSync.map(schedule => {
+        const startDate = new Date(schedule.scheduledtime + schedule.timezone);
+        // set endDate 2 hours later
+        const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
+
+        return RNCalendarEvents.saveEvent(schedule.comments, {
+          location: schedule.address,
+          notes: schedule.projtitle || '',
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(),
+          alarms: [{
+            date: -1 * 24 * 60
+          }]
+        });
+      }));
+
+      // 生成本地记录
+      const records = sync.map((m, i) => ({ remote: dataNeedToSync[i].id, local: m }));
+      await AsyncStorage.setItem('schedule', JSON.stringify(records));
+
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   render() {

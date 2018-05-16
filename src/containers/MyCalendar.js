@@ -249,27 +249,7 @@ class MyCalendar extends React.Component {
           items[newDateString] = [];
         }
       }
-      this.setState({ items, markedDates });
-
-      return Promise.all(result.data.map(m => this.saveScheduleToLocal(m)));
-
-    })
-    .then(data => {
-      newItems = data;
-      return AsyncStorage.getItem('schedule');
-    })
-    .then(data => {
-      let localSchedule = [];
-      if (data) {
-        localSchedule = JSON.parse(data);
-      }
-      return AsyncStorage.setItem('schedule', JSON.stringify(localSchedule.concat(newItems.filter(f => f !== undefined))));
-    })
-    .then(data => {
-      this.isLoading = false;
-      // 加上前后30天内没有日程的日期
-
-      // setTimeout(() => this.setState({ items, markedDates }), 700);
+      this.setState({ items, markedDates }, () => this.isLoading = false);
     })
     .catch(err => {
       console.log(err)
