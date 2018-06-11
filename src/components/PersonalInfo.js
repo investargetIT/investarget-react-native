@@ -134,7 +134,8 @@ class PersonalInfo extends React.Component{
             <Cell label="微信" content={wechat} />
             <Cell label="交易师" content={traders} />
             {org ? <Cell label="机构" content={org} /> : null}
-            <View style={cellStyle} >
+            { !this.props.currentBD ? 
+            <View style={cellStyle}>
               <Text style={cellLabelStyle}>熟悉程度</Text>
               <Picker
                 style={{ flex: 1, height: 28 }}
@@ -143,6 +144,7 @@ class PersonalInfo extends React.Component{
                 options={this.state.famOptions} 
               />
             </View>
+            : null }
           </View>
         )
     }
