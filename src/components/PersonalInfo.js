@@ -1,7 +1,12 @@
 import React from 'react'
-import { View, ScrollView, Text, TouchableOpacity, Image } from 'react-native'
+import {
+  View,
+  Text,
+} from 'react-native';
 import * as api from '../api';
 import Toast from 'react-native-root-toast'
+import Picker from './Picker';
+import { connect } from 'react-redux';
 
 
 
@@ -34,8 +39,12 @@ class PersonalInfo extends React.Component{
         org:null,
         wechat:null,
         tags:[],
-        traders:[]
+        traders:[],
+        famlv: 0,
+        famOptions: [],
       }
+
+      this.relation = null;
     }
 
     getTraders = investor =>{
@@ -50,13 +59,17 @@ class PersonalInfo extends React.Component{
         }
         this.setState({ traders:list });
     })
+
+    // 找出当前交易师与投资人的熟悉程度
+    this.relation = data.filter(f => f.traderuser.id === this.props.userInfo.id)[0];
+    this.setState({ famlv: this.relation.score });
     
     }).catch(error => {
         Toast.show(error.message, {position: Toast.positions.CENTER})
     })
     }
 
-    componentDidMount(){
+  componentDidMount(){
     const currentBD = this.props.currentBD
     if(this.props.userId){
         this.getTraders(this.props.userId)     
@@ -84,7 +97,23 @@ class PersonalInfo extends React.Component{
             traders: currentBD.manager && [{ label: currentBD.manager.username }],
         })
     }
-    }
+    api.getSource('famlv').then(data => {
+      const famOptions = data.map(item => ({ label: item.name, value: item.id }));
+      this.setState({ famOptions });
+    });
+  }
+
+    handleChangeFamLv = value => {
+      this.setState({ famlv: value });
+      const { investoruser, traderuser, relationtype, id } = this.relation;
+      api.editUserRelation([{ 
+        id, 
+        traderuser: traderuser.id, 
+        investoruser: investoruser.id, 
+        relationtype, 
+        score: value 
+      }]);
+    };
 
     render(){
         let {mobile, email, title, org, wechat, tags, traders} =this.state
@@ -97,15 +126,24 @@ class PersonalInfo extends React.Component{
         tags = tags&&tags.length>0 ? tags : '暂无'
         org =  org || null    
         return(
-        <View style={this.props.style}>
-           <Cell label="电话" content={mobile} />
-           <Cell label="邮箱" content={email} />
-           <Cell label="职位" content={title} />
-           <Cell label="标签" content={tags} />
-           <Cell label="微信" content={wechat} />
-           <Cell label="交易师" content={traders} />
-           {org ? <Cell label="机构" content={org} /> : null}
-        </View>
+          <View style={this.props.style}>
+            <Cell label="电话" content={mobile} />
+            <Cell label="邮箱" content={email} />
+            <Cell label="职位" content={title} />
+            <Cell label="标签" content={tags} />
+            <Cell label="微信" content={wechat} />
+            <Cell label="交易师" content={traders} />
+            {org ? <Cell label="机构" content={org} /> : null}
+            <View style={cellStyle} >
+              <Text style={cellLabelStyle}>熟悉程度</Text>
+              <Picker
+                style={{ flex: 1, height: 28 }}
+                value={this.state.famlv}
+                onChange={this.handleChangeFamLv}
+                options={this.state.famOptions} 
+              />
+            </View>
+          </View>
         )
     }
 
@@ -124,4 +162,9 @@ class Cell extends React.Component {
     }
 }
 
-export default PersonalInfo
+function mapStateToProps(state) {
+  const { userInfo } = state.app;
+  return { userInfo };
+}
+
+export default connect(mapStateToProps)(PersonalInfo);
