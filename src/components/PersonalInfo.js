@@ -62,7 +62,7 @@ class PersonalInfo extends React.Component{
 
     // 找出当前交易师与投资人的熟悉程度
     this.relation = data.filter(f => f.traderuser.id === this.props.userInfo.id)[0];
-    this.setState({ famlv: this.relation.score });
+    this.setState({ famlv: this.relation.familiar });
     
     }).catch(error => {
         Toast.show(error.message, {position: Toast.positions.CENTER})
@@ -111,7 +111,7 @@ class PersonalInfo extends React.Component{
         traderuser: traderuser.id, 
         investoruser: investoruser.id, 
         relationtype, 
-        score: value 
+        familiar: value 
       }]);
     };
 
