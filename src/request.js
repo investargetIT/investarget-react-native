@@ -1,7 +1,7 @@
 let baseUrl = "http://192.168.1.251:8080"
-baseUrl = "https://api.investarget.com";
-let mobileUrl = 'http://192.168.1.113:3000';
-mobileUrl = 'https://m.investarget.com';
+// baseUrl = "https://api.investarget.com";
+let mobileUrl = 'http://192.168.1.251:3000';
+// mobileUrl = 'https://m.investarget.com';
 export { baseUrl, mobileUrl };
 
 export class ApiError extends Error {
