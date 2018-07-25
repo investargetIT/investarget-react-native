@@ -172,7 +172,7 @@ import {
           orgfilter.splice(index,1)
         }
         return Object.assign({}, state, {
-              orgFilter: orgfilter.concat(action.filter)
+              orgFilter: action.filter[0].id === undefined ? orgfilter : orgfilter.concat(action.filter)
         })
 
       case TOGGLE_ORG_FILTER:

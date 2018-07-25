@@ -124,7 +124,10 @@ class OrgFilter extends React.Component {
     	if(type==CATEGORY_6){
     		items=this.props.orgTypesOptions.filter(data=>values.includes(data.value))
     	}
-    	items=items.map(item=>({...item,type,id: item.value,name: item.label}))
+        items=items.map(item=>({...item,type,id: item.value,name: item.label}))
+        if (items.length === 0) {
+          items = [{ type }];
+        }
     	this.props.dispatch(toggleOrgFilterMultiple(items))
     }
 
