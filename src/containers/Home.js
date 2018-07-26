@@ -118,9 +118,11 @@ class Home extends React.Component {
     return (
       <View style={{ flex: 1 }}>
 
+        { this.props.currentUser ? 
         <View style={this.determineSize('dashboard')}> 
           <Dashboard {...this.props} />
         </View>
+        : null }
 
         <View style={{ ...this.determineSize('project'), flex: this.state.active === 'project' ? 1 : undefined }}>
           <ProjectList {...this.props} />
