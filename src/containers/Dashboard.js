@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Text,
   View,
+  TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
 import * as api from '../api';
@@ -30,6 +31,8 @@ class Dashboard extends React.Component {
       .then(result => this.setState({ list: result.data }));
   }
 
+  handleItemPressed = item => this.props.navigation.navigate('ProjectDetail', { project: item });
+  
   render () {
     return (
       <View>
@@ -55,16 +58,18 @@ class Dashboard extends React.Component {
           <View key={m.id} style={{ padding: 10, backgroundColor: 'white', borderBottomWidth: 0.3, borderBottomColor: '#CED0CE' }}>
 
             <View style={{ width: '80%', alignSelf: 'center', alignItems: 'center', backgroundColor: undefined }}>
-              <Text style={{ marginBottom: 20, lineHeight: 20, textAlign: 'center', fontSize: 15 }}>灵芝项目：全新靶点多肽类抗肿瘤、脑卒中创新药研发企业</Text>
-              <Text style={{ margin: 2, fontSize: 13, color: '#666' }}>地区：中国</Text>
-              <Text style={{ margin: 2, fontSize: 13, color: '#666' }}>交易类型：股权融资</Text>
-              <Text style={{ margin: 2, fontSize: 13, color: '#666', textAlign: 'center' }}>标签：人工智能、大数据、互联网金融</Text>
+              <Text style={{ marginBottom: 20, lineHeight: 20, textAlign: 'center', fontSize: 15 }}>{m.projtitle}</Text>
+              <Text style={{ margin: 2, fontSize: 13, color: '#666' }}>地区：{m.country.country}</Text>
+              <Text style={{ margin: 2, fontSize: 13, color: '#666' }}>交易类型：{m.transactionType.map(m => m.name).join('、')}</Text>
+              <Text style={{ margin: 2, fontSize: 13, color: '#666', textAlign: 'center' }}>标签：{m.tags.map(m => m.name).join('、')}</Text>
               <Text style={{ margin: 20, lineHeight: 30, color: '#10458F', backgroundColor: undefined }}>点击查看时间轴</Text>
             </View>
 
             <View style={{ height: undefined, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: undefined }}>
               <Text>BD投资人：10</Text>
-              <Text style={{ color: '#10458F' }}>项目详情</Text>
+              <TouchableOpacity onPress={this.handleItemPressed.bind(this, m)}>
+                <Text style={{ color: '#10458F' }}>项目详情</Text>
+              </TouchableOpacity>
             </View>
 
           </View>)}
