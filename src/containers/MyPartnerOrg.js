@@ -35,13 +35,14 @@ class MyPartnerOrg extends React.Component {
     static navigationOptions = ({ navigation }) =>{
         const { params } = navigation.state
         return {
-        title: '我的投资人',
+        title: params && params.title || '我的投资人',
         headerStyle: {
             backgroundColor: '#10458f',
         },
         headerTintColor: '#fff',
         headerBackTitle: null,
-        headerRight:<View  style={{marginRight:8, display:'flex',flexDirection:'row',alignItems:'center'}}>
+        headerRight: params && params.title ? undefined :
+        <View  style={{marginRight:8, display:'flex',flexDirection:'row',alignItems:'center'}}>
                         <Text style={{color:'white'}} onPress={()=>{params.filter&&params.filter()}}>筛选</Text>
                     </View>
         }
@@ -49,13 +50,22 @@ class MyPartnerOrg extends React.Component {
 
     constructor (props) {
       super(props);
+
+      const { params } = props.navigation.state;
+      if (params) {
+        const { title, filter, disableAdd } = params;
+        this.title = title; 
+        this.filter = filter;
+        this.disableAdd = disableAdd;
+      }
+
       this.state = {
         data: [],
         loading: false,
         isLoadingAll: false,
         isLoadingMore: false, 
         page: 0,
-        filter:null
+        filter: this.filter && this.transoformParams(this.filter) || this.transoformParams(props.trueOrgFilter),
       }
     }
 
@@ -63,14 +73,19 @@ class MyPartnerOrg extends React.Component {
       this.props.navigation.navigate('OrgFilter')
     }
 
+    componentWillMount () {
+      this.props.navigation.setParams({ title: this.title });
+    }
+
     componentDidMount() {
       const {trueOrgFilter} =this.props
-      if(trueOrgFilter){
-        let filter = this.transoformParams(trueOrgFilter)
-        this.setState({filter},this.getData)
-      }else{
+      // if(trueOrgFilter){
+      //   let filter = this.transoformParams(trueOrgFilter)
+      //   console.log('fil', filter)
+      //   this.setState({filter},this.getData)
+      // }else{
         this.getData();
-      }
+      // }
       this.props.navigation.setParams({ filter: this.handleFilter })
       
     }
@@ -108,6 +123,14 @@ class MyPartnerOrg extends React.Component {
       }
     }
 
+    isThereAnyFilter = () => {
+      const { area, currencys, industrys, isOversea, orgtransactionphases, orgtypes, search, tags } = this.state.filter;
+      if (area.length === 0 && currencys.length === 0 && industrys.length === 0 && !isOversea && orgtransactionphases.length === 0 && orgtypes.length === 0 && !search && tags.length === 0) {
+        return false;
+      }
+      return true;
+    }
+
     getData = isLoadingMore => {
       const {filter} = this.state
       if (isLoadingMore === undefined) {
@@ -121,7 +144,7 @@ class MyPartnerOrg extends React.Component {
         ...filter 
       })
       .then(data => {
-        if (!isLoadingMore) {
+        if (!isLoadingMore && !this.isThereAnyFilter()) {
           data.data.unshift({ orgname: '暂无机构', id: 'none' });
         }
         org = data.data;
@@ -304,10 +327,14 @@ class MyPartnerOrg extends React.Component {
         />
       }
       ItemSeparatorComponent={this.separator}
-      ListHeaderComponent={this.renderHeader}
+      ListHeaderComponent={this.disableAdd ? undefined : this.renderHeader}
       onEndReachedThreshold={0.01}
       onEndReached={this.loadMore}
       ListFooterComponent={this.renderFooter}
+      ListEmptyComponent={() => <View style={{flex:1,alignItems:'center',paddingTop: 60}}>
+            <Image style={{ width: 100, height: 86 }} source={require('../images/emptyBox.png')} />
+        </View>
+      }
     />
   }
 }

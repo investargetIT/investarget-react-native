@@ -2,7 +2,8 @@ import React from 'react';
 import {
   Text,
   View,
-  TouchableOpacity
+  TouchableOpacity,
+  TouchableHighlight
 } from 'react-native';
 import { connect } from 'react-redux';
 import * as api from '../api';
@@ -33,23 +34,49 @@ class Dashboard extends React.Component {
 
   handleItemPressed = item => this.props.navigation.navigate('ProjectDetail', { project: item });
   
+  handleOrgTypePressed (type) {
+    let title, filter;
+    switch (type) {
+      case 1:
+        title = '基金';
+        filter = [{type: 'orgTypes', value: 1}];
+        break;
+      case 12:
+        title = '上市公司';
+        filter = [{type: 'orgTypes', value: 12}];
+        break;
+      case 57:
+        title = 'LP';
+        filter = [{type: 'tag', value: 57}];
+    }
+    this.props.navigation.navigate('MyPartnerOrg', { title, disableAdd: true, filter });
+  }
+
+
+
   render () {
     return (
       <View>
 
         <View style={{ height: 120, flexDirection: 'row', backgroundColor: 'white' }}>
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: undefined }}>
-            <View><Text style={{ color: '#10458F' }}>基金</Text></View>
-            <View><Text style={{ fontSize: 30, color: '#10458F' }}>{this.state.fund}</Text></View>
-          </View>
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: undefined }}>
-            <View><Text style={{ color: '#10458F' }}>上市公司</Text></View>
-            <View><Text style={{ fontSize: 30, color: '#10458F' }}>{this.state.lc}</Text></View>
-          </View>
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: undefined }}>
-            <View><Text style={{ color: '#10458F' }}>LP</Text></View>
-            <View><Text style={{ fontSize: 30, color: '#10458F' }}>{this.state.lp}</Text></View>
-          </View>
+          <TouchableHighlight underlayColor="lightgray" onPress={this.handleOrgTypePressed.bind(this, 1)} style={{ flex: 1 }}>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: undefined }}>
+              <View><Text style={{ color: '#10458F' }}>基金</Text></View>
+              <View><Text style={{ fontSize: 30, color: '#10458F' }}>{this.state.fund}</Text></View>
+            </View>
+          </TouchableHighlight>
+          <TouchableHighlight underlayColor="lightgray" onPress={this.handleOrgTypePressed.bind(this, 12)} style={{ flex: 1 }}>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: undefined }}>
+              <View><Text style={{ color: '#10458F' }}>上市公司</Text></View>
+              <View><Text style={{ fontSize: 30, color: '#10458F' }}>{this.state.lc}</Text></View>
+            </View>
+          </TouchableHighlight>
+          <TouchableHighlight underlayColor="lightgray" onPress={this.handleOrgTypePressed.bind(this, 57)} style={{ flex: 1 }}>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: undefined }}>
+              <View><Text style={{ color: '#10458F' }}>LP</Text></View>
+              <View><Text style={{ fontSize: 30, color: '#10458F' }}>{this.state.lp}</Text></View>
+            </View>
+          </TouchableHighlight>
         </View>
 
         <View style={{ marginTop: 10 }}>
