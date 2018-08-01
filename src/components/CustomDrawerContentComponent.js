@@ -61,7 +61,7 @@ const CustomDrawerContentComponent = (props) => {
         <Text>日程管理</Text>
       </TouchableHighlight>
 
-      { props.userInfo && (props.userInfo.permissions.includes('BD.manageProjectBD') || props.userInfo.permissions.includes('BD.user_getProjectBD')) ?
+      {/* { props.userInfo && (props.userInfo.permissions.includes('BD.manageProjectBD') || props.userInfo.permissions.includes('BD.user_getProjectBD')) ?
       <TouchableHighlight style={styles.menuContainer} underlayColor="lightgray" onPress={() => props.navigation.navigate('ProjectBD')}>
         <Text>项目BD</Text>
       </TouchableHighlight>
@@ -71,7 +71,7 @@ const CustomDrawerContentComponent = (props) => {
       <TouchableHighlight style={styles.menuContainer} underlayColor="lightgray" onPress={() => props.navigation.navigate('OrganizationBD')}>
         <Text>机构BD</Text>
       </TouchableHighlight>
-      : null }
+      : null } */}
 
       <TouchableHighlight style={styles.menuContainer} underlayColor="lightgray" onPress={() => props.navigation.navigate('MyTags')}>
         <Text>关注标签</Text>
