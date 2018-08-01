@@ -331,10 +331,9 @@ class MyPartnerOrg extends React.Component {
       onEndReachedThreshold={0.01}
       onEndReached={this.loadMore}
       ListFooterComponent={this.renderFooter}
-      ListEmptyComponent={() => <View style={{flex:1,alignItems:'center',paddingTop: 60}}>
-            <Image style={{ width: 100, height: 86 }} source={require('../images/emptyBox.png')} />
-        </View>
-      }
+      ListEmptyComponent={<View style={{ flex: 1, alignItems: 'center', paddingTop: 60 }}>
+        <Image style={{ width: 100, height: 86 }} source={require('../images/emptyBox.png')} />
+      </View>}
     />
   }
 }

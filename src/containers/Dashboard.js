@@ -52,6 +52,9 @@ class Dashboard extends React.Component {
     this.props.navigation.navigate('MyPartnerOrg', { title, disableAdd: true, filter });
   }
 
+  handleProjPressed (proj) {
+    this.props.navigation.navigate('OrgBDList', { proj });
+  }
 
 
   render () {
@@ -60,19 +63,19 @@ class Dashboard extends React.Component {
 
         <View style={{ height: 120, flexDirection: 'row', backgroundColor: 'white' }}>
           <TouchableHighlight underlayColor="lightgray" onPress={this.handleOrgTypePressed.bind(this, 1)} style={{ flex: 1 }}>
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: undefined }}>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
               <View><Text style={{ color: '#10458F' }}>基金</Text></View>
               <View><Text style={{ fontSize: 30, color: '#10458F' }}>{this.state.fund}</Text></View>
             </View>
           </TouchableHighlight>
           <TouchableHighlight underlayColor="lightgray" onPress={this.handleOrgTypePressed.bind(this, 12)} style={{ flex: 1 }}>
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: undefined }}>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
               <View><Text style={{ color: '#10458F' }}>上市公司</Text></View>
               <View><Text style={{ fontSize: 30, color: '#10458F' }}>{this.state.lc}</Text></View>
             </View>
           </TouchableHighlight>
           <TouchableHighlight underlayColor="lightgray" onPress={this.handleOrgTypePressed.bind(this, 57)} style={{ flex: 1 }}>
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: undefined }}>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
               <View><Text style={{ color: '#10458F' }}>LP</Text></View>
               <View><Text style={{ fontSize: 30, color: '#10458F' }}>{this.state.lp}</Text></View>
             </View>
@@ -81,25 +84,27 @@ class Dashboard extends React.Component {
 
         <View style={{ marginTop: 10 }}>
 
-          { this.state.list.map(m => 
-          <View key={m.id} style={{ padding: 10, backgroundColor: 'white', borderBottomWidth: 0.3, borderBottomColor: '#CED0CE' }}>
+          {this.state.list.map(m =>
+            <TouchableHighlight key={m.id} underlayColor="lightgray" onPress={this.handleProjPressed.bind(this, m)}>
+              <View style={{ padding: 10, backgroundColor: 'white', borderBottomWidth: 0.3, borderBottomColor: '#CED0CE' }}>
 
-            <View style={{ width: '80%', alignSelf: 'center', alignItems: 'center', backgroundColor: undefined }}>
-              <Text style={{ marginBottom: 20, lineHeight: 20, textAlign: 'center', fontSize: 15 }}>{m.projtitle}</Text>
-              <Text style={{ margin: 2, fontSize: 13, color: '#666' }}>地区：{m.country.country}</Text>
-              <Text style={{ margin: 2, fontSize: 13, color: '#666' }}>交易类型：{m.transactionType.map(m => m.name).join('、')}</Text>
-              <Text style={{ margin: 2, fontSize: 13, color: '#666', textAlign: 'center' }}>标签：{m.tags.map(m => m.name).join('、')}</Text>
-              <Text style={{ margin: 20, lineHeight: 30, color: '#10458F', backgroundColor: undefined }}>点击查看时间轴</Text>
-            </View>
+                <View style={{ width: '80%', alignSelf: 'center', alignItems: 'center', backgroundColor: undefined }}>
+                  <Text style={{ marginBottom: 20, lineHeight: 20, textAlign: 'center', fontSize: 15 }}>{m.projtitle}</Text>
+                  <Text style={{ margin: 2, fontSize: 13, color: '#666' }}>地区：{m.country.country}</Text>
+                  <Text style={{ margin: 2, fontSize: 13, color: '#666' }}>交易类型：{m.transactionType.map(m => m.name).join('、')}</Text>
+                  <Text style={{ margin: 2, fontSize: 13, color: '#666', textAlign: 'center' }}>标签：{m.tags.map(m => m.name).join('、')}</Text>
+                  <Text style={{ margin: 20, lineHeight: 30, color: '#10458F', backgroundColor: undefined }}>点击查看时间轴</Text>
+                </View>
 
-            <View style={{ height: undefined, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: undefined }}>
-              <Text>BD投资人：10</Text>
-              <TouchableOpacity onPress={this.handleItemPressed.bind(this, m)}>
-                <Text style={{ color: '#10458F' }}>项目详情</Text>
-              </TouchableOpacity>
-            </View>
+                <View style={{ height: undefined, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: undefined }}>
+                  <Text>BD投资人：10</Text>
+                  <TouchableOpacity onPress={this.handleItemPressed.bind(this, m)}>
+                    <Text style={{ color: '#10458F' }}>项目详情</Text>
+                  </TouchableOpacity>
+                </View>
 
-          </View>)}
+              </View>
+            </TouchableHighlight>)}
 
         </View>
 
