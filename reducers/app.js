@@ -38,6 +38,7 @@ import {
     UPDATE_PROJECT_STRUCTURE,
     SYNC_SCHEDULE,
     SCHEDULE_SYNCED,
+    RECEIVE_ORGBDRES,
   } from '../actions'
   import AsyncStorage from '../src/AsyncStorage'
    
@@ -82,7 +83,7 @@ import {
   },
     // 是否需要同步日程，用户在日程管理中修改了日程时，将该值设为true，触发同步操作，同步完成后设为false
     isNeedSyncSchedule: false,
-  
+    orgbdres: [],
   }
   
   export default function (state = initialState, action) {
@@ -215,6 +216,10 @@ import {
       case RECEIVE_TAGS:
         return Object.assign({}, state, {
           tags: action.tags
+        })
+      case RECEIVE_ORGBDRES:
+        return Object.assign({}, state, {
+          orgbdres: action.orgbdres
         })
       case RECEIVE_CURRENCYTYPE:
         return Object.assign({}, state, {

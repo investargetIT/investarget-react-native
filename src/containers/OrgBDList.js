@@ -81,9 +81,8 @@ class OrgBDList extends React.Component {
 
   separator = () => <View style={{ height: 0.3, backgroundColor: "#CED0CE", marginLeft: 10 }} />;
 
-  handleItemPressed (org) {
-    // const { userType } = this.props.userInfo;
-    // this.props.navigation.navigate('MyPartner', { org, userType });
+  handleItemPressed (item) {
+    this.props.navigation.navigate('OrganizationBD', { org: item.data[0].org });
   }
 
   loadMore = () => {
