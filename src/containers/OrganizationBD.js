@@ -80,7 +80,7 @@ class OrganizationBDList extends React.Component{
   }
 
   handleClick = (item) =>{
-    this.props.navigation.navigate('PersonalDetail', {item, source:'orgBD'})
+    this.props.navigation.navigate('OrgBDDetail', {item, source:'orgBD'})
   }
 
 	getData = isLoadingMore =>{

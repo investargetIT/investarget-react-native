@@ -26,6 +26,7 @@ class TimelineManagement extends React.Component {
             backgroundColor: '#10458f',
         },
         headerTintColor: '#fff',
+        headerBackTitle: null,
     };
 
     constructor(props) {
