@@ -8,7 +8,7 @@ import {
 import * as api from '../api'
 import Toast from 'react-native-root-toast'
 import TimelineRemark from '../components/TimelineRemark'
-import ModifyBDStatus from '../components/ModifyBDStatus'
+import ModifyOrgBDStatus from '../components/ModifyOrgBDStatus'
 import { connect } from 'react-redux';
 
 const containerStyle = {
@@ -194,7 +194,7 @@ class PersonalDetail extends React.Component{
 			  comments={item.BDComments} 
 			/>
             {visible?
-			<ModifyBDStatus 
+			<ModifyOrgBDStatus 
 			  currentBD={item} 
 			  source={source} 
 			  setVisible={this.setModalVisible} 

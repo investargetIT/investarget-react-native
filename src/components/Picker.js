@@ -38,7 +38,7 @@ class Picker2 extends React.Component {
     }
 
     render() {
-
+        
         const selectedItem = this.props.options.filter(item => item.value == this.props.value)[0]
         const selectedLabel = selectedItem ? selectedItem.label : ''
         
@@ -69,7 +69,7 @@ class Picker2 extends React.Component {
                     <Modal visible={this.state.visible} animationType="slide" transparent={true}>
                         <View style={pickerContainerStyle}>
                             <PickerIOS2
-                                value={this.props.value}
+                                value={this.props.value || this.props.options[0].value}
                                 options={this.props.options}
                                 onCancel={this.handleCancel}
                                 onConfirm={this.handleConfirm}
