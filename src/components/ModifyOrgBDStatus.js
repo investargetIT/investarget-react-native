@@ -4,6 +4,10 @@ import * as api from '../api'
 import Toast from 'react-native-root-toast'
 import Picker from '../components/Picker'
 import { connect } from 'react-redux';
+import { 
+  checkMobile,
+  checkEmail,
+} from '../utils';
 
 const backgroundStyle ={
 	flex:1,
@@ -95,11 +99,9 @@ pressOk = () =>{
 }
 
 checkInvalid = () =>{
-    if (this.props.source === 'projectBD') return;
     const {username, mobile, wechat, email, bd_status, group} =this.state
     const {currentBD} = this.props
-    let disabled = ((username.length === 0 || mobile.length === 0 || wechat.length === 0 || email.length === 0 || group.length === 0) && bd_status === 3 && currentBD.bduser === null && currentBD.response !== 3)
-           || (wechat.length === 0 && bd_status === 3 && currentBD.bduser !== null && currentBD.response !== 3);
+    let disabled = ((username.length === 0 || !checkMobile(mobile) || wechat.length === 0 || !checkEmail(email) || group.length === 0) && bd_status === 3 && currentBD.bduser === null && currentBD.response !== 3);
     this.setState({disabled})       
 }
 
@@ -170,13 +172,16 @@ handleConfirmAudit = (isModifyWechat) =>{
     if(currentBD.bduser){
       api.checkUserRelation(currentBD.bduser, currentBD.manager.id)
         .then(result => {
-            console.log('result', result);
-          if (result || hasPerm('usersys.admin_changeuser') && isModifyWechat) {
-              console.log('adsad');
+          if (result || this.props.userInfo.permissions.includes('usersys.admin_changeuser') && isModifyWechat) {
+            api.addUserRelation({
+                relationtype: true,
+                investoruser: currentBD.bduser,
+                traderuser: currentBD.manager.id
+              })
             api.editUser([currentBD.bduser], { wechat }); 
           } else {
             api.addUserRelation({
-              relationtype: false,
+              relationtype: true,
               investoruser: currentBD.bduser,
               traderuser: currentBD.manager.id
             })
@@ -194,14 +199,18 @@ handleConfirmAudit = (isModifyWechat) =>{
         });
 
         this.addRelation(currentBD.bduser);
-        
-        api.addOrgBDComment({
-        orgBD: currentBD.id,
-        comments: `微信: ${wechat}`
-      }).then((data)=>{
-        DeviceEventEmitter.emit('updateOrgBD') 
-        this.props.navigation.goBack()
-      })
+        if (wechat.length > 0) {
+            api.addOrgBDComment({
+                orgBD: currentBD.id,
+                comments: `微信: ${wechat}`
+            }).then((data) => {
+                DeviceEventEmitter.emit('updateOrgBD')
+                this.props.navigation.goBack()
+            })
+        } else {
+            DeviceEventEmitter.emit('updateOrgBD')
+            this.props.navigation.goBack(); 
+        }
     }
     else{
         api.addOrgBDComment({
@@ -253,7 +262,22 @@ addRelation = investorID =>{
 }
 
 confirmModify = () =>{
-
+  if (this.props.currentBD.bduser && this.props.currentBD.response !== 2 && this.state.bd_status === 2) {
+    const { proj, bduser, manager } = this.props.currentBD;
+    const params = {
+      timelinedata: {
+        'proj': proj.id,
+        'investor': bduser,
+        'trader': manager.id,
+      },
+      statusdata: {
+        'alertCycle': 7,
+        'transationStatus': 1,
+        'isActive': true
+      }
+    }
+    api.addTimeline(params);
+  }
   this.wechatConfirm()
 
 }
@@ -414,9 +438,9 @@ class SelectInvestorGroup extends React.Component {
 }
 
 function mapStateToProps (state) {
-  let { orgbdres } = state.app;
+  let { orgbdres, userInfo } = state.app;
   orgbdres = orgbdres.map(m => ({ label: m.name, value: m.id }));
-  return { orgbdres };
+  return { orgbdres, userInfo };
 }
 
 export default connect(mapStateToProps)(ModifyBDStatus);
