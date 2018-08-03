@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, Text, TextInput, View, FlatList, RefreshControl, TouchableOpacity, DeviceEventEmitter, Modal, Alert} from 'react-native';
+import { Image, Text, TextInput, View, FlatList, RefreshControl, TouchableOpacity, DeviceEventEmitter, Modal, Alert, Switch } from 'react-native';
 import * as api from '../api'
 import Toast from 'react-native-root-toast'
 import Picker from '../components/Picker'
@@ -77,7 +77,8 @@ constructor(props){
 	    group: '',
 	    disabled: this.props.source === 'projectBD' ? false : true,
         visible: true,
-        confirmModal:false
+        confirmModal:false,
+        isimportant:props.currentBD.isimportant,
 	}
 }
 
@@ -145,9 +146,9 @@ checkExistence = (mobile, email) => {
 }
 
 handleConfirmAudit = (isModifyWechat) =>{
-    const {bd_status, username,mobile,wechat,email,group} = this.state
+    const {bd_status, username,mobile,wechat,email,group,isimportant} = this.state
     const {currentBD} = this.props
-    const body={response:bd_status}
+    const body={ response: bd_status, isimportant: isimportant ? 1 : 0}
     api.modifyOrgBD(currentBD.id, body).then(()=>{
         DeviceEventEmitter.emit('updateOrgBD')
         if(bd_status!==3 || currentBD.response===3) {
@@ -272,7 +273,7 @@ componentDidMount(){
 }
 
 render(){
-	const {bd_status, group, disabled, confirmModal, visible} = this.state
+	const {bd_status, group, disabled, confirmModal, visible, isimportant} = this.state
 	const {source, currentBD} = this.props
     let color=disabled ? 'white' : 'lightblue'
     buttonStyle={...buttonStyle,backgroundColor:color}
@@ -285,24 +286,37 @@ render(){
     >
     <View style={backgroundStyle}>
     	<View style={modalStyle}>
-    		<View style={titleStyle}>
-    		<Text >修改BD状态</Text>
-    		<TouchableOpacity onPress={this.setModalVisible.bind(this,false)}>
-			<Text >X</Text>
-			</TouchableOpacity>
-    		</View>
-    	<View style={cellStyle}>
-		<Text style={cellLabelStyle}>状态</Text>
-    	<View style={{width:'70%'}}>
 
-        <Picker
-          value={bd_status} 
-          options={this.props.orgbdres} 
-          onChange={this.handleChangeStatus} 
-        />
+                        <View style={titleStyle}>
+                            <Text >修改BD状态</Text>
+                            <TouchableOpacity onPress={this.setModalVisible.bind(this, false)}>
+                                <Text >X</Text>
+                            </TouchableOpacity>
+                        </View>
 
-    	</View>
-    	</View>
+
+                        <View style={cellStyle}>
+                            <Text style={cellLabelStyle}>重点BD</Text>
+                            <View style={{ width: '70%' }}>
+                                <Switch
+                                    onTintColor="#10458f"
+                                    value={isimportant}
+                                    onValueChange={isimportant => this.setState({ isimportant })}
+                                />
+                            </View>
+                        </View>
+
+                        <View style={cellStyle}>
+                            <Text style={cellLabelStyle}>状态</Text>
+                            <View style={{ width: '70%' }}>
+                                <Picker
+                                    value={bd_status}
+                                    options={this.props.orgbdres}
+                                    onChange={this.handleChangeStatus}
+                                />
+                            </View>
+                        </View>
+
     	{ !currentBD.bduser && currentBD.response!=3 && bd_status==3 ?
     	<View>
             <SelectInvestorGroup 

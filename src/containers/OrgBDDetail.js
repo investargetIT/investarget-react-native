@@ -3,7 +3,7 @@ import {
   Text, 
   View, 
   TouchableOpacity, 
-  ScrollView, 
+  ScrollView,
 } from 'react-native';
 import * as api from '../api'
 import Toast from 'react-native-root-toast'
@@ -166,21 +166,24 @@ class PersonalDetail extends React.Component{
 				proj: item.proj&&item.proj.projtitle,
 				org: item.org&&item.org.orgname,
 				comments: item.BDComments,
-				response: item.response
+                response: item.response,
+                isimportant: item.isimportant,
 			})
  
 	}
 	render(){
-		let {proj, comments, response, id, org, currentBD, visible } =this.state
+		let {proj, comments, response, id, org, currentBD, visible, isimportant } =this.state
 		const {item, source} = this.props.navigation.state.params
 		return(
 		<ScrollView style={containerStyle}>
            <PersonalInfo currentBD={item} />
            <Cell label="项目" content={proj} />
 
-                <View style={{...cellStyle, justifyContent: 'space-between'}}>
+           <Cell label="重点BD" content={isimportant ? '是' : '否'} />
+
+                <View style={{ ...cellStyle, justifyContent: 'space-between' }}>
                     <Text style={cellLabelStyle}>当前状态</Text>
-                    <Text style={{flex: 1}}>{response ? this.props.orgbdres.filter(f => f.id === response)[0].name : '暂无'}</Text>
+                    <Text style={{ flex: 1 }}>{response ? this.props.orgbdres.filter(f => f.id === response)[0].name : '暂无'}</Text>
                     <TouchableOpacity style={{ marginRight: 16 }} onPress={this.setModalVisible.bind(this, true)}>
                         <Text style={{ textAlign: 'right', color: '#10458F' }}>修改状态</Text>
                     </TouchableOpacity>
