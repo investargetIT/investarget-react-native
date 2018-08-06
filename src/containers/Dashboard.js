@@ -49,6 +49,7 @@ class Dashboard extends React.Component {
       fund: null,
       lc: null,
       lp: null,
+      total: null,
       list: [],
       loading: false,
       isLoadingMore: false,
@@ -57,6 +58,8 @@ class Dashboard extends React.Component {
   }
 
   componentDidMount () {
+    api.getOrg({ trader: this.props.userInfo.id })
+      .then(result => this.setState({ total: result.count }));
     api.getOrg({ trader: this.props.userInfo.id, orgtypes: 1 })
       .then(result => this.setState({ fund: result.count }));
     api.getOrg({ trader: this.props.userInfo.id, orgtypes: 12 })
@@ -141,28 +144,30 @@ class Dashboard extends React.Component {
   };
 
   renderHeader = () => (
-    <View>
-      <View style={{ height: 120, flexDirection: 'row', backgroundColor: 'white' }}>
-        <TouchableHighlight underlayColor="lightgray" onPress={this.handleOrgTypePressed.bind(this, 1)} style={{ flex: 1 }}>
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
-            <View><Text style={{ color: '#10458F' }}>基金</Text></View>
-            <View><Text style={{ fontSize: 30, color: '#10458F' }}>{this.state.fund}</Text></View>
+    <View style={{ backgroundColor: 'white' }}>
+      <Text style={{ marginTop: 20, backgroundColor: undefined, textAlign: 'center' }}>我的资源库共有：<Text style={{ fontSize: 30, fontFamily: 'DIN Condensed' }}>{this.state.total}</Text> 家机构，其中</Text> 
+      <View style={{ height: 130, flexDirection: 'row' }}>
+        <TouchableHighlight underlayColor="lightgray" onPress={this.handleOrgTypePressed.bind(this, 1)} style={{ flex: 1, margin: 10, borderRadius: 8, backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2 }}>
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: undefined, backgroundColor: undefined }}>
+            <View style={{ flexBasis: 44, justifyContent: 'center', backgroundColor: undefined }}><Text style={{ color: '#999' }}>基金</Text></View>
+            <View><Text style={{ fontSize: 50, color: 'rgb(48, 148, 224)', fontWeight: '700', fontFamily: 'DIN Condensed' }}>{this.state.fund}</Text></View>
           </View>
         </TouchableHighlight>
-        <TouchableHighlight underlayColor="lightgray" onPress={this.handleOrgTypePressed.bind(this, 12)} style={{ flex: 1 }}>
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
-            <View><Text style={{ color: '#10458F' }}>上市公司</Text></View>
-            <View><Text style={{ fontSize: 30, color: '#10458F' }}>{this.state.lc}</Text></View>
+        <TouchableHighlight underlayColor="lightgray" onPress={this.handleOrgTypePressed.bind(this, 12)} style={{ flex: 1, marginTop: 10, marginBottom: 10, borderRadius: 8, backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2 }}>
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: undefined, backgroundColor: undefined }}>
+            <View style={{ flexBasis: 44, justifyContent: 'center', backgroundColor: undefined }}><Text style={{ color: '#999' }}>上市公司</Text></View>
+            <View><Text style={{ fontSize: 50, color: 'rgb(48, 148, 224)', fontWeight: '700', fontFamily: 'DIN Condensed' }}>{this.state.lc}</Text></View>
           </View>
         </TouchableHighlight>
-        <TouchableHighlight underlayColor="lightgray" onPress={this.handleOrgTypePressed.bind(this, 57)} style={{ flex: 1 }}>
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
-            <View><Text style={{ color: '#10458F' }}>LP</Text></View>
-            <View><Text style={{ fontSize: 30, color: '#10458F' }}>{this.state.lp}</Text></View>
+        <TouchableHighlight underlayColor="lightgray" onPress={this.handleOrgTypePressed.bind(this, 57)} style={{ flex: 1, margin: 10, borderRadius: 8, backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2 }}>
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: undefined, backgroundColor: undefined }}>
+            <View style={{ flexBasis: 44, justifyContent: 'center', backgroundColor: undefined }}><Text style={{ color: '#999' }}>LP</Text></View>
+            <View><Text style={{ fontSize: 50, color: 'rgb(48, 148, 224)', fontWeight: '700', fontFamily: 'DIN Condensed' }}>{this.state.lp}</Text></View>
           </View>
         </TouchableHighlight>
       </View>
-      <View style={{ height: 5 }} />
+      <Text style={{ marginRight: 10, marginBottom: 10, textAlign: 'right', color: '#999' }}>其他：{this.state.total-this.state.fund-this.state.lc-this.state.lp}</Text>
+      <Text style={{ paddingLeft: 10, fontSize: 13, color: '#999', backgroundColor: 'rgb(242, 242, 242)', lineHeight: 32 }}>机构BD</Text>
     </View>
   );
 
