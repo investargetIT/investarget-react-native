@@ -37,6 +37,7 @@ export const SAVE_REDIRECT_URL = 'SAVE_REDIRECT_URL'
 export const UPDATE_PROJECT_STRUCTURE = 'UPDATE_PROJECT_STRUCTURE'
 export const SYNC_SCHEDULE = 'SYNC_SCHEDULE';
 export const SCHEDULE_SYNCED = 'SCHEDULE_SYNCED';
+export const RECEIVE_ORGBDRES = 'RECEIVE_ORGBDRES';
 
 export function updateProjectStructure(structure) {
   return {
@@ -160,6 +161,13 @@ export function receiveTags(tags) {
   return {
     type: RECEIVE_TAGS,
     tags
+  }
+}
+
+export function receiveOrgBDRes(orgbdres) {
+  return {
+    type: RECEIVE_ORGBDRES,
+    orgbdres
   }
 }
 

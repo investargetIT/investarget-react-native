@@ -51,6 +51,8 @@ import ProjectBD from './src/containers/ProjectBD';
 import OrganizationBD from './src/containers/OrganizationBD';
 import PersonalDetail from './src/containers/PersonalDetail';
 import OrgFilter from './src/containers/OrgFilter';
+import OrgBDList from './src/containers/OrgBDList';
+import OrgBDDetail from './src/containers/OrgBDDetail';
   
   const AppNavigator = StackNavigator({
     Home: { screen:  Home },
@@ -94,7 +96,9 @@ import OrgFilter from './src/containers/OrgFilter';
     ProjectBD:{screen: ProjectBD},
     OrganizationBD: {screen: OrganizationBD},
     PersonalDetail: {screen: PersonalDetail},
-    OrgFilter:{screen: OrgFilter}
+    OrgFilter:{screen: OrgFilter},
+    OrgBDList:{screen: OrgBDList},
+    OrgBDDetail:{screen: OrgBDDetail},
   })
 
   const DrawerApp = DrawerNavigator(

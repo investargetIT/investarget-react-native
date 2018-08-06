@@ -2,7 +2,9 @@
  import { Image, Text, View, FlatList, RefreshControl, TouchableOpacity, Alert,Linking, ActivityIndicator, DeviceEventEmitter} from 'react-native';
  import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view'
  import * as api from '../api'
+ import { connect } from 'react-redux';
  import Toast from 'react-native-root-toast'
+import { receiveOrgBDRes } from '../../actions';
 
  class OrganizationBD extends React.Component{
  	static navigationOptions=({navigation}) =>{
@@ -42,13 +44,30 @@
  }
 
 class OrganizationBDList extends React.Component{
+
+  static navigationOptions = ({navigation}) => {
+    const { params } = navigation.state;
+    return {
+       title: params && params.title,
+       headerStyle: {
+         backgroundColor: '#10458f',
+       },
+       headerTintColor: '#fff',
+       headerBackTitle: null
+     }
+    }
+
  	constructor(props) {
-	    super(props);
+      super(props);
+      
+      const { params } = props.navigation.state;
+      this.org = params.org;
+
 	    this.state={
 	    	list:[],
 	    	total:0,
 	    	isLoadingAll:false,
-	    	page_index: 1,
+	    	page_index: 0,
 	    	page_size: 6,
 	    	bd_status:props.status,
 	    	loading:false,
@@ -56,9 +75,12 @@ class OrganizationBDList extends React.Component{
 	    }
   	}
 
+  componentWillMount () {
+    this.props.navigation.setParams({ title: this.org.orgname });
+  }
+
   handleClick = (item) =>{
-    this.props.navigation.navigate('PersonalDetail', {item, source:'orgBD'})
-    
+    this.props.navigation.navigate('OrgBDDetail', {item, source:'orgBD'})
   }
 
 	getData = isLoadingMore =>{
@@ -67,15 +89,15 @@ class OrganizationBDList extends React.Component{
     }
 		const {bd_status, page_size} =this.state
 		const params={
-			bd_status,
-			page_index:isLoadingMore?this.state.page_index+1 : 1,
-			page_size
+      page_index:isLoadingMore?this.state.page_index+1 : 1,
+      org: this.org.id,
+      manager: [this.props.userInfo.id]
 		}
-		api.getOrgBdList(params).then((result)=>{  			
+		api.getOrgBdList(params).then((result)=>{  
 		this.setState({
 			total:result.count,
 			list: isLoadingMore?this.state.list.concat(result.data) :result.data,
-			isLoadingAll: result.data.length < page_size,
+			isLoadingAll: result.data.length < 10,
 			isLoadingMore:false,
 			page_index:isLoadingMore ? this.state.page_index + 1 : 1,
 			loading:false
@@ -94,6 +116,9 @@ class OrganizationBDList extends React.Component{
 	componentDidMount(){
 		this.getData()
     this.subscription = DeviceEventEmitter.addListener('updateOrgBD',this.getData)
+    api.getSource('orgbdres').then(data => {
+      this.props.dispatch(receiveOrgBDRes(data))
+    })
 	}
 
   componentWillUnmount(){
@@ -101,7 +126,7 @@ class OrganizationBDList extends React.Component{
   }
 
 	renderFooter = () => {
-      if (this.state.list.length < this.state.page_size) return null;
+      if (this.state.list.length < 10) return null;
       if (this.state.isLoadingAll) {
         return (
         <Text style={{ padding: 16, textAlign: 'center', fontSize: 12, color: 'gray' }}>---没有更多了---</Text>
@@ -144,22 +169,24 @@ class OrganizationBDList extends React.Component{
 }
 
   function OrganizationItem (props) {
- 		const username = props.username || ''
- 		const title = props.usertitle&&props.usertitle.name || '暂无'
- 		const mobile = props.usermobile || '暂无'
- 		const email = props.email || '暂无'
-    const org = props.org&&props.org.orgname || '暂无'
- 		const imgSource = props.useinfo&&props.useinfo.photourl ? { uri: props.useinfo.photourl } : require('../images/userCenter/defaultAvatar.png')
+ 		const username = props.username || '暂无联系人' 
+ 		const title = props.usertitle&&props.usertitle.name
+ 		const mobile = props.userinfo && props.userinfo.mobile || '暂无'
+ 		const email = props.userinfo && props.userinfo.email || '暂无'
+    const response = props.response && props.orgbdres.filter(f => f.id === props.response)[0].name;
+ 		const imgSource = props.userinfo&&props.userinfo.photourl ? { uri: props.userinfo.photourl } : require('../images/userCenter/defaultAvatar.png')
 	    return (	    
       <TouchableOpacity onPress={props.onSelect}>
         <View style={{flexDirection:'row',backgroundColor:'#fff',padding: 16,paddingTop: 24}}>
             <Image source={imgSource} style={{width:60,height:60,marginRight:16,borderRadius:30}} />
-            <View style={{justifyContent:'space-between', flex: 0.5}}>
-                <Text style={{fontSize:16,color:'#333'}} numberOfLines={1}>{org}</Text>
+            <View style={{justifyContent: response ? 'space-between' : 'center', flex: 0.5}}>
                 <Text style={{fontSize:16,color:'#333'}} numberOfLines={1}>
                     {username + ' '}
+                    { title ? 
                     <Text style={{fontSize:13,color:'#999'}} numberOfLines={1}>{title}</Text>
+                    : null }
                 </Text>
+                <Text style={{fontSize:13,color:'#666'}} numberOfLines={1}>{response}</Text>
             </View>
             <View style={{ marginLeft: 4, flex: 0.5, justifyContent: 'space-between'}}>
               <TouchableOpacity onPress={() => Linking.openURL(`tel:${mobile}`)}>
@@ -180,4 +207,10 @@ class OrganizationBDList extends React.Component{
 	    )
   }
 
- export default OrganizationBD
+OrganizationItem = connect(state => ({ orgbdres: state.app.orgbdres }))(OrganizationItem);
+
+function mapStateToProps (state) {
+  const { userInfo } = state.app;
+  return { userInfo };
+}
+export default connect(mapStateToProps)(OrganizationBDList);
