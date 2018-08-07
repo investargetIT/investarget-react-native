@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import * as api from '../api';
+import { SearchBar } from 'react-native-elements';
+import _ from 'lodash';
 
 const PAGE_SIZE = 10;
 
@@ -55,6 +57,7 @@ class Dashboard extends React.Component {
       isLoadingMore: false,
       isLoadingAll: false,
     };
+    this.search = '';
   }
 
   componentDidMount () {
@@ -69,6 +72,11 @@ class Dashboard extends React.Component {
     this.getData();
   }
 
+  handleSearch = text => {
+    this.search = text;
+    this.getData();
+  }
+
   getData = async isLoadingMore => {
     if (isLoadingMore === undefined) {
       this.setState({ loading: true });
@@ -77,7 +85,8 @@ class Dashboard extends React.Component {
       bdm: this.props.userInfo.id, 
       projstatus: [4, 6, 7], 
       skip_count: isLoadingMore ? this.state.list.length : 0, 
-      max_size: PAGE_SIZE 
+      max_size: PAGE_SIZE,
+      search: this.search,
     });
 
     for (let index = 0; index < allData.data.length; index++) {
@@ -145,7 +154,7 @@ class Dashboard extends React.Component {
 
   renderHeader = () => (
     <View style={{ backgroundColor: 'white' }}>
-      <Text style={{ marginTop: 20, backgroundColor: undefined, textAlign: 'center' }}>我的资源库共有：<Text style={{ fontSize: 30, fontFamily: 'DIN Condensed' }}>{this.state.total}</Text> 家机构，其中</Text> 
+      <Text style={{ marginTop: 20, backgroundColor: undefined, textAlign: 'center', fontSize: 17 }}>我的资源库共有：<Text style={{ fontSize: 30, fontFamily: 'DIN Condensed' }}>{this.state.total}</Text> 家机构，其中</Text> 
       <View style={{ height: 130, flexDirection: 'row' }}>
         <TouchableHighlight underlayColor="lightgray" onPress={this.handleOrgTypePressed.bind(this, 1)} style={{ flex: 1, margin: 10, borderRadius: 8, backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2 }}>
           <View style={{ flex: 1, alignItems: 'center', justifyContent: undefined, backgroundColor: undefined }}>
@@ -173,32 +182,42 @@ class Dashboard extends React.Component {
 
   render () {
     return (
-      <FlatList
-        style={{ backgroundColor: undefined }}
-        data={this.state.list}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => <OrgBDGroupByProjCell
-          onPress={this.handleProjPressed.bind(this, item)}
-          projOnPress={this.handleItemPressed.bind(this, item)}
-          data={item}
-        />}
-        ListHeaderComponent={this.renderHeader}
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.loading}
-            onRefresh={this.getData}
-            colors={['#10458f']}
-            tintColor="#10458f"
-          />
-        }
-        ItemSeparatorComponent={this.separator}
-        onEndReachedThreshold={0.01}
-        onEndReached={this.loadMore}
-        ListFooterComponent={this.renderFooter}
-        ListEmptyComponent={<View style={{ flex: 1, alignItems: 'center', paddingTop: 60 }}>
-          <Image style={{ width: 100, height: 86 }} source={require('../images/emptyBox.png')} />
-        </View>}
-      />
+      <View style={{ height: '100%' }}>
+
+        <SearchBar
+          lightTheme
+          containerStyle={{ backgroundColor: 'rgb(242, 242, 242)' }}
+          inputStyle={{ backgroundColor: 'rgb(226, 227, 229)' }}
+          onChangeText={_.debounce(this.handleSearch, 1000)}
+          placeholder='根据项目名称搜索机构BD' />
+
+        <FlatList
+          data={this.state.list}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => <OrgBDGroupByProjCell
+            onPress={this.handleProjPressed.bind(this, item)}
+            projOnPress={this.handleItemPressed.bind(this, item)}
+            data={item}
+          />}
+          ListHeaderComponent={this.search ? null : this.renderHeader}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.loading}
+              onRefresh={this.getData}
+              colors={['#10458f']}
+              tintColor="#10458f"
+            />
+          }
+          ItemSeparatorComponent={this.separator}
+          onEndReachedThreshold={0.01}
+          onEndReached={this.loadMore}
+          ListFooterComponent={this.renderFooter}
+          ListEmptyComponent={<View style={{ flex: 1, alignItems: 'center', paddingTop: 60 }}>
+            <Image style={{ width: 100, height: 86 }} source={require('../images/emptyBox.png')} />
+          </View>}
+        />
+
+      </View>
     );
   }
 }
