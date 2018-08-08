@@ -62,6 +62,7 @@ class OrganizationBDList extends React.Component{
       
       const { params } = props.navigation.state;
       this.org = params.org;
+      this.proj = params.proj;
 
 	    this.state={
 	    	list:[],
@@ -91,7 +92,8 @@ class OrganizationBDList extends React.Component{
 		const params={
       page_index:isLoadingMore?this.state.page_index+1 : 1,
       org: this.org.id,
-      manager: [this.props.userInfo.id]
+      manager: [this.props.userInfo.id],
+      proj: this.proj.id,
 		}
 		api.getOrgBdList(params).then((result)=>{  
 		this.setState({
