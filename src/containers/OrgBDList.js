@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import * as api from '../api';
 import { connect } from 'react-redux';
+import { SearchBar } from 'react-native-elements';
+import _ from 'lodash';
 
 function MyPartnerOrgCell (props) {
   const { org, count, data } = props.data;
@@ -28,7 +30,7 @@ class OrgBDList extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const { params } = navigation.state;
     return {
-      title: params && params.title,
+      title: params.title,
       headerStyle: {
         backgroundColor: '#10458f',
       },
@@ -42,6 +44,8 @@ class OrgBDList extends React.Component {
 
     const { params } = props.navigation.state;
     this.proj = params.proj;
+
+    this.search = '';
 
     this.state = {
       data: [],
@@ -64,7 +68,14 @@ class OrgBDList extends React.Component {
     if (isLoadingMore === undefined) {
       this.setState({ loading: true });
     }
-    const basicData = await api.getOrgBdBase({ proj: this.proj.id, manager: [this.props.userInfo.id], page_index: isLoadingMore ?  this.state.page + 1 : 1 });
+
+    let org = [];
+    if (this.search) {
+      const reqOrg = await api.getOrg({ search: this.search, issub: false, page_size: 100, proj: this.proj.id });
+      org = reqOrg.data.map(m => m.id);
+    }
+
+    const basicData = await api.getOrgBdBase({ proj: this.proj.id, manager: [this.props.userInfo.id], page_index: isLoadingMore ?  this.state.page + 1 : 1, org });
     const allData = await Promise.all(basicData.data.map(m => api.getOrgBdList({ proj: m.proj, org: m.org, manager: [this.props.userInfo.id] })));
     allData.forEach(function(element) {
       element['id'] = element.data[0].org.id;
@@ -108,34 +119,52 @@ class OrgBDList extends React.Component {
     );
   };
 
+  handleSearch = text => {
+    this.search = text;
+    this.getData();
+  }
+
   render () {
-    return <FlatList
-      style={{ backgroundColor: 'white' }}
-      data={this.state.data}
-      keyExtractor={item => item.id}
-      renderItem={({ item }) => <MyPartnerOrgCell data={item} onPress={this.handleItemPressed.bind(this, item)} />}
-      refreshControl={
-        <RefreshControl 
-          refreshing={this.state.loading} 
-          onRefresh={this.getData} 
-          colors={['#10458f']} 
-          tintColor="#10458f" 
+    return (
+      <View style={{ height: '100%' }}>
+
+        <SearchBar
+          lightTheme
+          containerStyle={{ backgroundColor: 'rgb(242, 242, 242)' }}
+          inputStyle={{ backgroundColor: 'rgb(226, 227, 229)' }}
+          onChangeText={_.debounce(this.handleSearch, 1000)}
+          placeholder='根据机构名称搜索机构BD' />
+
+        <FlatList
+          style={{ backgroundColor: 'white' }}
+          data={this.state.data}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => <MyPartnerOrgCell data={item} onPress={this.handleItemPressed.bind(this, item)} />}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.loading}
+              onRefresh={this.getData}
+              colors={['#10458f']}
+              tintColor="#10458f"
+            />
+          }
+          ItemSeparatorComponent={this.separator}
+          onEndReachedThreshold={0.01}
+          onEndReached={this.loadMore}
+          ListFooterComponent={this.renderFooter}
+          ListEmptyComponent={<View style={{ flex: 1, alignItems: 'center', paddingTop: 60 }}>
+            <Image style={{ width: 100, height: 86 }} source={require('../images/emptyBox.png')} />
+          </View>}
         />
-      }
-      ItemSeparatorComponent={this.separator}
-      onEndReachedThreshold={0.01}
-      onEndReached={this.loadMore}
-      ListFooterComponent={this.renderFooter}
-      ListEmptyComponent={<View style={{ flex: 1, alignItems: 'center', paddingTop: 60 }}>
-        <Image style={{ width: 100, height: 86 }} source={require('../images/emptyBox.png')} />
-      </View>}
-    />
+
+      </View>
+    )
   }
 }
 
 function mapStateToProps (state) {
-  const { userInfo } = state.app;
-  return { userInfo };
+  const { userInfo, myInvestorRefresh,trueOrgFilter } = state.app;
+  return { userInfo, myInvestorRefresh,trueOrgFilter };
 }
 
 export default connect(mapStateToProps)(OrgBDList);
