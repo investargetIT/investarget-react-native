@@ -53,7 +53,10 @@ class OrganizationBDList extends React.Component{
          backgroundColor: '#10458f',
        },
        headerTintColor: '#fff',
-       headerBackTitle: null
+       headerBackTitle: null,
+      headerRight: <TouchableOpacity style={{ marginRight: 8 }} onPress={params.handleIconPressed}>
+        <Text style={{ color: 'white' }}>新增BD</Text>
+      </TouchableOpacity>
      }
     }
 
@@ -77,7 +80,10 @@ class OrganizationBDList extends React.Component{
   	}
 
   componentWillMount () {
-    this.props.navigation.setParams({ title: this.org.orgname });
+    this.props.navigation.setParams({ 
+      title: this.org.orgname, 
+      handleIconPressed: () => this.props.navigation.navigate('AddOrgBD', { org: this.org }),
+    });
   }
 
   handleClick = (item) =>{

@@ -53,6 +53,7 @@ import PersonalDetail from './src/containers/PersonalDetail';
 import OrgFilter from './src/containers/OrgFilter';
 import OrgBDList from './src/containers/OrgBDList';
 import OrgBDDetail from './src/containers/OrgBDDetail';
+import AddOrgBD from './src/containers/AddOrgBD';
   
   const AppNavigator = StackNavigator({
     Home: { screen:  Home },
@@ -99,6 +100,7 @@ import OrgBDDetail from './src/containers/OrgBDDetail';
     OrgFilter:{screen: OrgFilter},
     OrgBDList:{screen: OrgBDList},
     OrgBDDetail:{screen: OrgBDDetail},
+    AddOrgBD: { screen: AddOrgBD },
   })
 
   const DrawerApp = DrawerNavigator(
