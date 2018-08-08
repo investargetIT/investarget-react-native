@@ -99,7 +99,7 @@ class MyCalendar extends React.Component {
     api.getSchedule({ date: day.dateString, page_size: 10000 })
     .then(result => {
       
-      console.log('data from result', result);
+      // console.log('data from result', result);
 
       const loadDate = moment(day.dateString);
       const startOfMonth = loadDate.clone().startOf('month');
@@ -109,11 +109,11 @@ class MyCalendar extends React.Component {
         const currentDate = startOfMonth.clone().add(i, 'd').format('YYYY-MM-DD');
         dateOfTheMonth.push(currentDate);
       }
-      console.log('dateOfTheMonth', dateOfTheMonth);
+      // console.log('dateOfTheMonth', dateOfTheMonth);
 
       dateOfTheMonth.forEach(element => {
         const cachedEvent = items[element] && items[element].slice();
-        console.log('cachedEvent', cachedEvent);
+        // console.log('cachedEvent', cachedEvent);
         const eventFromServer = result.data.filter(f => f.scheduledtime.slice(0, 10) === element);
 
         if (cachedEvent && cachedEvent.length > 0 && eventFromServer.length === 0) {
