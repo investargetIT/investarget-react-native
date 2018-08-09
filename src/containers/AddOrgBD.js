@@ -1,9 +1,14 @@
 import React from 'react'
-import { View, Text, Image, TouchableOpacity, FlatList } from 'react-native'
+import { View, Text, Image, TouchableOpacity, FlatList, DeviceEventEmitter } from 'react-native'
 import { connect } from 'react-redux'
 import Toast from 'react-native-root-toast'
-
 import * as api from '../api'
+import { 
+    receiveTitles,
+    requestContents,
+    hideLoading,
+} from '../../actions';
+import moment from 'moment';
 
 const PAGE_SIZE = 10
 const loadingBottomStyle = {
@@ -35,6 +40,7 @@ class AddOrgBD extends React.Component {
         super(props);
 
         this.org = props.navigation.state.params.org;
+        this.proj = props.navigation.state.params.proj;
 
         this.state = {
             users: [],
@@ -84,29 +90,35 @@ class AddOrgBD extends React.Component {
     }
 
     confirmSelect = () => {
-        const { favoritetype, projects } = this.props.navigation.state.params
-        const { selected } = this.state
-        const { userId } = this.props
-        var param
-        var successMessage
-        if (favoritetype == 3) {
-            param = { user: selected, projs: projects, favoritetype, trader: userId }
-            successMessage = '推荐成功'
-        } else if (favoritetype == 5) {
-            param = { user: userId, projs: projects, favoritetype, trader: selected }
-            successMessage = '感兴趣成功'
-        }
-        api.projFavorite(param).then(() => {
-            Toast.show(successMessage, {position: Toast.positions.CENTER})
-        }).catch(error => {
-            console.log('###', error)
-            Toast.show(error.message, {position: Toast.positions.CENTER})
-        })
+        const body = {
+          bduser: this.state.selected,
+          expirationtime: moment().add(1, 'weeks').format('YYYY-MM-DDTHH:mm:ss'),
+          isimportant: false,
+          manager: this.props.userId,
+          org: this.org.id,
+          proj: this.proj.id,
+        } 
+        this.props.dispatch(requestContents());
+        api.addOrgBD(body)
+            .then(() => {
+                DeviceEventEmitter.emit('updateOrgBD') 
+                this.props.navigation.goBack()
+            })
+            .catch(error => {
+                
+                Toast.show(error.message, { position: Toast.positions.CENTER })
+        }).finally(() => this.props.dispatch(hideLoading()))
     }
 
     componentDidMount() {
         this.props.navigation.setParams({
             onPress: this.confirmSelect
+        })
+
+        api.getSource('title').then(data => {
+            this.props.dispatch(receiveTitles(data))
+        }).catch(error => {
+            Toast.show(error.message, { position: Toast.positions.CENTER })
         })
 
         this.getUsers(1).then(({total, list}) => {
@@ -125,7 +137,8 @@ class AddOrgBD extends React.Component {
                     data={users}
                     keyExtractor={(item,index)=>item.id}             
                     renderItem={({item}) => (
-                        <UserItem {...item} 
+                        <UserItem {...item}
+                            titles={this.props.titles}
                             selected={selected == item.id}
                             onSelect={this.handleSelect.bind(this, item.id)} />
                         )}
@@ -151,7 +164,7 @@ class AddOrgBD extends React.Component {
 
 
 function UserItem(props) {
-    const { username, photoUrl, org, title } = props
+    const { username, photoUrl, org, title, titles } = props
     const imgSource = photoUrl ? { uri: photoUrl } : require('../images/userCenter/defaultAvatar.png')
 
     return (
@@ -162,7 +175,7 @@ function UserItem(props) {
                     <Text style={{fontSize:16,color:'#333'}} numberOfLines={1}>{org}</Text>
                     <View style={{flexDirection:'row'}}>
                         <Text style={{width:120,marginRight:20,fontSize:16,color:'#333'}} numberOfLines={1}>{username}</Text>
-                        <Text style={{fontSize:13,color:'#999'}} numberOfLines={1}>{title}</Text>
+                        <Text style={{fontSize:13,color:'#999'}} numberOfLines={1}>{titles.length > 0 ? titles.filter(f => f.id === title)[0].name : title}</Text>
                     </View>
                 </View>
             </View>
@@ -175,8 +188,9 @@ function UserItem(props) {
 
 
 function mapStateToProps(state) {
-    const { userType, id } = state.app.userInfo
-    return { userType, userId: id }
+    const { userInfo, titles } = state.app;
+    const { userType, id } = userInfo;
+    return { userType, userId: id, titles };
 }
 
 export default connect(mapStateToProps)(AddOrgBD)

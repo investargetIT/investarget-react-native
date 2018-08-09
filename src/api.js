@@ -112,6 +112,8 @@ export const getOrgBdBase = params => {
   return r('/bd/orgbdbase/?' + qs.stringify(params));
 };
 export const modifyOrgBD = (id, body) => r(`/bd/orgbd/${id}/`, 'PUT', body);
+export const addOrgBD = body => r('/bd/orgbd/', 'POST', body);
+
 export function getOrg(param) {
   _.forIn(param, function(value, key) {
     if (Array.isArray(value)) {

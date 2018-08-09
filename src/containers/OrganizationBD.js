@@ -82,7 +82,7 @@ class OrganizationBDList extends React.Component{
   componentWillMount () {
     this.props.navigation.setParams({ 
       title: this.org.orgname, 
-      handleIconPressed: () => this.props.navigation.navigate('AddOrgBD', { org: this.org }),
+      handleIconPressed: () => this.props.navigation.navigate('AddOrgBD', { org: this.org, proj: this.proj }),
     });
   }
 
