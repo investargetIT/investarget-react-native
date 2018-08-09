@@ -100,8 +100,9 @@ class OrganizationBDList extends React.Component{
       org: this.org.id,
       manager: [this.props.userInfo.id],
       proj: this.proj.id,
-		}
-		api.getOrgBdList(params).then((result)=>{  
+      sort: 'response__sort',
+    }
+		api.getOrgBdList(params).then((result)=>{ 
 		this.setState({
 			total:result.count,
 			list: isLoadingMore?this.state.list.concat(result.data) :result.data,
