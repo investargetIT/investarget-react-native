@@ -4,12 +4,21 @@ import {
   View, 
   TouchableOpacity, 
   ScrollView,
+  Platform,
+  ActionSheetIOS,
 } from 'react-native';
 import * as api from '../api'
 import Toast from 'react-native-root-toast'
 import TimelineRemark from '../components/TimelineRemark'
 import ModifyOrgBDStatus from '../components/ModifyOrgBDStatus'
 import { connect } from 'react-redux';
+import ActionSheet from '../ActionSheet';
+import { Icon } from 'react-native-elements';
+import ImagePicker from 'react-native-image-picker';
+import { 
+    requestContents,
+    hideLoading,
+} from '../../actions';
 
 const containerStyle = {
     backgroundColor: '#fff',
@@ -131,7 +140,11 @@ class PersonalDetail extends React.Component{
       headerStyle: {
         backgroundColor: '#10458f',
       },
-      headerTintColor: '#fff'
+      headerTintColor: '#fff',
+      headerRight: params.handleIconPressed ? <TouchableOpacity style={{ marginRight: 8 }} onPress={params.handleIconPressed}>
+        <Icon name="more-horiz" color="white" />
+      </TouchableOpacity>
+      : null,
     }
  	}
 
@@ -158,9 +171,12 @@ class PersonalDetail extends React.Component{
 	}
 
 	componentDidMount(){
-		this.props.navigation.setParams({ handleSubmit: this.handleSubmit })
+		
 		const {item, source} = this.props.navigation.state.params
-
+        this.props.navigation.setParams({
+            handleIconPressed: [1, 2, 3].includes(item.response) ?
+                this.handleAddButtonPressed : null
+        });
 			this.setState({
 				currentBD: item,
 				proj: item.proj&&item.proj.projtitle,
@@ -170,7 +186,74 @@ class PersonalDetail extends React.Component{
                 isimportant: item.isimportant,
 			})
  
-	}
+    }
+    
+    handleAddButtonPressed = () => {
+        if (Platform.OS === 'ios') {
+          var BUTTONS = [
+            '用相机拍摄名片',
+            '从相册选取名片',
+            '修改联系人信息',
+            '取消',
+          ];
+          var CANCEL_INDEX = BUTTONS.length - 1;
+  
+          ActionSheetIOS.showActionSheetWithOptions(
+            {
+              options: BUTTONS,
+              cancelButtonIndex: CANCEL_INDEX,
+              title: '上传名片自动添加或手工录入',
+            },
+            this.handleActionButtonPressed,
+          );
+        } else if (Platform.OS === 'android') {
+          ActionSheet.showActionSheetWithOptions({
+            title: '上传名片自动添加或手工录入',
+            options: [
+              '用相机拍摄名片',
+              '从相册选取名片',
+              '修改联系人信息',
+            ],
+          },
+          this.handleActionButtonPressed,
+        );
+        }
+      }
+
+      handleActionButtonPressed = buttonIndex => {
+        switch (buttonIndex) {
+          case 0:
+            ImagePicker.launchCamera({}, this.imagePickerCallback);
+            break;
+          case 1:
+            ImagePicker.launchImageLibrary({}, this.imagePickerCallback);
+            break;
+          case 2:
+            // this.props.navigation.navigate('AddInvestor', {  onGoBack: this.getData });
+            break;
+        }
+      }
+
+      imagePickerCallback = response => {
+        if (response.didCancel) {
+            // Toast.show('已取消', {position: Toast.positions.CENTER})
+        } else if (response.error) {
+            Toast.show(response.error, {position: Toast.positions.CENTER})
+        } else {
+            this.props.dispatch(requestContents());
+            let file = { uri: response.uri, type: 'application/octet-stream', name: 'businessCard.jpg'}
+            api.qiniuUpload('image', file).then((result) => {
+                const { key: cardKey, url: cardUrl } = result.data
+                return api.editUser([this.state.id], { cardKey, cardUrl }).then(data => {
+                    Toast.show('名片上传成功', {position: Toast.positions.CENTER})
+                })
+            }).catch(error => {
+                Toast.show(error.message, {position: Toast.positions.CENTER})
+            }).finally(() => this.props.dispatch(hideLoading()));
+        } 
+      }
+
+
 	render(){
 		let {proj, comments, response, id, org, currentBD, visible, isimportant } =this.state
 		const {item, source} = this.props.navigation.state.params
