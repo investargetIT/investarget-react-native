@@ -68,6 +68,20 @@ class PersonalInfo extends React.Component{
       this.relation = null;
     }
 
+    componentWillReceiveProps (nextProps) {
+      const { currentBD } = nextProps;
+      this.setState({
+        mobile: currentBD.userinfo && currentBD.userinfo.mobile,
+        email: currentBD.userinfo && currentBD.userinfo.email,
+        title: currentBD.usertitle && currentBD.usertitle.name,
+        org: currentBD.org && currentBD.org.orgname,
+        wechat: currentBD.userinfo && currentBD.userinfo.wechat,
+        tags: currentBD.userinfo && currentBD.userinfo.tags && currentBD.userinfo.tags.map(item => item.name).join(','),
+        manager: currentBD.manager.username,
+        famlv: 0,
+      })
+    }
+
     getTraders = investor =>{
     const param = { investoruser: investor}
     api.getUserRelation(param).then(result => {
@@ -141,6 +155,7 @@ class PersonalDetail extends React.Component{
         backgroundColor: '#10458f',
       },
       headerTintColor: '#fff',
+      headerBackTitle: null,
       headerRight: params.handleIconPressed ? <TouchableOpacity style={{ marginRight: 8 }} onPress={params.handleIconPressed}>
         <Icon name="more-horiz" color="white" />
       </TouchableOpacity>
@@ -149,7 +164,9 @@ class PersonalDetail extends React.Component{
  	}
 
 	constructor(props){
-		super(props)
+        super(props)
+        this.orgBDID = this.props.navigation.state.params.item.id;
+
 		this.state={
 			id:this.props.navigation.state.params.item.bduser,
 			comments:[],
@@ -171,21 +188,31 @@ class PersonalDetail extends React.Component{
 	}
 
 	componentDidMount(){
-		
 		const {item, source} = this.props.navigation.state.params
         this.props.navigation.setParams({
             handleIconPressed: [1, 2, 3].includes(item.response) ?
                 this.handleAddButtonPressed : null
         });
-			this.setState({
-				currentBD: item,
-				proj: item.proj&&item.proj.projtitle,
-				org: item.org&&item.org.orgname,
-				comments: item.BDComments,
-                response: item.response,
-                isimportant: item.isimportant,
-			})
+        this.getData();
  
+    }
+
+    getData = () => {
+        api.getOrgBDDetail(this.orgBDID)
+            .then(result => {
+                const item = result;
+                this.setState({
+                    currentBD: item,
+                    proj: item.proj && item.proj.projtitle,
+                    org: item.org && item.org.orgname,
+                    comments: item.BDComments,
+                    response: item.response,
+                    isimportant: item.isimportant,
+                })
+            })
+            .catch(error => {
+                Toast.show(error.message, { position: Toast.positions.CENTER })
+            })
     }
     
     handleAddButtonPressed = () => {
@@ -229,7 +256,7 @@ class PersonalDetail extends React.Component{
             ImagePicker.launchImageLibrary({}, this.imagePickerCallback);
             break;
           case 2:
-            // this.props.navigation.navigate('AddInvestor', {  onGoBack: this.getData });
+            this.props.navigation.navigate('EditUser', {  userID: this.props.navigation.state.params.item.bduser, onComplete: this.getData });
             break;
         }
       }
@@ -259,7 +286,9 @@ class PersonalDetail extends React.Component{
 		const {item, source} = this.props.navigation.state.params
 		return(
 		<ScrollView style={containerStyle}>
-           <PersonalInfo currentBD={item} />
+           { this.state.currentBD ? 
+           <PersonalInfo currentBD={this.state.currentBD} />
+           : null}
            <Cell label="项目" content={proj} />
 
            <Cell label="重点BD" content={isimportant ? '是' : '否'} />

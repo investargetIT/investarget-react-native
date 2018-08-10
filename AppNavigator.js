@@ -54,6 +54,7 @@ import OrgFilter from './src/containers/OrgFilter';
 import OrgBDList from './src/containers/OrgBDList';
 import OrgBDDetail from './src/containers/OrgBDDetail';
 import AddOrgBD from './src/containers/AddOrgBD';
+import EditUser from './src/containers/EditUser';
   
   const AppNavigator = StackNavigator({
     Home: { screen:  Home },
@@ -101,6 +102,7 @@ import AddOrgBD from './src/containers/AddOrgBD';
     OrgBDList:{screen: OrgBDList},
     OrgBDDetail:{screen: OrgBDDetail},
     AddOrgBD: { screen: AddOrgBD },
+    EditUser: { screen: EditUser },
   })
 
   const DrawerApp = DrawerNavigator(
