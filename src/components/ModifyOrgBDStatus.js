@@ -153,7 +153,7 @@ handleConfirmAudit = (isModifyWechat) =>{
     const body={ response: bd_status, isimportant: isimportant ? 1 : 0}
     api.modifyOrgBD(currentBD.id, body).then(()=>{
         DeviceEventEmitter.emit('updateOrgBD')
-        if(bd_status!==3 || currentBD.response===3) {
+        if(bd_status === currentBD.response || ![1, 2, 3].includes(bd_status) || ([1, 2, 3].includes(bd_status) && [1, 2, 3].includes(currentBD.response))) {
         this.setState({visible:false})
         this.props.navigation.goBack()
         }        
