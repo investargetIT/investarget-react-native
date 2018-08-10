@@ -13,7 +13,8 @@ import TimelineRemark from '../components/TimelineRemark'
 import ModifyOrgBDStatus from '../components/ModifyOrgBDStatus'
 import { connect } from 'react-redux';
 import ActionSheet from '../ActionSheet';
-import { Icon } from 'react-native-elements';
+import { 
+    Icon, Button } from 'react-native-elements';
 import ImagePicker from 'react-native-image-picker';
 import { 
     requestContents,
@@ -156,10 +157,10 @@ class PersonalDetail extends React.Component{
       },
       headerTintColor: '#fff',
       headerBackTitle: null,
-      headerRight: params.handleIconPressed ? <TouchableOpacity style={{ marginRight: 8 }} onPress={params.handleIconPressed}>
-        <Icon name="more-horiz" color="white" />
-      </TouchableOpacity>
-      : null,
+    //   headerRight: params.handleIconPressed ? <TouchableOpacity style={{ marginRight: 8 }} onPress={params.handleIconPressed}>
+    //     <Icon name="more-horiz" color="white" />
+    //   </TouchableOpacity>
+    //   : null,
     }
  	}
 
@@ -308,6 +309,16 @@ class PersonalDetail extends React.Component{
 			  id={item.id} 
 			  comments={item.BDComments} 
 			/>
+
+            {[1, 2, 3].includes(this.state.response) ?
+            <Button
+                onPress={this.handleAddButtonPressed}
+                title="编辑"
+                color="white"
+                backgroundColor="#10458f"
+            /> 
+            : null }
+
             {visible?
 			<ModifyOrgBDStatus 
 			  currentBD={item} 
