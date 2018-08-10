@@ -60,7 +60,7 @@ const cellLabelStyle = {
 }
 const cellContentStyle = {
     width:'60%',
-    borderWidth:1,
+    // borderWidth:1,
     borderColor:'#f4f4f4'
 }
 const status_options=[{label: '未BD',value: 1},
