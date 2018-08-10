@@ -175,7 +175,7 @@ function UserItem(props) {
                     <Text style={{fontSize:16,color:'#333'}} numberOfLines={1}>{org}</Text>
                     <View style={{flexDirection:'row'}}>
                         <Text style={{width:120,marginRight:20,fontSize:16,color:'#333'}} numberOfLines={1}>{username}</Text>
-                        <Text style={{fontSize:13,color:'#999'}} numberOfLines={1}>{titles.length > 0 ? titles.filter(f => f.id === title)[0].name : title}</Text>
+                        <Text style={{fontSize:13,color:'#999'}} numberOfLines={1}>{title && titles.length > 0 ? titles.filter(f => f.id === title)[0].name : title}</Text>
                     </View>
                 </View>
             </View>
