@@ -31,9 +31,9 @@ function OrgBDGroupByProjCell (props) {
           {/* <Text style={{ margin: 10, lineHeight: 30, color: '#10458F', backgroundColor: undefined }}>点击查看时间轴</Text> */}
         </View>
 
-        <View style={{ margin: 10, marginTop: 20, marginBottom: 20, height: undefined, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: undefined }}>
+        <View style={{ margin: 10, marginTop: 10, marginBottom: 10, height: undefined, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: undefined}}>
           <Text>BD机构：{orgCount}</Text>
-          <TouchableOpacity onPress={projOnPress}>
+          <TouchableOpacity style={{ padding: 10 }} onPress={projOnPress}>
             <Text style={{ color: '#10458F' }}>项目详情</Text>
           </TouchableOpacity>
         </View>

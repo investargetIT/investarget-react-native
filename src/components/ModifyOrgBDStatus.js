@@ -28,7 +28,7 @@ const titleStyle={
 	justifyContent:'space-between', 
 	width:'100%',
 	borderBottomColor: '#f4f4f4',
-	borderBottomWidth: 1
+    borderBottomWidth: 1
 }
 const buttonContainer={
 	flexDirection:'row',
@@ -312,8 +312,8 @@ render(){
     	<View style={modalStyle}>
 
                         <View style={titleStyle}>
-                            <Text >修改BD状态</Text>
-                            <TouchableOpacity onPress={this.setModalVisible.bind(this, false)}>
+                            <Text style={{ padding: 10, fontSize: 16 }}>修改BD状态</Text>
+                            <TouchableOpacity  style={{ padding: 10 }} onPress={this.setModalVisible.bind(this, false)}>
                                 <Text >X</Text>
                             </TouchableOpacity>
                         </View>
