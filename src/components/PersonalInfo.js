@@ -3,11 +3,14 @@ import {
   View,
   Text,
   Image,
+  TouchableOpacity,
+  Modal,
 } from 'react-native';
 import * as api from '../api';
 import Toast from 'react-native-root-toast'
 import Picker from './Picker';
 import { connect } from 'react-redux';
+import ImageViewer from 'react-native-image-zoom-viewer';
 
 
 
@@ -44,6 +47,7 @@ class PersonalInfo extends React.Component{
         famlv: 0,
         famOptions: [],
         cardUrl: null,
+        showCardDetail: false,
       }
 
       this.relation = null;
@@ -147,10 +151,12 @@ class PersonalInfo extends React.Component{
               style={{ backgroundColor: 'yellow' }}
               label="名片" 
               content={cardUrl ? 
-                <Image
-                  style={{ width: 40, height: 28 }}
-                  source={{ uri: cardUrl }}
-                />
+                <TouchableOpacity onPress={() => this.setState({ showCardDetail: true })}>
+                  <Image
+                    style={{ width: 40, height: 28 }}
+                    source={{ uri: cardUrl }}
+                  />
+                </TouchableOpacity>
               : '暂无'} 
             />
 
@@ -170,6 +176,17 @@ class PersonalInfo extends React.Component{
               />
             </View>
             : null }
+
+            { cardUrl ?  
+            <Modal visible={this.state.showCardDetail} transparent={true}>
+              <ImageViewer 
+                imageUrls={[{ url: cardUrl }]}
+                saveToLocalByLongPress={false}
+                onClick={() => this.setState({ showCardDetail: false })}
+              />
+            </Modal>
+            : null }
+
           </View>
         )
     }

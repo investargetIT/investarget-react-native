@@ -4083,9 +4083,19 @@ react-native-fs@^2.8.1:
     base-64 "^0.1.0"
     utf8 "^2.1.1"
 
+react-native-image-pan-zoom@^2.1.8:
+  version "2.1.8"
+  resolved "http://registry.npm.taobao.org/react-native-image-pan-zoom/download/react-native-image-pan-zoom-2.1.8.tgz#2f8d8459a6f56b897b53222649e1225d8fc6e5ee"
+
 react-native-image-picker@^0.26.7:
   version "0.26.7"
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-0.26.7.tgz#ad2ee957f7f6cc01396893ea03d84cb2adb2e376"
+
+react-native-image-zoom-viewer@^2.2.15:
+  version "2.2.15"
+  resolved "http://registry.npm.taobao.org/react-native-image-zoom-viewer/download/react-native-image-zoom-viewer-2.2.15.tgz#186734ea25473fd1c15202a157adf53fb8fa8fb6"
+  dependencies:
+    react-native-image-pan-zoom "^2.1.8"
 
 react-native-install-apk@^1.0.0:
   version "1.0.0"
