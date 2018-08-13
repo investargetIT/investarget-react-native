@@ -2,6 +2,7 @@ import React from 'react'
 import {
   View,
   Text,
+  Image,
 } from 'react-native';
 import * as api from '../api';
 import Toast from 'react-native-root-toast'
@@ -42,6 +43,7 @@ class PersonalInfo extends React.Component{
         traders:[],
         famlv: 0,
         famOptions: [],
+        cardUrl: null,
       }
 
       this.relation = null;
@@ -73,21 +75,28 @@ class PersonalInfo extends React.Component{
     })
     }
 
+  getData = async () => {
+    const user = await api.getUserBase(this.props.userId);
+    this.setState({
+      mobile: user.mobile,
+      email: user.email,
+      title: user.title && user.title.name,
+      tags: user.tags && user.tags.map(item => item.name).join(','),
+      org: user.org && user.org.orgname,
+      wechat: user.wechat, 
+    });
+    if (user.cardBucket && user.cardKey) {
+      const cardUrl = await api.downloadUrl(user.cardBucket, user.cardKey);
+      this.setState({ cardUrl });
+    }
+  }
+
   componentDidMount(){
     const currentBD = this.props.currentBD
     if(this.props.userId){
-        this.getTraders(this.props.userId)     
-        api.getUserBase(this.props.userId).then(result=>{
-        this.setState({
-            mobile:result.mobile,
-            email: result.email,
-            title: result.title&&result.title.name,
-            tags: result.tags&&result.tags.map(item=>item.name).join(','),
-            org: result.org&&result.org.orgname,
-            wechat: result.wechat
-        })
-        }).catch(error => {
-            Toast.show(error.message, {position: Toast.positions.CENTER})
+        this.getTraders(this.props.userId)
+        this.getData().catch(error => {
+            Toast.show(error.message, { position: Toast.positions.CENTER })
         })
     }
     else if(currentBD){
@@ -120,7 +129,7 @@ class PersonalInfo extends React.Component{
     };
 
     render(){
-        let {mobile, email, title, org, wechat, tags, traders} =this.state
+        let {mobile, email, title, org, wechat, tags, traders, cardUrl} =this.state
         traders=traders.length>0 ? traders.map(m =>m.label).join(',') :'暂无'
         mobile = mobile ? /^\d{2}-/.test(mobile) ? mobile = '+' + mobile : mobile : '暂无';
         
@@ -133,6 +142,18 @@ class PersonalInfo extends React.Component{
           <View style={this.props.style}>
             <Cell label="电话" content={mobile} />
             <Cell label="邮箱" content={email} />
+
+            <Cell
+              style={{ backgroundColor: 'yellow' }}
+              label="名片" 
+              content={cardUrl ? 
+                <Image
+                  style={{ width: 40, height: 28 }}
+                  source={{ uri: cardUrl }}
+                />
+              : '暂无'} 
+            />
+
             <Cell label="职位" content={title} />
             <Cell label="标签" content={tags} />
             <Cell label="微信" content={wechat} />
@@ -159,10 +180,13 @@ class Cell extends React.Component {
 
     render() {
         const { label, content } = this.props
+        const isText = typeof content === 'string';
         return (
             <View style={cellStyle} >
                 <Text style={cellLabelStyle}>{label}</Text>
+                { isText ? 
                 <Text style={cellContentStyle} numberOfLines={2}>{content}</Text>
+                : content }
             </View>
         )
     }
