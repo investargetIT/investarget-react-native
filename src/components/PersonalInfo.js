@@ -11,6 +11,7 @@ import Toast from 'react-native-root-toast'
 import Picker from './Picker';
 import { connect } from 'react-redux';
 import ImageViewer from 'react-native-image-zoom-viewer';
+import BusinessCard from './BusinessCard';
 
 
 
@@ -147,18 +148,7 @@ class PersonalInfo extends React.Component{
             <Cell label="电话" content={mobile} />
             <Cell label="邮箱" content={email} />
 
-            <Cell
-              style={{ backgroundColor: 'yellow' }}
-              label="名片" 
-              content={cardUrl ? 
-                <TouchableOpacity onPress={() => this.setState({ showCardDetail: true })}>
-                  <Image
-                    style={{ width: 40, height: 28 }}
-                    source={{ uri: cardUrl }}
-                  />
-                </TouchableOpacity>
-              : '暂无'} 
-            />
+            <BusinessCard cardUrl={cardUrl} /> 
 
             <Cell label="职位" content={title} />
             <Cell label="标签" content={tags} />
@@ -177,15 +167,7 @@ class PersonalInfo extends React.Component{
             </View>
             : null }
 
-            { cardUrl ?  
-            <Modal visible={this.state.showCardDetail} transparent={true}>
-              <ImageViewer 
-                imageUrls={[{ url: cardUrl }]}
-                saveToLocalByLongPress={false}
-                onClick={() => this.setState({ showCardDetail: false })}
-              />
-            </Modal>
-            : null }
+
 
           </View>
         )

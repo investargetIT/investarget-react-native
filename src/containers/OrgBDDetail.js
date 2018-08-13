@@ -20,6 +20,7 @@ import {
     requestContents,
     hideLoading,
 } from '../../actions';
+import BusinessCard from '../components/BusinessCard';
 
 const containerStyle = {
     backgroundColor: '#fff',
@@ -57,6 +58,7 @@ class PersonalInfo extends React.Component{
       this.state={
         mobile: currentBD.userinfo && currentBD.userinfo.mobile,
         email: currentBD.userinfo && currentBD.userinfo.email,
+        cardUrl: currentBD.userinfo && currentBD.userinfo.cardurl,
         title: currentBD.usertitle && currentBD.usertitle.name,
         org: currentBD.org && currentBD.org.orgname,
         wechat: currentBD.userinfo && currentBD.userinfo.wechat,
@@ -74,6 +76,7 @@ class PersonalInfo extends React.Component{
       this.setState({
         mobile: currentBD.userinfo && currentBD.userinfo.mobile,
         email: currentBD.userinfo && currentBD.userinfo.email,
+        cardUrl: currentBD.userinfo && currentBD.userinfo.cardurl,
         title: currentBD.usertitle && currentBD.usertitle.name,
         org: currentBD.org && currentBD.org.orgname,
         wechat: currentBD.userinfo && currentBD.userinfo.wechat,
@@ -117,7 +120,7 @@ class PersonalInfo extends React.Component{
     }
 
     render(){
-        let {mobile, email, title, org, wechat, tags, manager} =this.state
+        let {mobile, email, title, org, wechat, tags, manager, cardUrl} =this.state
         mobile = mobile ? /^\d{2}-/.test(mobile) ? mobile = '+' + mobile : mobile : '暂无';
         
         email = email || '暂无'
@@ -129,6 +132,7 @@ class PersonalInfo extends React.Component{
           <View style={this.props.style}>
             <Cell label="电话" content={mobile} />
             <Cell label="邮箱" content={email} />
+            <BusinessCard cardUrl={cardUrl} /> 
             <Cell label="职位" content={title} />
             <Cell label="标签" content={tags} />
             <Cell label="微信" content={wechat} />
