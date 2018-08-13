@@ -101,35 +101,31 @@ pressOk = () =>{
 checkInvalid = () =>{
     const {username, mobile, wechat, email, bd_status, group} =this.state
     const {currentBD} = this.props
-    let disabled = ((username.length === 0 || !checkMobile(mobile) || wechat.length === 0 || !checkEmail(email) || group.length === 0) && bd_status === 3 && currentBD.bduser === null && currentBD.response !== 3);
-    this.setState({disabled})       
+    let disabled = ((username.length === 0 || !checkMobile(mobile) || wechat.length === 0 || !checkEmail(email) || group.length === 0) && bd_status !== currentBD.response && currentBD.bduser === null);
+    this.setState({disabled})
 }
 
 
     wechatConfirm = () => {
         const { bd_status, confirmModal } = this.state
         const { currentBD } = this.props
-        if ([2, 3].includes(bd_status) && ![2, 3].includes(currentBD.response)) {
-            if (!currentBD.bduser) {
-                this.checkExistence(this.state.mobile, this.state.email).then(ifExist => {
-                    if (ifExist) {
-                        Alert.alert('用户已存在');
-                    } else {
-                        this.handleConfirmAudit(true);
-                    }
-                })
-            } else {
-                // 已经有联系人时
-                if (currentBD.userinfo.wechat && currentBD.userinfo.wechat.length > 0 && this.state.wechat.length > 0) {
-                    // 该联系人已经有微信
-                    this.setState({ visible: false, confirmModal: true })
+        if (!currentBD.bduser) {
+            this.checkExistence(this.state.mobile, this.state.email).then(ifExist => {
+                if (ifExist) {
+                    Alert.alert('用户已存在');
                 } else {
-                    // 该联系人没有微信
-                    this.setState({ visible: false }, () => this.handleConfirmAudit(true));
+                    this.handleConfirmAudit(true);
                 }
-            }
+            })
         } else {
-            this.handleConfirmAudit(true)
+            // 已经有联系人时
+            if (currentBD.userinfo.wechat && currentBD.userinfo.wechat.length > 0 && this.state.wechat.length > 0) {
+                // 该联系人已经有微信
+                this.setState({ visible: false, confirmModal: true })
+            } else {
+                // 该联系人没有微信
+                this.setState({ visible: false }, () => this.handleConfirmAudit(true));
+            }
         }
     }
 
@@ -161,11 +157,15 @@ handleConfirmAudit = (isModifyWechat) =>{
         Toast.show(error.message, {position: Toast.positions.CENTER})
     })
     
-    // 如果状态没有改变
-    // 或者状态改为除了已见面、已签NDA、正在看前期资料这三个状态以外的状态
-    // 或者虽然状态改成了上述三种状态之一，但是原来的状态也是这三种状态之一
-    // 以上三种情况结束执行
-    if(bd_status === currentBD.response || ![1, 2, 3].includes(bd_status) || ([1, 2, 3].includes(bd_status) && [1, 2, 3].includes(currentBD.response))) {
+    if (
+        // 如果状态没有改变
+        bd_status === currentBD.response || 
+        // 或者状态改为除了已见面、已签NDA、正在看前期资料这三个状态以外的状态并且已经有bduser了
+        (![1, 2, 3].includes(bd_status) && currentBD.bduser) || 
+        // 或者虽然状态改成了上述三种状态之一，但是原来的状态也是这三种状态之一并且已经有bduser了
+        (currentBD.bduser && [1, 2, 3].includes(bd_status) && [1, 2, 3].includes(currentBD.response))
+    ) {
+         // 以上三种情况结束执行
         return;
     }
 
@@ -178,7 +178,9 @@ handleConfirmAudit = (isModifyWechat) =>{
                 investoruser: currentBD.bduser,
                 traderuser: currentBD.manager.id
               })
-            api.editUser([currentBD.bduser], { wechat }); 
+            if (wechat.length > 0) {
+              api.editUser([currentBD.bduser], { wechat });
+            }
           } else {
             api.addUserRelation({
               relationtype: true,
@@ -186,7 +188,7 @@ handleConfirmAudit = (isModifyWechat) =>{
               traderuser: currentBD.manager.id
             })
               .then(result => {
-                if (isModifyWechat) {
+                if (isModifyWechat && wechat.length > 0) {
                   api.editUser([currentBD.bduser], { wechat });
                 }
               })
@@ -341,7 +343,7 @@ render(){
                             </View>
                         </View>
 
-    	{ !currentBD.bduser && currentBD.response!=3 && bd_status==3 ?
+    	{ !currentBD.bduser && currentBD.response !== bd_status ?
     	<View>
             <SelectInvestorGroup 
               value={group} 
