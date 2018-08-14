@@ -39,6 +39,7 @@ WeChat.registerApp('wx9a404829cfaab3aa');
 
 
 function onNotification(msg) {
+  // Toast.show('onNotification: ' + JSON.stringify(msg), { position: Toast.positions.CENTER });
   Alert.alert('通知', msg, [
     {text: '取消', onPress: () => {}},
     {text: '确定', onPress: () => {
@@ -75,7 +76,9 @@ class Container extends React.Component {
         })
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo))
         .then(() => this.setState({ isShowApp: true }));
-        
+      
+        JPushModule.setAlias(String(userInfo.id), ()=>{});
+
         // 登录后接收推送
         JPushModule.getRegistrationID((registrationId) => {})
         if (Platform.OS == 'android') {
@@ -83,17 +86,37 @@ class Container extends React.Component {
             if (resultCode === 0) {}
           });
         }
-        JPushModule.setAlias(String(userInfo.id), ()=>{})
+        
         JPushModule.addReceiveNotificationListener(
-          notification => onNotification(notification.alertContent || notification.aps.alert)
+          notification => {
+            // Toast.show('aa: ' + JSON.stringify(notification), { position: Toast.positions.CENTER })
+            onNotification(notification.alertContent || notification.aps.alert)
+          }
         );
         JPushModule.addReceiveOpenNotificationListener(
-          notification => onNotification(notification.alertContent || notification.aps.alert)
-        )
+          notification => {
+            // Toast.show('bb: ' + JSON.stringify(notification), { position: Toast.positions.CENTER })  
+            onNotification(notification.alertContent || notification.aps.alert)
+          })
         // iOS Only 监听：应用没有启动的状态点击推送打开应用
         JPushModule.addOpenNotificationLaunchAppListener(
-          notification => onNotification(notification.alertContent || notification.aps.alert)
-        );
+          notification => {
+            // Toast.show('cc: ' + JSON.stringify(notification), { position: Toast.positions.CENTER }) 
+            onNotification(notification.alertContent || notification.aps.alert)
+          });
+        
+          JPushModule.getLaunchAppNotification( notification => {
+            if (notification === undefined) {
+              // 说明应用不是通过点击通知启动的，是通过点击应用 icon
+            } else if (notification['aps'] === undefined) {
+              // 说明是 local notification
+            } else {
+              // Toast.show('dd: ' + JSON.stringify(notification), { position: Toast.positions.CENTER })  
+              // 说明是 remote notification
+              onNotification(notification.alertContent || notification.aps.alert)
+            }
+          });
+
         if (Platform.OS === 'ios') {
           JPushModule.setBadge(0, () => {});
         }
