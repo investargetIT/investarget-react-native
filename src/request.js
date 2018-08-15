@@ -1,7 +1,11 @@
+import AsyncStorage from './AsyncStorage';
+import { logout } from '../actions';
+import { NavigationActions } from 'react-navigation'
+
 let baseUrl = "http://192.168.1.251:8080"
-// baseUrl = "https://api.investarget.com";
+baseUrl = "https://api.investarget.com";
 let mobileUrl = 'http://192.168.1.251:3000';
-// mobileUrl = 'https://m.investarget.com';
+mobileUrl = 'https://m.investarget.com';
 export { baseUrl, mobileUrl };
 
 export class ApiError extends Error {
@@ -26,6 +30,13 @@ function checkStatus(response) {
 function parseErrorMessage(data) {
   const { code, errormsg } = data
   if (code !== 1000) {
+    if (code === 3000) {
+      AsyncStorage.removeItem('userInfo')
+        .then(() => {
+          window.store.dispatch(logout());
+          window.store.dispatch(NavigationActions.navigate({ routeName: 'Login' }));
+        });
+    } 
     throw new ApiError(code, errormsg)
   }
   return  data

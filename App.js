@@ -32,6 +32,8 @@ window.LANG = 'cn'
 StatusBar.setBarStyle('light-content');
 const store = createStore(rootReducer)
 
+window.store = store;
+
 let msgReceiveTime = 0
 
 WeChat.registerApp('wx9a404829cfaab3aa');
