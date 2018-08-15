@@ -39,8 +39,8 @@ WeChat.registerApp('wx9a404829cfaab3aa');
 
 
 function onNotification(notification) {
-  Toast.show('onNotification: ' + JSON.stringify(notification), { position: Toast.positions.BOTTOM});
-  const { alertContent: msg, extras } = notification;
+  let { alertContent, extras, aps } = notification;
+  const msg = alertContent || aps.alert;
   Alert.alert(
     '通知',
     msg,
@@ -49,6 +49,9 @@ function onNotification(notification) {
       {
         text: '确定', onPress: () => {
           if (!extras) return;
+          if (typeof extras === 'string') {
+            extras = JSON.parse(extras);
+          }
           let route;
           switch (extras.type) {
             case 'OrgBD':
@@ -59,7 +62,6 @@ function onNotification(notification) {
               route = { routeName: 'ProjectDetail', params: { project: { id, title } } };
           }
           if (route) {
-            // console.log('store', store);
             store.dispatch(NavigationActions.navigate(route));
           }
         }
@@ -75,11 +77,6 @@ class Container extends React.Component {
     isShowSwiper: null,
   }
   componentDidMount() {
-    // const testNotification = {
-    //   alertContent: 'dsad',
-    //   extras: { type: 'OrgBD', info: {proj: 513, projtitle: '图灵项目'}}
-    // }
-    // setTimeout(() => onNotification(testNotification), 2000);
     AsyncStorage.getItem('userInfo').then(data => {
      
       if (!data) { 
