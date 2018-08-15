@@ -130,7 +130,7 @@ class Container extends React.Component {
             // Toast.show('cc: ' + JSON.stringify(notification), { position: Toast.positions.CENTER }) 
             onNotification(notification)
           });
-        
+       if (Platform.OS === 'ios') { 
           JPushModule.getLaunchAppNotification( notification => {
             if (notification === undefined) {
               // 说明应用不是通过点击通知启动的，是通过点击应用 icon
@@ -142,6 +142,7 @@ class Container extends React.Component {
               onNotification(notification)
             }
           });
+        }
 
         if (Platform.OS === 'ios') {
           JPushModule.setBadge(0, () => {});
