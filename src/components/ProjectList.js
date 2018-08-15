@@ -63,11 +63,7 @@ class ProjectList extends React.Component {
         this.checkUpdate();
       }
       if (this.props.projects.length === 0) {
-        this.props.dispatch(requestContents(''));
-        this.getProjects((projects, dataStructure) => {
-          this.props.dispatch(updateProjectStructure(dataStructure))
-          this.props.dispatch(receiveContents('', projects))
-        });
+       this.onRefresh(); 
       }
     }
 

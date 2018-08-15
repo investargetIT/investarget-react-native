@@ -68,8 +68,9 @@ class Home extends React.Component {
 
   constructor(props) {
     super(props);
+    const { params } = props.navigation.state;
     this.state = {
-      active: 'project'
+      active: params ? params.active : 'project',
     };
     props.navigation.setParams({ 
       onIconPressed: this.handleIconPressed,

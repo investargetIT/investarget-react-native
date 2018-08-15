@@ -38,14 +38,35 @@ WeChat.registerApp('wx9a404829cfaab3aa');
 
 
 
-function onNotification(msg) {
-  // Toast.show('onNotification: ' + JSON.stringify(msg), { position: Toast.positions.CENTER });
-  Alert.alert('通知', msg, [
-    {text: '取消', onPress: () => {}},
-    {text: '确定', onPress: () => {
-       store.dispatch(NavigationActions.navigate({routeName: 'Notification'}))        
-    }}
-  ])
+function onNotification(notification) {
+  Toast.show('onNotification: ' + JSON.stringify(notification), { position: Toast.positions.BOTTOM});
+  const { alertContent: msg, extras } = notification;
+  Alert.alert(
+    '通知',
+    msg,
+    [
+      { text: '取消', onPress: () => { } },
+      {
+        text: '确定', onPress: () => {
+          if (!extras) return;
+          let route;
+          switch (extras.type) {
+            case 'OrgBD':
+              route = { routeName: 'Home', params: { active: 'dashboard' } };
+              break;
+            case 'favoriteProject':
+              const { proj: id, projtitle: title } = extras.info;
+              route = { routeName: 'ProjectDetail', params: { project: { id, title } } };
+          }
+          if (route) {
+            // console.log('store', store);
+            store.dispatch(NavigationActions.navigate(route));
+          }
+        }
+      },
+    ],
+    { cancelable: false }
+  );
 }
 
 class Container extends React.Component {
@@ -54,6 +75,11 @@ class Container extends React.Component {
     isShowSwiper: null,
   }
   componentDidMount() {
+    // const testNotification = {
+    //   alertContent: 'dsad',
+    //   extras: { type: 'OrgBD', info: {proj: 513, projtitle: '图灵项目'}}
+    // }
+    // setTimeout(() => onNotification(testNotification), 2000);
     AsyncStorage.getItem('userInfo').then(data => {
      
       if (!data) { 
@@ -90,19 +116,19 @@ class Container extends React.Component {
         JPushModule.addReceiveNotificationListener(
           notification => {
             // Toast.show('aa: ' + JSON.stringify(notification), { position: Toast.positions.CENTER })
-            onNotification(notification.alertContent || notification.aps.alert)
+            onNotification(notification)
           }
         );
         JPushModule.addReceiveOpenNotificationListener(
           notification => {
             // Toast.show('bb: ' + JSON.stringify(notification), { position: Toast.positions.CENTER })  
-            onNotification(notification.alertContent || notification.aps.alert)
+            onNotification(notification)
           })
         // iOS Only 监听：应用没有启动的状态点击推送打开应用
         JPushModule.addOpenNotificationLaunchAppListener(
           notification => {
             // Toast.show('cc: ' + JSON.stringify(notification), { position: Toast.positions.CENTER }) 
-            onNotification(notification.alertContent || notification.aps.alert)
+            onNotification(notification)
           });
         
           JPushModule.getLaunchAppNotification( notification => {
@@ -113,7 +139,7 @@ class Container extends React.Component {
             } else {
               // Toast.show('dd: ' + JSON.stringify(notification), { position: Toast.positions.CENTER })  
               // 说明是 remote notification
-              onNotification(notification.alertContent || notification.aps.alert)
+              onNotification(notification)
             }
           });
 
