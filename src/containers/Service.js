@@ -1,11 +1,12 @@
 import React from 'react'
-import { View, Text, Image, TouchableOpacity } from 'react-native'
+import { View, Text, Image, TouchableOpacity, Dimensions } from 'react-native'
 import { connect } from 'react-redux'
 import Toast from 'react-native-root-toast'
 import ImagePicker from 'react-native-image-picker'
 import * as api from '../api'
 import PartnerCard from '../components/PartnerCard'
 
+const height = Dimensions.get('window').width * 570 / 1125;
 
 class Service extends React.Component {
 
@@ -75,7 +76,7 @@ class Service extends React.Component {
     render() {
         return (
             <View>
-                <Image source={require('../images/serveBG.png')} />
+                <Image style={{ width: '100%', height }} source={require('../images/serveBG.png')} />
                 <View style={{padding: 16, backgroundColor: '#fff', marginBottom: 16}}>
                     <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
                         <Text style={{fontSize: 15, color: '#666'}}>
