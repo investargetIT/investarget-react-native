@@ -31,11 +31,11 @@ function parseErrorMessage(data) {
   const { code, errormsg } = data
   if (code !== 1000) {
     if (code === 3000) {
-      AsyncStorage.removeItem('userInfo')
-        .then(() => {
-          window.store.dispatch(logout());
+      // AsyncStorage.removeItem('userInfo')
+        // .then(() => {
+          // window.store.dispatch(logout());
           window.store.dispatch(NavigationActions.navigate({ routeName: 'Login' }));
-        });
+        // });
     } 
     throw new ApiError(code, errormsg)
   }
