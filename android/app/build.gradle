@@ -97,8 +97,8 @@ android {
         applicationId "com.investargetnative"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 14
-        versionName "3.3.1"
+        versionCode 18
+        versionName "3.4.0"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
