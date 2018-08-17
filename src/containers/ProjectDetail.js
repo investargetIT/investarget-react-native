@@ -256,13 +256,14 @@ class ProjectDetail extends React.Component {
 
       const imgSource = this.state.isFavorite ? require('../images/home/projCollected.png')
                                               : require('../images/home/projNoCollect.png')
+      const uri = `${this.state.url}&userToken=${this.props.userInfo.token}&email=${encodeURIComponent(this.props.userInfo.emailAddress)}`;
       return (
         <View style={{ flex: 1 }}>
 
           <WebView
             ref={ref => this.webView = ref}
             onNavigationStateChange={navState => this.setState({ canGoBack: navState.canGoBack })} 
-            source={{ uri: this.state.url + '&userToken=' + this.props.userInfo.token }} />
+            source={{ uri }} />
 
           <View style={{ height: 42, backgroundColor: '#10458F', flexDirection: 'row' }}>
             <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center' }}>
