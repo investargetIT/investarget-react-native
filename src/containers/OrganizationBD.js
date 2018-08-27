@@ -189,6 +189,7 @@ class OrganizationBDList extends React.Component{
         <View style={{flexDirection:'row',backgroundColor:'#fff',padding: 16,paddingTop: 24}}>
             <Image source={imgSource} style={{width:60,height:60,marginRight:16,borderRadius:30}} />
             <View style={{justifyContent: response ? 'space-between' : 'center', flex: 0.5}}>
+                { !props.isRead ? <Text style={{fontSize:13,color:'red'}} numberOfLines={1}>New</Text> : null }
                 <Text style={{fontSize:16,color:'#333'}} numberOfLines={1}>
                     {username + ' '}
                     { title ? 

@@ -6,6 +6,8 @@ import {
   ScrollView,
   Platform,
   ActionSheetIOS,
+  Image,
+  DeviceEventEmitter,
 } from 'react-native';
 import * as api from '../api'
 import Toast from 'react-native-root-toast'
@@ -167,6 +169,9 @@ class PersonalDetail extends React.Component{
     //     <Icon name="more-horiz" color="white" />
     //   </TouchableOpacity>
     //   : null,
+          headerLeft: <TouchableOpacity onPress={params.goBack}>
+              <Image source={require('../images/login/backButton.png')} style={{ marginLeft: 10, width: 16, height: 18 }} />
+          </TouchableOpacity>
     }
  	}
 
@@ -203,6 +208,17 @@ class PersonalDetail extends React.Component{
         this.getData();
  
     }
+
+    componentWillMount () {
+        this.props.navigation.setParams({ 
+          goBack: this.handleNavGoBack,
+        });
+      }
+    
+      handleNavGoBack = () => {
+        DeviceEventEmitter.emit('updateOrgBD');
+        this.props.navigation.goBack();
+      }
 
     getData = () => {
         api.getOrgBDDetail(this.orgBDID)
