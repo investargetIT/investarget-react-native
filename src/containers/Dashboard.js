@@ -120,7 +120,7 @@ class Dashboard extends React.Component {
         title = 'LP';
         filter = [{type: 'tag', value: 57}];
     }
-    this.props.navigation.navigate('MyPartnerOrg', { title, disableAdd: true, filter });
+    this.props.navigation.navigate('OrgBDProjList', { title, disableAdd: true, filter });
   }
 
   handleProjPressed (proj) {
@@ -154,7 +154,8 @@ class Dashboard extends React.Component {
 
   renderHeader = () => (
     <View style={{ backgroundColor: 'white' }}>
-      <Text style={{ marginTop: 20, backgroundColor: undefined, textAlign: 'center', fontSize: 17 }}>我的资源库共有：<Text style={{ fontSize: 30, fontFamily: 'DIN Condensed' }}>{this.state.total}</Text> 家机构，其中</Text> 
+      <Text style={{ marginTop: 20, backgroundColor: undefined, textAlign: 'center', fontSize: 17 }}>我的资源库共有：<Text style={{ fontSize: 30, fontFamily: 'DIN Condensed' }}>{this.state.total}</Text> 家机构，其中</Text>
+
       <View style={{ height: 130, flexDirection: 'row' }}>
         <TouchableHighlight underlayColor="lightgray" onPress={this.handleOrgTypePressed.bind(this, 1)} style={{ flex: 1, margin: 10, borderRadius: 8, backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, elevation: 2 }}>
           <View style={{ flex: 1, alignItems: 'center', justifyContent: undefined, backgroundColor: undefined }}>
@@ -175,8 +176,26 @@ class Dashboard extends React.Component {
           </View>
         </TouchableHighlight>
       </View>
+
       <Text style={{ marginRight: 10, marginBottom: 10, textAlign: 'right', color: '#999' }}>其他：{this.state.total-this.state.fund-this.state.lc-this.state.lp}</Text>
-      <Text style={{ paddingLeft: 10, fontSize: 13, color: '#999', backgroundColor: 'rgb(242, 242, 242)', lineHeight: 32 }}>机构BD</Text>
+      <Text style={{ backgroundColor: undefined, textAlign: 'center', fontSize: 17 }}>BD统计</Text>
+
+      <View style={{ height: 130, flexDirection: 'row', justifyContent: 'center' }}>
+        <TouchableHighlight underlayColor="lightgray" onPress={this.handleOrgTypePressed.bind(this, 1)} style={{ flexBasis: 116, margin: 10, borderRadius: 8, backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, elevation: 2 }}>
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: undefined, backgroundColor: undefined }}>
+            <View style={{ flexBasis: 44, justifyContent: 'center', backgroundColor: undefined }}><Text style={{ color: '#999' }}>机构BD</Text></View>
+            <View><Text style={{ fontSize: 50, color: 'rgb(48, 148, 224)', fontWeight: '700', fontFamily: 'DIN Condensed' }}>{this.state.fund}</Text></View>
+          </View>
+        </TouchableHighlight>
+        <TouchableHighlight underlayColor="lightgray" onPress={this.handleOrgTypePressed.bind(this, 57)} style={{ flexBasis: 116, margin: 10, borderRadius: 8, backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, elevation: 2 }}>
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: undefined, backgroundColor: undefined }}>
+            <View style={{ flexBasis: 44, justifyContent: 'center', backgroundColor: undefined }}><Text style={{ color: '#999' }}>项目BD</Text></View>
+            <View><Text style={{ fontSize: 50, color: 'rgb(48, 148, 224)', fontWeight: '700', fontFamily: 'DIN Condensed' }}>{this.state.lp}</Text></View>
+          </View>
+        </TouchableHighlight>
+      </View>
+
+      <Text style={{ marginTop: 10, paddingLeft: 10, fontSize: 13, color: '#999', backgroundColor: 'rgb(242, 242, 242)', lineHeight: 32 }}>新增机构BD</Text>
     </View>
   );
 
