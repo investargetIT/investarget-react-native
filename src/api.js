@@ -748,4 +748,7 @@ export const editSchedule = (id, body) => r('/msg/schedule/' + id + '/', 'PUT', 
 export const deleteSchedule = id => r('/msg/schedule/' + id + '/', 'DELETE');
 
 export const getAndroidVersion = () => r('/source/android');
-export const addAndroidVersion = body => r('/source/android', 'POST', body); 
+export const addAndroidVersion = body => r('/source/android', 'POST', body);
+
+export const getOrgBDCount =  param => r('/bd/orgbd/count/?' + qs.stringify(param));
+export const getProjBDCount = param => r('/bd/projbd/count/?' + qs.stringify(param));

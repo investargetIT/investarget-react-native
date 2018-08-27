@@ -57,6 +57,8 @@ class Dashboard extends React.Component {
       isLoadingMore: false,
       isLoadingAll: false,
       page: 0,
+      orgBDCount: null,
+      projBDCount: null,
     };
     this.search = '';
   }
@@ -70,6 +72,10 @@ class Dashboard extends React.Component {
       .then(result => this.setState({ lc: result.count }));
     api.getOrg({ trader: this.props.userInfo.id, tags: 57 })
       .then(result => this.setState({ lp: result.count }));
+    api.getOrgBDCount({ manager: this.props.userInfo.id })
+      .then(result => this.setState({ orgBDCount: result.count }));
+    api.getProjBDCount({ manager: this.props.userInfo.id })
+      .then(result => this.setState({ projBDCount: result.count }));
     this.getData();
   }
 
@@ -189,13 +195,13 @@ class Dashboard extends React.Component {
         <TouchableHighlight underlayColor="lightgray" onPress={() => this.props.navigation.navigate('OrgBDProjList')} style={{ flexBasis: 116, margin: 10, borderRadius: 8, backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, elevation: 2 }}>
           <View style={{ flex: 1, alignItems: 'center', justifyContent: undefined, backgroundColor: undefined }}>
             <View style={{ flexBasis: 44, justifyContent: 'center', backgroundColor: undefined }}><Text style={{ color: '#999' }}>机构BD</Text></View>
-            <View><Text style={{ fontSize: 50, color: 'rgb(48, 148, 224)', fontWeight: '700', fontFamily: 'DIN Condensed' }}>{this.state.fund}</Text></View>
+            <View><Text style={{ fontSize: 50, color: 'rgb(48, 148, 224)', fontWeight: '700', fontFamily: 'DIN Condensed' }}>{this.state.orgBDCount}</Text></View>
           </View>
         </TouchableHighlight>
         <TouchableHighlight underlayColor="lightgray" onPress={() => this.props.navigation.navigate('ProjectBD')} style={{ flexBasis: 116, margin: 10, borderRadius: 8, backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, elevation: 2 }}>
           <View style={{ flex: 1, alignItems: 'center', justifyContent: undefined, backgroundColor: undefined }}>
             <View style={{ flexBasis: 44, justifyContent: 'center', backgroundColor: undefined }}><Text style={{ color: '#999' }}>项目BD</Text></View>
-            <View><Text style={{ fontSize: 50, color: 'rgb(48, 148, 224)', fontWeight: '700', fontFamily: 'DIN Condensed' }}>{this.state.lp}</Text></View>
+            <View><Text style={{ fontSize: 50, color: 'rgb(48, 148, 224)', fontWeight: '700', fontFamily: 'DIN Condensed' }}>{this.state.projBDCount}</Text></View>
           </View>
         </TouchableHighlight>
       </View>
