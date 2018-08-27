@@ -263,27 +263,6 @@ addRelation = investorID =>{
        }
 }
 
-confirmModify = () =>{
-  if (this.props.currentBD.bduser && this.props.currentBD.response !== 2 && this.state.bd_status === 2) {
-    const { proj, bduser, manager } = this.props.currentBD;
-    const params = {
-      timelinedata: {
-        'proj': proj.id,
-        'investor': bduser,
-        'trader': manager.id,
-      },
-      statusdata: {
-        'alertCycle': 7,
-        'transationStatus': 1,
-        'isActive': true
-      }
-    }
-    api.addTimeline(params);
-  }
-  this.wechatConfirm()
-
-}
-
 handleChangeStatus = value =>{
 	this.setState({bd_status:value},this.checkInvalid)	
 
@@ -377,7 +356,7 @@ render(){
         :null}
 
     	<View style={buttonContainer}>
-    		<TouchableOpacity style={{...buttonStyle}} onPress={disabled ? null : this.confirmModify.bind(this)}>
+    		<TouchableOpacity style={{...buttonStyle}} onPress={disabled ? null : this.wechatConfirm.bind(this)}>
 			<Text style={{width:30}}>确认</Text>
 			</TouchableOpacity>
     	</View>	
