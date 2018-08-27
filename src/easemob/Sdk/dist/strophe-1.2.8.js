@@ -5663,9 +5663,9 @@
           n_callback(o.Strophe, o.$build, o.$msg, o.$iq, o.$pres)
         })
       } else {
-        require(['strophe'], function (o) {
-          n_callback(o.Strophe, o.$build, o.$msg, o.$iq, o.$pres)
-        })
+        // require(['strophe'], function (o) {
+          // n_callback(o.Strophe, o.$build, o.$msg, o.$iq, o.$pres)
+        // })
       }
     } else {
       return callback(Strophe, $build, $msg, $iq, $pres)
