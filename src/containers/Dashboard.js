@@ -56,6 +56,7 @@ class Dashboard extends React.Component {
       loading: false,
       isLoadingMore: false,
       isLoadingAll: false,
+      page: 0,
     };
     this.search = '';
   }
@@ -81,25 +82,29 @@ class Dashboard extends React.Component {
     if (isLoadingMore === undefined) {
       this.setState({ loading: true });
     }
-    const allData = await api.getProj({ 
-      bdm: this.props.userInfo.id, 
-      projstatus: [4, 6, 7], 
-      skip_count: isLoadingMore ? this.state.list.length : 0, 
-      max_size: PAGE_SIZE,
+    const allData = await api.getOrgBDProj({ 
       search: this.search,
+      manager: [this.props.userInfo.id],
+      isRead: false,
+      page_size: PAGE_SIZE,
+      page_index: isLoadingMore ? this.state.page + 1 : 1,
     });
 
-    for (let index = 0; index < allData.data.length; index++) {
-      const element = allData.data[index];
-      const bdReq = await api.getOrgBdBase({ proj: element.id, manager: this.props.userInfo.id });
-      element.orgCount = bdReq.count;
+    let list = [];
+    if (allData.count > 0) {
+      const reqProjList = await api.getProj({
+        ids: allData.data.filter(f => f.proj).map(m => m.proj),
+        max_size: PAGE_SIZE,
+      });
+      list = reqProjList.data;
     }
 
     this.setState({ 
-      list: isLoadingMore ? this.state.list.concat(allData.data) : allData.data, 
+      list: isLoadingMore ? this.state.list.concat(list) : list, 
       loading: false, 
-      isLoadingAll: allData.data.length < PAGE_SIZE,
+      isLoadingAll: list.length < PAGE_SIZE,
       isLoadingMore: false,
+      page: isLoadingMore ? this.state.page + 1 : 1,
     });
   }
 
@@ -120,7 +125,7 @@ class Dashboard extends React.Component {
         title = 'LP';
         filter = [{type: 'tag', value: 57}];
     }
-    this.props.navigation.navigate('OrgBDProjList', { title, disableAdd: true, filter });
+    this.props.navigation.navigate('MyPartnerOrg', { title, disableAdd: true, filter });
   }
 
   handleProjPressed (proj) {
@@ -181,13 +186,13 @@ class Dashboard extends React.Component {
       <Text style={{ backgroundColor: undefined, textAlign: 'center', fontSize: 17 }}>BD统计</Text>
 
       <View style={{ height: 130, flexDirection: 'row', justifyContent: 'center' }}>
-        <TouchableHighlight underlayColor="lightgray" onPress={this.handleOrgTypePressed.bind(this, 1)} style={{ flexBasis: 116, margin: 10, borderRadius: 8, backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, elevation: 2 }}>
+        <TouchableHighlight underlayColor="lightgray" onPress={() => this.props.navigation.navigate('OrgBDProjList')} style={{ flexBasis: 116, margin: 10, borderRadius: 8, backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, elevation: 2 }}>
           <View style={{ flex: 1, alignItems: 'center', justifyContent: undefined, backgroundColor: undefined }}>
             <View style={{ flexBasis: 44, justifyContent: 'center', backgroundColor: undefined }}><Text style={{ color: '#999' }}>机构BD</Text></View>
             <View><Text style={{ fontSize: 50, color: 'rgb(48, 148, 224)', fontWeight: '700', fontFamily: 'DIN Condensed' }}>{this.state.fund}</Text></View>
           </View>
         </TouchableHighlight>
-        <TouchableHighlight underlayColor="lightgray" onPress={this.handleOrgTypePressed.bind(this, 57)} style={{ flexBasis: 116, margin: 10, borderRadius: 8, backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, elevation: 2 }}>
+        <TouchableHighlight underlayColor="lightgray" onPress={() => this.props.navigation.navigate('ProjectBD')} style={{ flexBasis: 116, margin: 10, borderRadius: 8, backgroundColor: 'white', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, elevation: 2 }}>
           <View style={{ flex: 1, alignItems: 'center', justifyContent: undefined, backgroundColor: undefined }}>
             <View style={{ flexBasis: 44, justifyContent: 'center', backgroundColor: undefined }}><Text style={{ color: '#999' }}>项目BD</Text></View>
             <View><Text style={{ fontSize: 50, color: 'rgb(48, 148, 224)', fontWeight: '700', fontFamily: 'DIN Condensed' }}>{this.state.lp}</Text></View>
