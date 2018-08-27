@@ -59,7 +59,7 @@ class PersonalInfo extends React.Component{
       this.state={
         mobile: currentBD.userinfo && currentBD.userinfo.mobile,
         email: currentBD.userinfo && currentBD.userinfo.email,
-        cardUrl: currentBD.userinfo && currentBD.userinfo.cardurl,
+        cardUrl: currentBD.cardurl,
         title: currentBD.usertitle && currentBD.usertitle.name,
         org: currentBD.org && currentBD.org.orgname,
         wechat: currentBD.userinfo && currentBD.userinfo.wechat,
