@@ -55,6 +55,7 @@ class PersonalInfo extends React.Component{
     constructor(props){
       super(props);
       const { currentBD } = props;
+      this.currentBD = currentBD;
       this.state={
         mobile: currentBD.userinfo && currentBD.userinfo.mobile,
         email: currentBD.userinfo && currentBD.userinfo.email,
@@ -117,6 +118,7 @@ class PersonalInfo extends React.Component{
             const famOptions = data.map(item => ({ label: item.name, value: item.id }));
             this.setState({ famOptions });
         });
+        api.readOrgBD({ bds: [this.currentBD.id] });
     }
 
     render(){

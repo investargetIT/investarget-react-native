@@ -752,3 +752,5 @@ export const addAndroidVersion = body => r('/source/android', 'POST', body);
 
 export const getOrgBDCount =  param => r('/bd/orgbd/count/?' + qs.stringify(param));
 export const getProjBDCount = param => r('/bd/projbd/count/?' + qs.stringify(param));
+
+export const readOrgBD = body => r('/bd/orgbd/read/', 'POST', body);
