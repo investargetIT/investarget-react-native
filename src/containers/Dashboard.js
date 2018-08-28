@@ -64,6 +64,10 @@ class Dashboard extends React.Component {
   }
 
   componentDidMount () {
+    this.getAllData();
+  }
+
+  getAllData = () => {
     api.getOrg({ trader: this.props.userInfo.id })
       .then(result => this.setState({ total: result.count }));
     api.getOrg({ trader: this.props.userInfo.id, orgtypes: 1 })
@@ -233,7 +237,7 @@ class Dashboard extends React.Component {
           refreshControl={
             <RefreshControl
               refreshing={this.state.loading}
-              onRefresh={this.getData}
+              onRefresh={this.getAllData}
               colors={['#10458f']}
               tintColor="#10458f"
             />
