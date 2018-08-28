@@ -2,10 +2,9 @@ import AsyncStorage from './AsyncStorage';
 import { logout } from '../actions';
 import { NavigationActions } from 'react-navigation'
 
-let baseUrl = "http://192.168.1.251:8080"
+let baseUrl = "http://apitest.investarget.com"
 baseUrl = "https://api.investarget.com";
-let mobileUrl = 'http://192.168.1.251:3000';
-// mobileUrl = 'http://10.0.0.7:3000';
+let mobileUrl = 'http://mtest.investarget.com';
 mobileUrl = 'https://m.investarget.com';
 export { baseUrl, mobileUrl };
 
