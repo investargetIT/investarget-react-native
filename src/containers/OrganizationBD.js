@@ -190,12 +190,13 @@ class OrganizationBDList extends React.Component{
             <Image source={imgSource} style={{width:60,height:60,marginRight:16,borderRadius:30}} />
             <View style={{justifyContent: response ? 'space-between' : 'center', flex: 0.5}}>
                 { !props.isRead ? <Text style={{fontSize:13,color:'red'}} numberOfLines={1}>New</Text> : null }
-                <Text style={{fontSize:16,color:'#333'}} numberOfLines={1}>
-                    {username + ' '}
-                    { title ? 
-                    <Text style={{fontSize:13,color:'#999'}} numberOfLines={1}>{title}</Text>
-                    : null }
-                </Text>
+
+                <View style={{ flexDirection: 'row', backgroundColor: undefined }}>
+                  { props.isimportant ? <Image style={{ width: 10, height: 10 }} source={require('../images/important.png')} /> : null }
+                  <Text style={{fontSize:16,color:'#333'}} numberOfLines={1}>{username + ' '}</Text>
+                  { title ? <Text style={{fontSize:13,color:'#999', alignSelf: 'center'}} numberOfLines={1}>{title}</Text> : null }
+                </View>
+
                 <Text style={{fontSize:13,color:'#666'}} numberOfLines={1}>{response}</Text>
             </View>
             <View style={{ marginLeft: 4, flex: 0.5, justifyContent: 'space-between'}}>
