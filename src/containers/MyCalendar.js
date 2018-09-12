@@ -60,6 +60,7 @@ class MyCalendar extends React.Component {
 
   render() {
     return (
+      <View style={{ flex: 1 }}>
       <Agenda
         items={this.state.items}
         loadItemsForMonth={this.loadItems.bind(this)}
@@ -75,6 +76,18 @@ class MyCalendar extends React.Component {
         /* theme={{calendarBackground: 'red', agendaKnobColor: 'green'}} */
         //renderDay={(day, item) => (<Text>{day ? day.day: 'item'}</Text>)}
       />
+
+        <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: 'white' }}>
+          <Text>会议类型：</Text>
+          <View style={{ width: 20, height: 20, backgroundColor: 'rgb(230, 168, 47)' }}></View>
+          <Text style={{ marginLeft: 5 }}>路演会议</Text>
+          <View style={{ marginLeft: 10, width: 20, height: 20, backgroundColor: 'rgb(66, 175, 149)' }}></View>
+          <Text style={{ marginLeft: 5 }}>约见公司</Text>
+          <View style={{ marginLeft: 10, width: 20, height: 20, backgroundColor: 'rgb(95, 163, 246)' }}></View>
+          <Text style={{ marginLeft: 5 }}>约见投资人</Text>
+        </View>
+
+      </View>
     );
   }
 
@@ -115,7 +128,7 @@ class MyCalendar extends React.Component {
         const cachedEvent = items[element] && items[element].slice();
         // console.log('cachedEvent', cachedEvent);
         const eventFromServer = result.data.filter(f => f.scheduledtime.slice(0, 10) === element);
-
+        // console.log('eventFromServer', eventFromServer);
         if (cachedEvent && cachedEvent.length > 0 && eventFromServer.length === 0) {
           items[element] = [];
         } else if (eventFromServer.length > 0 && (!cachedEvent || cachedEvent.length === 0)) {
@@ -152,7 +165,8 @@ class MyCalendar extends React.Component {
         const isDateInCache = element in markedDates;
         if (isDateHasEvent && !isDateInCache) {
           const schedule = result.data.filter(f => f.scheduledtime.slice(0, 10) === element)[0];
-          const color = dateToColor(new Date(schedule.scheduledtime + schedule.timezone));
+          // console.log('schedule', schedule);
+          const color = typeToColor(schedule.type);
           markedDates[element] = [{startingDay: true, color}, {endingDay: true, color}];
         } else if (!isDateHasEvent && isDateInCache) {
           delete markedDates[element]; 
@@ -166,6 +180,8 @@ class MyCalendar extends React.Component {
           items[newDateString] = [];
         }
       }
+      // console.log('items', items);
+      // console.log('markedDates', markedDates);
       this.setState({ items, markedDates }, () => this.isLoading = false);
     })
     .catch(err => {
@@ -186,7 +202,7 @@ class MyCalendar extends React.Component {
   }
 
   renderItem(item) {
-    const color = dateToColor(new Date(item.scheduledtime + item.timezone));
+    const color = typeToColor(item.type);
     return (
       <TouchableHighlight style={[styles.item, { height: item.height, backgroundColor: color }]} onPress={this.handleSchedulePressed.bind(this, item)} underlayColor="lightgray">
       <View>
@@ -207,7 +223,7 @@ class MyCalendar extends React.Component {
   }
 
   rowHasChanged(r1, r2) {
-    return r1.comments !== r2.comments;
+    return r1.comments !== r2.comments || r1.type !== r2.type;
   }
 
   timeToString(time) {
@@ -251,6 +267,17 @@ function dateToColor(date) {
     color = '#ffeb3b';
   }
   return color;
+}
+
+function typeToColor(type) {
+  switch (type) {
+    case 1:
+      return 'rgb(230, 168, 47)';
+    case 2:
+      return 'rgb(66, 175, 149)';
+    default:
+      return 'rgb(95, 163, 246)';
+  }
 }
 
 function mapStateToProps(state) {

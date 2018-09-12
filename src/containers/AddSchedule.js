@@ -59,6 +59,7 @@ class AddSchedule extends React.Component {
       location: null,
       areaOptions: [],
       country: { label: '中国', value: 42 },
+      type: 3,
     }
   }
 
@@ -99,6 +100,7 @@ class AddSchedule extends React.Component {
       user: this.state.user && this.state.user.id,
       country: this.state.country.value,
       location: ['中国', 'China'].includes(this.state.country.label) ? this.state.location : null,
+      type: this.state.type,
     };
     api.addSchedule(body)
     .then(data => {
@@ -206,6 +208,8 @@ class AddSchedule extends React.Component {
           handleChangeArea={ location => this.setState({ location }) }
           country={this.state.country}
           onSelectCountry={country => this.setState({ country })}
+          type={this.state.type}
+          handleChangeType={type => this.setState({ type })}
         />
         
       </ScrollView>

@@ -62,6 +62,7 @@ class EditSchedule extends React.Component {
       country: null,
       areaOptions: [],
       location: null,
+      type: 3,
     }
 
     this.schedule = this.props.navigation.state.params.schedule;
@@ -107,6 +108,7 @@ class EditSchedule extends React.Component {
         user: investor,
         country: result.country ? { value: result.country.id, label: result.country.country } : null,
         location: result.location && result.location.id,
+        type: result.type,
       });
       this.props.navigation.setParams({ onPress: this.isModifiable() ? this.handleSubmit : undefined });
     })
@@ -158,6 +160,7 @@ class EditSchedule extends React.Component {
       user: this.state.user && this.state.user.id,
       country: this.state.country.value,
       location: ['中国', 'China'].includes(this.state.country.label) ? this.state.location : null,
+      type: this.state.type,
     };
     api.editSchedule(this.schedule.id, body)
     .then(data => {
@@ -289,6 +292,8 @@ class EditSchedule extends React.Component {
           handleChangeArea={ location => this.setState({ location })}
           onSelectCountry={country => this.setState({ country })}
           location={this.state.location}
+          type={this.state.type}
+          handleChangeType={type => this.setState({ type })}
         />
 
         { this.props.userInfo.id === this.schedule.createuser.id ? 

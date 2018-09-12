@@ -19,6 +19,12 @@ import { connect } from 'react-redux';
 import * as api from '../api';
 import { receiveContinentsAndCountries } from '../../actions';
 
+const scheduleTypeOptions = [
+    { label: '路演会议', value: 1 },
+    { label: '约见公司', value: 2 },
+    { label: '约见投资人', value: 3 },
+];
+
 class ScheduleForm extends React.Component {
 
     constructor (props) {
@@ -82,6 +88,16 @@ class ScheduleForm extends React.Component {
         return (
             <View>
                 <View style={{ backgroundColor: 'white', marginTop: 20 }}>
+
+                    <Picker
+                        style={{ flex: 1, height: 44, paddingLeft: 2 }}
+                        value={props.type}
+                        onChange={props.handleChangeType}
+                        placeholder="日程类型"
+                        options={scheduleTypeOptions} />
+
+                    <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
+
                     <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, justifyContent: 'center' }}>
                         <TextInput
                             style={{ fontSize: 16, paddingLeft: 0 }}
