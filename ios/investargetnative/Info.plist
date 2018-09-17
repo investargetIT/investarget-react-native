@@ -34,7 +34,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>3.4.3.1</string>
+	<string>3.4.3.2</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>weixin</string>
@@ -56,7 +56,7 @@
 		</dict>
 	</dict>
 	<key>NSCalendarsUsageDescription</key>
-	<string>同步日程</string>
+	<string>Your schedule will be synchronized to your device's calendars automatically.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>You can use your device’s camera to take a selfie as avatar, scan business card  or take a photo and send to your friend.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
