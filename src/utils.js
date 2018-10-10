@@ -92,7 +92,7 @@ export function convertUserInfo(user_info, permissions) {
         auditStatus: user_info.userstatus.id,
         cardBucket: user_info.cardBucket,
         cardKey: user_info.cardKey,
-        cardUrl: user_info.cardKey ? 'https://o79atf82v.qnssl.com/' + user_info.cardKey : null,
+        cardUrl: user_info.cardKey ? 'https://image.investarget.com/' + user_info.cardKey : null,
         // 使用 org 表示 company
         company: user_info.org && convertOrg(user_info.org).name,
         country: user_info.country && convertCountry(user_info.country) ,

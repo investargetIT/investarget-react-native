@@ -37,7 +37,7 @@ class UserCenter extends React.Component {
                 <ImageBackground source={require('../images/userCenter/ht-usercenterheaderbg.png')} blurRadius={8} style={{display:'flex',marginBottom:20}}>
                     <View style={{padding: 40,display:'flex',alignItems:'center',justifyContent:'center'}}>
                         <Image
-                            source={{uri: 'https://o79atf82v.qnssl.com/2017-07-28 09-50.jpg'}}
+                            source={{uri: 'https://image.investarget.com/2017-07-28 09-50.jpg'}}
                             style={{width:90,height:90,borderRadius:45}}
                         />
                         <Text style={{fontSize:18,margin:10,color:'#fff',backgroundColor:'transparent'}}>多维海拓test</Text>
