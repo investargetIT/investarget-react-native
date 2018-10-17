@@ -112,14 +112,18 @@ class Timeline extends React.Component {
         <Image source={require('../images/timeline/timeLineBG.png')} style={{ position: 'absolute', width: '100%', height: '100%' }}/>
 
         <ScrollView>
-        <View style={{ marginLeft: 44 }}>
-          <View style={{ marginLeft: 5, paddingLeft: 10, paddingTop: 10, paddingRight: 48, paddingBottom: 10, borderLeftWidth: 1, borderLeftColor: 'white', }}>
-            <Image source={require('../images/timeline/timeline-title-bg.png')} style={{ position: 'relative', backgroundColor: 'transparent', height: 25, width: 120 }}>
-              <Text style={{ position: 'absolute', backgroundColor: 'orange', left: 16, top: Platform.OS === 'android' ? 2 : 4, color: 'white', fontSize: 16, backgroundColor: 'transparent' }}>{this.state.title}</Text>
-            </Image>
+
+          <View style={{ marginLeft: 44 }}>
+
+            <View style={{ marginLeft: 5, borderLeftWidth: 1, borderLeftColor: 'white' }}>
+              <View style={{ height: 25, width: 120, marginLeft: 15, marginTop: 10, marginBottom: 10 }}>
+                <Image source={require('../images/timeline/timeline-title-bg.png')} style={{ width: '100%', height: '100%' }} />
+                <Text numberOfLines={1} style={{ position: 'absolute', left: 14, top: Platform.OS === 'android' ? 2 : 4, color: 'white', fontSize: 16, backgroundColor: 'transparent' }}>{this.state.title}</Text>
+              </View>
+            </View>
+
+            <View style={{ width: 10, height: 10, backgroundColor: 'white', borderWidth: 1, borderColor: 'orange', borderRadius: 5, position: 'absolute', top: 18 }}></View>
           </View>
-          <View style={{ width: 10, height: 10, backgroundColor: 'white', borderWidth: 1, borderColor: 'orange', borderRadius: 5, position: 'absolute', top: 18 }}></View>
-        </View>
 
         <TimelineStep handleStepClicked={this.handleStepClicked} icon={require("../images/timeline/stepImage1.png")} color="#FF6900" title="step1，获取项目概要" investors={this.state.timelines.filter(item=>item.transactionStatusId===1)} />
         <TimelineStep handleStepClicked={this.handleStepClicked} icon={require("../images/timeline/stepImage2.png")} color="#2AA0AE" title="step2，签署保密协议" investors={this.state.timelines.filter(item=>item.transactionStatusId===2)} />
