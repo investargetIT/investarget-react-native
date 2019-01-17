@@ -9,6 +9,7 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import * as api from '../api';
+import debounce from 'lodash.debounce';
 
 function OrgItem({ orgname, description, onPress }) {
   return (
@@ -46,6 +47,7 @@ class SelectOrg extends React.Component {
       search: '',
       orgs: [],
     }
+    this.searchProject = debounce(this.searchProject, 400);
   }
  
   componentDidMount() {
