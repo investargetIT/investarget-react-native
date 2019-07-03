@@ -8,3 +8,6 @@ https://github.com/flare216/react-native-install-apk/commit/33e7ea1a3edff6c34e75
 
 如果碰到一个和`third-party`有关的错误的话，以下链接可能会有帮助：
 https://github.com/facebook/react-native/issues/19529#issuecomment-423898864
+
+如果碰到`file not found`这类错误的话，参考以下链接：
+https://github.com/facebook/react-native/issues/11721#issuecomment-270672904
