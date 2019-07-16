@@ -90,7 +90,7 @@ class AddSchedule extends React.Component {
 
   }
 
-  addSchedule = () => {
+  addSchedule = async () => {
     this.props.dispatch(requestContents());
     const body = {
       scheduledtime: formatDate(this.state.date),
@@ -102,14 +102,16 @@ class AddSchedule extends React.Component {
       location: ['中国', 'China'].includes(this.state.country.label) ? this.state.location : null,
       type: this.state.type,
     };
-    api.addSchedule(body)
-    .then(data => {
+    try {
+      await api.getUserSession();
+      await api.addSchedule([body]);
       this.props.dispatch(hideLoading());
       const { navigation } = this.props;
       navigation.goBack();
       navigation.state.params.onEditEventCompleted(body);
-    })
-    .catch(err => console.error(err));
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   addScheduleAndSyncRemark = () => {

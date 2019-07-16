@@ -754,3 +754,5 @@ export const getOrgBDCount =  param => r('/bd/orgbd/count/?' + qs.stringify(para
 export const getProjBDCount = param => r('/bd/projbd/count/?' + qs.stringify(param));
 
 export const readOrgBD = body => r('/bd/orgbd/read/', 'POST', body);
+
+export const getUserSession = () => r('/user/session/');
