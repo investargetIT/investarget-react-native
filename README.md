@@ -12,4 +12,4 @@ https://github.com/facebook/react-native/issues/19529#issuecomment-423898864
 如果碰到`file not found`这类错误的话，参考以下链接：
 https://github.com/facebook/react-native/issues/11721#issuecomment-270672904
 
-如果碰到**can not find simulator**这类错误的话，编辑`node_modules/react-native/local-cli/runIOS/findMatchingSimulator.js`文件，将其中有类似`version.indexOf('iOS') === -1`的一行代码改为`!version.inculdes('iOS')`，可以参考：https://github.com/facebook/react-native/issues/23282#issuecomment-476439080
+如果碰到 **can not find simulator** 这类错误的话，编辑`node_modules/react-native/local-cli/runIOS/findMatchingSimulator.js`文件，将其中有类似`version.indexOf('iOS') === -1`的一行代码改为`!version.inculdes('iOS')`，可以参考：https://github.com/facebook/react-native/issues/23282#issuecomment-476439080
