@@ -163,7 +163,17 @@ class MyCalendar extends React.Component {
 
         const isDateHasEvent = result.data.filter(m => m.scheduledtime.slice(0, 10) === element).length > 0;
         const isDateInCache = element in markedDates;
-        if (isDateHasEvent && !isDateInCache) {
+
+        // 比较日程类型，如果类型变了的话，日历上该日期的颜色应该跟着一起变化
+        let oldColor = '';
+        let newColor = '';
+        if (isDateHasEvent && isDateInCache) {
+          const newSchedule = result.data.filter(f => f.scheduledtime.slice(0, 10) === element)[0];
+          newColor = typeToColor(newSchedule.type);
+          oldColor = markedDates[element][0].color;
+        }
+
+        if (isDateHasEvent && (!isDateInCache || oldColor !== newColor)) {
           const schedule = result.data.filter(f => f.scheduledtime.slice(0, 10) === element)[0];
           // console.log('schedule', schedule);
           const color = typeToColor(schedule.type);
