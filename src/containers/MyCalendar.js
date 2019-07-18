@@ -42,6 +42,7 @@ class MyCalendar extends React.Component {
       markedDates: {},
     };
     this.loadingOrLoadedDate = [];
+    this.tappedDate = null;
   }
 
   componentDidMount() {
@@ -49,7 +50,10 @@ class MyCalendar extends React.Component {
   }
 
   handleAddIconPressed = () => {
-    this.props.navigation.navigate('AddSchedule', { onEditEventCompleted: this.onEditEventCompleted });
+    this.props.navigation.navigate('AddSchedule', {
+      onEditEventCompleted: this.onEditEventCompleted,
+      initialDate: this.tappedDate,
+    });
   }
 
   onEditEventCompleted = event => {
@@ -68,7 +72,7 @@ class MyCalendar extends React.Component {
         renderItem={this.renderItem.bind(this)}
         renderEmptyDate={this.renderEmptyDate.bind(this)}
         rowHasChanged={this.rowHasChanged.bind(this)}
-        /* onDayPress={this.handleOnDayPress} */
+        onDayPress={this.handleOnDayPress}
         
         markedDates={this.state.markedDates}
         markingType={'interactive'}
@@ -92,12 +96,15 @@ class MyCalendar extends React.Component {
   }
 
   handleOnDayPress = day => {
-    if (this.state.items[day.dateString] === null) {
-      this.state.items[day.dateString] = []
-    }
-    this.setState({
-      items: this.state.items,
-    });
+    const { dateString } = day;
+    const dateStringWithTimezone = `${dateString}T00:00:00+08:00`;
+    this.tappedDate = new Date(dateStringWithTimezone);
+    // if (this.state.items[day.dateString] === null) {
+    //   this.state.items[day.dateString] = []
+    // }
+    // this.setState({
+    //   items: this.state.items,
+    // });
   }
 
   loadItems(day) {

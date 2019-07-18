@@ -47,13 +47,18 @@ class AddSchedule extends React.Component {
   constructor (props) {
     super (props);
 
+
+    const { initialDate } = props.navigation.state.params;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     this.timeline = null;
 
     this.state = {
       title: '',
       address: '',
       showDatePickerIOS: false,
-      date: new Date(),
+      date: initialDate || today,
       project: null,
       user: null,
       location: null,
