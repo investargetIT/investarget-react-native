@@ -56,13 +56,15 @@
 		</dict>
 	</dict>
 	<key>NSCalendarsUsageDescription</key>
-	<string>Your schedule will be synchronized to your device's calendars automatically.</string>
+	<string>Your schedule will be synchronized to your device&apos;s calendars automatically.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>You can use your device’s camera to take a selfie as avatar, scan business card  or take a photo and send to your friend.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>You can send your location to your friend</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>You can select a photo from your photo gallery to upload as avatar, upload as business card or send to your friend directly.</string>
+  <key>NSLocationAlwaysUsageDescription</key>
+  <string>With your location, we could provide better service.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
