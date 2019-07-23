@@ -7,6 +7,7 @@ import {
   Image,
   TouchableHighlight,
   Platform,
+  Button,
 } from 'react-native';
 import { Agenda } from 'react-native-calendars';
 import * as api from '../api';
@@ -116,7 +117,7 @@ class MyCalendar extends React.Component {
     const items = Object.assign({}, this.state.items);
     const markedDates = Object.assign({}, this.state.markedDates);
     let newItems;
-    api.getSchedule({ date: day.dateString, page_size: 10000 })
+    api.getSchedule({ manager: this.props.userInfo.id, date: day.dateString, page_size: 10000 })
     .then(result => {
       
       // console.log('data from result', result);
@@ -218,13 +219,31 @@ class MyCalendar extends React.Component {
     );
   }
 
+  handleStartMeetingButtonPressed(meetingSchedule) {
+    console.log('handle start meeting button pressed', meetingSchedule);
+  }
+
+  isShowVideoMeetingButton(schedule) {
+    const { type, meeting } = schedule;
+    if (type !== 4 || !meeting) return false;
+    const { status } = meeting;
+    if (!status || status === 0) return false;
+    return true;
+  }
+
   renderItem(item) {
     const color = typeToColor(item.type);
     return (
       <TouchableHighlight style={[styles.item, { height: item.height, backgroundColor: color }]} onPress={this.handleSchedulePressed.bind(this, item)} underlayColor="lightgray">
       <View>
         <Text>{item.comments}</Text>
-
+          {this.isShowVideoMeetingButton(item) ?
+            <Button
+              title="启动会议"
+              color="white"
+              onPress={this.handleStartMeetingButtonPressed.bind(this, item)}
+            />
+            : null}
         { item.createuser.id !== this.props.userInfo.id ?
         <Text style={{ fontSize: 12, textAlign: 'right' }}>{item.createuser.username}</Text>
         : null }
