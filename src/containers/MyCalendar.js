@@ -228,7 +228,7 @@ class MyCalendar extends React.Component {
   isShowVideoMeetingButton(schedule) {
     const { type, meeting } = schedule;
     if (type !== 4 || !meeting) return false;
-    const { status } = meeting;
+    const { status } = meeting.status;
     if (!status || status === 0) return false;
     return true;
   }
