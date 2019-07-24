@@ -83,13 +83,15 @@ class MyCalendar extends React.Component {
       />
 
         <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: 'white' }}>
-          <Text>会议类型：</Text>
-          <View style={{ width: 20, height: 20, backgroundColor: 'rgb(230, 168, 47)' }}></View>
-          <Text style={{ marginLeft: 5 }}>路演会议</Text>
-          <View style={{ marginLeft: 10, width: 20, height: 20, backgroundColor: 'rgb(66, 175, 149)' }}></View>
-          <Text style={{ marginLeft: 5 }}>约见公司</Text>
-          <View style={{ marginLeft: 10, width: 20, height: 20, backgroundColor: 'rgb(95, 163, 246)' }}></View>
-          <Text style={{ marginLeft: 5 }}>约见投资人</Text>
+          <Text style={{ fontSize: 12 }}>会议类型：</Text>
+          <View style={{ width: 10, height: 10, backgroundColor: 'rgb(230, 168, 47)' }}></View>
+          <Text style={{ marginLeft: 2, fontSize: 12 }}>路演会议</Text>
+          <View style={{ marginLeft: 5, width: 10, height: 10, backgroundColor: 'rgb(66, 175, 149)' }}></View>
+          <Text style={{ marginLeft: 2, fontSize: 12 }}>约见公司</Text>
+          <View style={{ marginLeft: 5, width: 10, height: 10, backgroundColor: 'rgb(95, 163, 246)' }}></View>
+          <Text style={{ marginLeft: 2, fontSize: 12 }}>约见投资人</Text>
+          <View style={{ marginLeft: 5, width: 10, height: 10, backgroundColor: 'rgb(239, 83, 80)' }}></View>
+          <Text style={{ marginLeft: 2, fontSize: 12 }}>视频会议</Text>
         </View>
 
       </View>
@@ -311,8 +313,12 @@ function typeToColor(type) {
       return 'rgb(230, 168, 47)';
     case 2:
       return 'rgb(66, 175, 149)';
-    default:
+    case 3:
       return 'rgb(95, 163, 246)';
+    case 4:
+      return 'rgb(239, 83, 80)';
+    default:
+      return 'rgb(0, 0, 0)';
   }
 }
 
