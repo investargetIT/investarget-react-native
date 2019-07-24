@@ -222,8 +222,31 @@ class MyCalendar extends React.Component {
     );
   }
 
-  handleStartMeetingButtonPressed(meetingSchedule) {
-    console.log('handle start meeting button pressed', meetingSchedule);
+  getWID = (url) => {
+    const wid = url.match(/WID=(.*)&/)[1];
+    return wid;
+  }
+
+  getPW = (url) => {
+    const pw = url.match(/PW=(.*)/)[1];
+    return pw;
+  }
+
+  async handleStartMeetingButtonPressed(meetingSchedule) {
+    const { meeting: { url } } = meetingSchedule;
+    const wid = this.getWID(url);
+    const pw = this.getPW(url);
+    const formData = new FormData();
+    formData.append('AT', 'GetAuthInfo');
+    formData.append('UN', wid);
+    formData.append('PW', pw);
+    formData.append('getEncryptedPwd', true);
+    const encryptedPwRes = await fetch('https://investarget.webex.com.cn/investarget/user.php', {
+      method: 'post',
+      body: formData,
+    });
+    const encryptedPassword = await encryptedPwRes.text();
+    console.log('encrypw', encryptedPassword);
   }
 
   isShowVideoMeetingButton(schedule) {
