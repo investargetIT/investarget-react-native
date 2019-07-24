@@ -212,6 +212,7 @@ class MyCalendar extends React.Component {
   }
 
   handleSchedulePressed (schedule) {
+    if (schedule.type === 4) return;
     this.props.navigation.navigate(
       'EditSchedule', 
       {
