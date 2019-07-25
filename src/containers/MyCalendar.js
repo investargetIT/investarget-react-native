@@ -214,7 +214,12 @@ class MyCalendar extends React.Component {
   }
 
   handleSchedulePressed (schedule) {
-    if (schedule.type === 4) return;
+    if (schedule.type === 4) {
+      if (this.isShowVideoMeetingButton(schedule)) {
+        this.handleStartMeetingButtonPressed(schedule);
+      }
+      return;
+    };
     this.props.navigation.navigate(
       'EditSchedule', 
       {
@@ -298,16 +303,18 @@ class MyCalendar extends React.Component {
       <TouchableHighlight style={[styles.item, { height: item.height, backgroundColor: color }]} onPress={this.handleSchedulePressed.bind(this, item)} underlayColor="lightgray">
       <View>
         <Text>{item.comments}</Text>
-          {this.isShowVideoMeetingButton(item) ?
-            <Button
-              title="启动会议"
-              color="white"
-              onPress={this.handleStartMeetingButtonPressed.bind(this, item)}
-            />
-            : null}
         { item.createuser.id !== this.props.userInfo.id ?
         <Text style={{ fontSize: 12, textAlign: 'right' }}>{item.createuser.username}</Text>
         : null }
+          {this.isShowVideoMeetingButton(item) &&
+            <TouchableOpacity
+              style={{ marginTop: 10 }}
+              activeOpacity={0.8}
+              onPress={this.handleStartMeetingButtonPressed.bind(this, item)}
+            >
+              <Text style={{ fontSize: 12, textAlign: 'right' }}>点击进入会议</Text>
+            </TouchableOpacity>
+          }
       </View>
       </TouchableHighlight>
     );
