@@ -8,6 +8,8 @@ import {
   TouchableHighlight,
   Platform,
   Button,
+  Linking,
+  Alert,
 } from 'react-native';
 import { Agenda } from 'react-native-calendars';
 import * as api from '../api';
@@ -233,7 +235,8 @@ class MyCalendar extends React.Component {
   }
 
   async handleStartMeetingButtonPressed(meetingSchedule) {
-    const { meeting: { url } } = meetingSchedule;
+    const webExUrl = 'https://investarget.webex.com.cn/investarget/user.php';
+    const { meeting: { url, meetingKey } } = meetingSchedule;
     const wid = this.getWID(url);
     const pw = this.getPW(url);
     const formData = new FormData();
@@ -241,12 +244,44 @@ class MyCalendar extends React.Component {
     formData.append('UN', wid);
     formData.append('PW', pw);
     formData.append('getEncryptedPwd', true);
-    const encryptedPwRes = await fetch('https://investarget.webex.com.cn/investarget/user.php', {
+    const encryptedPwRes = await fetch(webExUrl, {
       method: 'post',
       body: formData,
     });
     const encryptedPassword = await encryptedPwRes.text();
-    console.log('encrypw', encryptedPassword);
+    // console.log('encrypw', encryptedPassword);
+    const formData2 = new FormData();
+    formData2.append('AT', 'GetAuthInfo');
+    formData2.append('UN', wid);
+    formData2.append('EPW', encryptedPassword);
+    formData2.append('isUTF8', 1);
+    const sessionTicketRes = await fetch(webExUrl, {
+      method: 'post',
+      body: formData2,
+    });
+    const sessionTicketXml = await sessionTicketRes.text();
+    // console.log('sessionTicketXml', sessionTicketXml);
+    let sessionTicket = '';
+    if (window.DOMParser) {
+      // console.log('we have dom parser');
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(sessionTicketXml, "text/xml");
+      sessionTicket = xmlDoc.getElementsByTagName("SessionTicket")[0].childNodes[0].nodeValue;
+    }
+    // console.log('session ticket', sessionTicket);
+    let startMeetingSchema = '';
+    if (Platform.OS == 'ios') {
+      startMeetingSchema = `wbx://investarget.webex.com.cn/investarget?MK=${meetingKey}&MTGTK=&sitetype=TRAIN&r2sec=1&ST=1&UN=${encodeURIComponent(wid)}&TK=${encodeURIComponent(sessionTicket)}`;
+    } else if (Platform.OS == 'android') {
+      startMeetingSchema = `wbx://meeting/investarget.webex.com.cn/investarget?MK=${meetingKey}&MTGTK=&sitetype=TRAIN&r2sec=1&UN=${encodeURIComponent(wid)}&TK=${encodeURIComponent(sessionTicket)}`;
+    }
+    console.log('schema', startMeetingSchema);
+    try {
+      await Linking.openURL(startMeetingSchema);
+    } catch (err) {
+      Alert.alert('无法打开，请确认已安装相关应用');
+      console.warn('open url error:', err);
+    }
   }
 
   isShowVideoMeetingButton(schedule) {
