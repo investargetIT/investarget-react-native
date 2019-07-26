@@ -756,3 +756,5 @@ export const getProjBDCount = param => r('/bd/projbd/count/?' + qs.stringify(par
 export const readOrgBD = body => r('/bd/orgbd/read/', 'POST', body);
 
 export const getUserSession = () => r('/user/session/');
+
+export const getWebexUser = param => r('/msg/webex/user/?' + qs.stringify(param));

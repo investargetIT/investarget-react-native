@@ -63,14 +63,29 @@ class EditVideoMeeting extends React.Component {
       areaOptions: [],
       location: null,
       type: 3,
+      attendees: [],
+      currentAttendee: null,
     }
 
     this.schedule = this.props.navigation.state.params.schedule;
+    console.log('this.schedule', this.schedule);
   }
 
   componentDidMount () {
     
     this.props.dispatch(requestContents());
+    const { meeting: { id: meetingId }} = this.schedule;
+    console.log('meeting id', meetingId);
+    api.getWebexUser({ meeting: meetingId })
+      .then(data => {
+        console.log('get webex user', data);
+        const content = data.data.map(m => `${m.name} ${m.email}`).join('\n');
+        const currentAttendee = data.data.filter(f => f.user === this.props.userInfo.id)[0];
+        console.log('attendees', content);
+        console.log('currentAttendee', currentAttendee);
+        this.setState({ attendees: content, currentAttendee });
+      });
+
     api.getScheduleDetail(this.schedule.id)
     .then(result => {
       console.log('result', result)
