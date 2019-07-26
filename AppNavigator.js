@@ -45,6 +45,7 @@ import AddSchedule from './src/containers/AddSchedule';
 import SelectProject from './src/containers/SelectProject';
 import SearchUser from './src/containers/SearchUser';
 import EditSchedule from './src/containers/EditSchedule';
+import EditVideoMeeting from './src/containers/EditVideoMeeting';
 import SelectOrg from './src/containers/SelectOrg';
 import Home from './src/containers/Home';
 import ProjectBD from './src/containers/ProjectBD';
@@ -95,6 +96,7 @@ import OrgBDProjList from './src/containers/OrgBDProjList';
     SelectProject: { screen: SelectProject },
     SearchUser: { screen: SearchUser },
     EditSchedule: { screen: EditSchedule },
+    EditVideoMeeting: { screen: EditVideoMeeting },
     SelectOrg: { screen: SelectOrg }, 
     ProjectBD:{screen: ProjectBD},
     OrganizationBD: {screen: OrganizationBD},

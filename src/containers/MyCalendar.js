@@ -214,19 +214,18 @@ class MyCalendar extends React.Component {
   }
 
   handleSchedulePressed (schedule) {
+    let navigateTo = 'EditSchedule';
     if (schedule.type === 4) {
-      if (this.isShowVideoMeetingButton(schedule)) {
-        this.handleStartMeetingButtonPressed(schedule);
-      }
-      return;
+      // if (this.isShowVideoMeetingButton(schedule)) {
+      //   this.handleStartMeetingButtonPressed(schedule);
+      // }
+      // return;
+      navigateTo = 'EditVideoMeeting';
     };
-    this.props.navigation.navigate(
-      'EditSchedule', 
-      {
-        schedule,
-        onEditEventCompleted: this.onEditEventCompleted 
-      }
-    );
+    this.props.navigation.navigate(navigateTo, {
+      schedule,
+      onEditEventCompleted: this.onEditEventCompleted 
+    });
   }
 
   getWID = (url) => {
