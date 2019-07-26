@@ -19,7 +19,7 @@ import UserItem from '../components/UserItem';
 import * as api from '../api';
 import { requestContents, hideLoading } from '../../actions';
 import { connect } from 'react-redux';
-import ScheduleForm from '../components/ScheduleForm';
+import VideoMeetingForm from '../components/VideoMeetingForm';
 import moment from 'moment';
 
 class EditVideoMeeting extends React.Component {
@@ -291,7 +291,7 @@ class EditVideoMeeting extends React.Component {
     return (
       <ScrollView>
 
-        <ScheduleForm 
+        <VideoMeetingForm
           title={this.state.title}
           handleContentChange={this.handleContentChange}
           address={this.state.address}
