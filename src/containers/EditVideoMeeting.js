@@ -65,6 +65,7 @@ class EditVideoMeeting extends React.Component {
       type: 3,
       attendees: [],
       currentAttendee: null,
+      meeting: null,
     }
 
     this.schedule = this.props.navigation.state.params.schedule;
@@ -124,6 +125,7 @@ class EditVideoMeeting extends React.Component {
         country: result.country ? { value: result.country.id, label: result.country.country } : null,
         location: result.location && result.location.id,
         type: result.type,
+        meeting: result.meeting,
       });
       this.props.navigation.setParams({ onPress: this.isModifiable() ? this.handleSubmit : undefined });
     })
@@ -309,6 +311,7 @@ class EditVideoMeeting extends React.Component {
           location={this.state.location}
           type={this.state.type}
           handleChangeType={type => this.setState({ type })}
+          meeting={this.state.meeting}
         />
 
         { this.props.userInfo.id === this.schedule.createuser.id ? 

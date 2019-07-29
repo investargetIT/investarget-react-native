@@ -75,7 +75,6 @@ class VideoMeetingForm extends React.Component {
     render() {
 
         const props = this.props;
-        const isChina = this.props.country && ['中国', 'China'].includes(this.props.country.label);
         return (
             <View>
                 <View style={{ backgroundColor: 'white', marginTop: 20 }}>
@@ -119,6 +118,43 @@ class VideoMeetingForm extends React.Component {
                 <ProjectItem {...props.project} onPress={props.handleProjectPressed} />
               </View>
             }
+
+            <View style={{ backgroundColor: 'white', marginTop: 20 }}>
+
+              <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Text style={{ fontSize: 16 }}>会议密码</Text>
+                <Text style={{ fontSize: 16, color: 'gray' }}>{props.meeting && props.meeting.password}</Text>
+              </View>
+
+              <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
+
+              <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Text style={{ fontSize: 16 }}>持续时间</Text>
+                <Text style={{ fontSize: 16, color: 'gray' }}>{props.meeting && `${props.meeting.duration}分钟`}</Text>
+              </View>
+
+              <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
+
+              <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Text style={{ fontSize: 16 }}>主持人密钥</Text>
+                <Text style={{ fontSize: 16, color: 'gray' }}>{props.meeting && props.meeting.hostKey}</Text>
+              </View>
+
+              <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
+
+              <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Text style={{ fontSize: 16 }}>音频连接</Text>
+                <Text style={{ fontSize: 16, color: 'gray' }}>4006140081 China2(400)</Text>
+              </View>
+
+              <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
+
+              <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Text style={{ fontSize: 16 }}>会议号</Text>
+                <Text style={{ fontSize: 16, color: 'red' }}>{props.meeting && props.meeting.meetingKey}</Text>
+              </View>
+
+            </View>
 
                 {Platform.OS === 'ios' && this.state.showDatePickerIOS ?
                     <Modal
