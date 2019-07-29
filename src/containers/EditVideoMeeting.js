@@ -13,6 +13,7 @@ import {
   Alert,
   DatePickerAndroid,
   TimePickerAndroid,
+  Linking,
 } from 'react-native';
 import ProjectItem from '../components/ProjectItem';
 import UserItem from '../components/UserItem';
@@ -27,7 +28,7 @@ class EditVideoMeeting extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const { params } = navigation.state;
     return {
-      title: '编辑视频会议',
+      title: '视频会议',
         headerStyle: {
           backgroundColor: '#10458f',
       },
@@ -66,6 +67,7 @@ class EditVideoMeeting extends React.Component {
       attendees: [],
       currentAttendee: null,
       meeting: null,
+      schedule: null,
     }
 
     this.schedule = this.props.navigation.state.params.schedule;
@@ -126,6 +128,7 @@ class EditVideoMeeting extends React.Component {
         location: result.location && result.location.id,
         type: result.type,
         meeting: result.meeting,
+        schedule: result,
       });
       this.props.navigation.setParams({ onPress: this.isModifiable() ? this.handleSubmit : undefined });
     })
@@ -139,6 +142,7 @@ class EditVideoMeeting extends React.Component {
   }
 
   isModifiable = () => {
+    return false;
     if (this.props.userInfo.id !== this.schedule.createuser.id) {
       return false;
     }
@@ -289,6 +293,109 @@ class EditVideoMeeting extends React.Component {
       .catch(err => console.error(err));
   }
 
+  getWID = (url) => {
+    const wid = url.match(/WID=(.*)&/)[1];
+    return wid;
+  }
+
+  getPW = (url) => {
+    const pw = url.match(/PW=(.*)/)[1];
+    return pw;
+  }
+
+  startMeeting = async () => {
+    const meetingSchedule = this.schedule;
+    console.log('meetingSchedule', meetingSchedule);
+    const webExUrl = 'https://investarget.webex.com.cn/investarget/user.php';
+    const { meeting: { url, meetingKey } } = meetingSchedule;
+    const wid = this.getWID(url);
+    const pw = this.getPW(url);
+    const formData = new FormData();
+    formData.append('AT', 'GetAuthInfo');
+    formData.append('UN', wid);
+    formData.append('PW', pw);
+    formData.append('getEncryptedPwd', true);
+    const encryptedPwRes = await fetch(webExUrl, {
+      method: 'post',
+      body: formData,
+    });
+    const encryptedPassword = await encryptedPwRes.text();
+    // console.log('encrypw', encryptedPassword);
+    const formData2 = new FormData();
+    formData2.append('AT', 'GetAuthInfo');
+    formData2.append('UN', wid);
+    formData2.append('EPW', encryptedPassword);
+    formData2.append('isUTF8', 1);
+    const sessionTicketRes = await fetch(webExUrl, {
+      method: 'post',
+      body: formData2,
+    });
+    const sessionTicketXml = await sessionTicketRes.text();
+    // console.log('sessionTicketXml', sessionTicketXml);
+    let sessionTicket = '';
+    if (window.DOMParser) {
+      // console.log('we have dom parser');
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(sessionTicketXml, "text/xml");
+      sessionTicket = xmlDoc.getElementsByTagName("SessionTicket")[0].childNodes[0].nodeValue;
+    }
+    // console.log('session ticket', sessionTicket);
+    let startMeetingSchema = '';
+    if (Platform.OS == 'ios') {
+      startMeetingSchema = `wbx://investarget.webex.com.cn/investarget?MK=${meetingKey}&MTGTK=&sitetype=TRAIN&r2sec=1&ST=1&UN=${encodeURIComponent(wid)}&TK=${encodeURIComponent(sessionTicket)}`;
+    } else if (Platform.OS == 'android') {
+      startMeetingSchema = `wbx://meeting/investarget.webex.com.cn/investarget?MK=${meetingKey}&MTGTK=&sitetype=TRAIN&r2sec=1&UN=${encodeURIComponent(wid)}&TK=${encodeURIComponent(sessionTicket)}`;
+    }
+    console.log('schema', startMeetingSchema);
+    try {
+      await Linking.openURL(startMeetingSchema);
+    } catch (err) {
+      Alert.alert('无法打开，请确认已安装相关应用');
+      console.warn('open url error:', err);
+    }
+  }
+
+  joinMeeting = async () => {
+    const { meeting: { meetingKey } } = this.schedule;
+    let joinMeetingSchema = '';
+    if (Platform.OS == 'ios') {
+      joinMeetingSchema = `wbx://investarget.webex.com.cn/investarget?MK=${meetingKey}&MTGTK=&sitetype=TRAIN&r2sec=1&ST=1`;
+    } else if (Platform.OS == 'android') {
+      joinMeetingSchema = `wbx://meeting/investarget.webex.com.cn/investarget?MK=${meetingKey}&MTGTK=&sitetype=TRAIN&r2sec=1`;
+    }
+    console.log('schema', joinMeetingSchema);
+    try {
+      await Linking.openURL(joinMeetingSchema);
+    } catch (err) {
+      Alert.alert('无法打开，请确认已安装相关应用');
+      console.warn('open url error:', err);
+    }
+  }
+
+  handleMeetingButtonPressed = () => {
+    if (this.isCurrentUserHost()) {
+      this.startMeeting();
+    } else {
+      this.joinMeeting();
+    }
+  }
+
+  isCurrentUserHost = () => {
+    console.log('current user', this.state.currentAttendee);
+    if (!this.state.currentAttendee) return false;
+    const { meetingRole } = this.state.currentAttendee;
+    if (meetingRole) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  isShowMeetingButton = () => {
+    if (!this.schedule.meeting.status) return false;
+    if (this.schedule.meeting.status.status === 0) return false;
+    return true;
+  }
   render () {
     return (
       <ScrollView>
@@ -315,15 +422,17 @@ class EditVideoMeeting extends React.Component {
           attendees={this.state.attendees}
         />
 
+        { this.isShowMeetingButton() &&
         <TouchableHighlight
           style={{ marginTop: 20, marginBottom: 80 }}
-          onPress={this.handleDeleteBtnPressed}
+          onPress={this.handleMeetingButtonPressed}
           underlayColor="lightgray"
         >
           <View style={{ height: 44, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
-            <Text style={{ fontSize: 16, color: '#428BCA', fontWeight: 'bold' }}>启动会议</Text>
+            <Text style={{ fontSize: 16, color: '#428BCA', fontWeight: 'bold' }}>{ this.isCurrentUserHost() ? '启动会议' : '加入会议'}</Text>
           </View>
         </TouchableHighlight>
+        }
 
         {/* { this.props.userInfo.id === this.schedule.createuser.id ? 
         <TouchableHighlight

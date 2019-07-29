@@ -305,7 +305,7 @@ class MyCalendar extends React.Component {
         { item.createuser.id !== this.props.userInfo.id ?
         <Text style={{ fontSize: 12, textAlign: 'right' }}>{item.createuser.username}</Text>
         : null }
-          {this.isShowVideoMeetingButton(item) &&
+          {/* {this.isShowVideoMeetingButton(item) &&
             <TouchableOpacity
               style={{ marginTop: 10 }}
               activeOpacity={0.8}
@@ -313,7 +313,7 @@ class MyCalendar extends React.Component {
             >
               <Text style={{ fontSize: 12, textAlign: 'right' }}>点击进入会议</Text>
             </TouchableOpacity>
-          }
+          } */}
       </View>
       </TouchableHighlight>
     );
