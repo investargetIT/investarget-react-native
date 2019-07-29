@@ -312,6 +312,7 @@ class EditVideoMeeting extends React.Component {
           type={this.state.type}
           handleChangeType={type => this.setState({ type })}
           meeting={this.state.meeting}
+          attendees={this.state.attendees}
         />
 
         { this.props.userInfo.id === this.schedule.createuser.id ? 

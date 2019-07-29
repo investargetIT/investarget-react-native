@@ -120,6 +120,13 @@ class VideoMeetingForm extends React.Component {
             }
 
             <View style={{ backgroundColor: 'white', marginTop: 20 }}>
+              <View style={{ padding: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Text style={{ fontSize: 16, width: 80 }}>参会人</Text>
+                <Text style={{ flex: 1, fontSize: 16, color: 'gray', textAlign: 'right' }}>{props.attendees}</Text>
+              </View>
+            </View>
+
+            <View style={{ backgroundColor: 'white', marginTop: 20 }}>
 
               <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Text style={{ fontSize: 16 }}>会议密码</Text>
