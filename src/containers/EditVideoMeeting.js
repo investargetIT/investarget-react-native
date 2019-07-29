@@ -223,10 +223,10 @@ class EditVideoMeeting extends React.Component {
   }
   
   handleProjectPressed = () => {
-    this.props.navigation.navigate(
-      'SelectProject', 
-      { onSelectProject: this.onSelectProject }
-    );
+    // this.props.navigation.navigate(
+    //   'SelectProject', 
+    //   { onSelectProject: this.onSelectProject }
+    // );
   }
 
   handleUserPressed = () => {
@@ -315,7 +315,17 @@ class EditVideoMeeting extends React.Component {
           attendees={this.state.attendees}
         />
 
-        { this.props.userInfo.id === this.schedule.createuser.id ? 
+        <TouchableHighlight
+          style={{ marginTop: 20, marginBottom: 80 }}
+          onPress={this.handleDeleteBtnPressed}
+          underlayColor="lightgray"
+        >
+          <View style={{ height: 44, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
+            <Text style={{ fontSize: 16, color: '#428BCA', fontWeight: 'bold' }}>启动会议</Text>
+          </View>
+        </TouchableHighlight>
+
+        {/* { this.props.userInfo.id === this.schedule.createuser.id ? 
         <TouchableHighlight
           style={{ marginTop: 20 }}
           onPress={this.handleDeleteBtnPressed}
@@ -325,7 +335,7 @@ class EditVideoMeeting extends React.Component {
             <Text style={{ fontSize: 16, color: 'red' }}>删除</Text>
           </View>
         </TouchableHighlight>
-        : null }
+        : null } */}
 
       </ScrollView>
     );
