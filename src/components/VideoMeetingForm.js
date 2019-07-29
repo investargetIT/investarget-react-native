@@ -79,7 +79,7 @@ class VideoMeetingForm extends React.Component {
             <View>
                 <View style={{ backgroundColor: 'white', marginTop: 20 }}>
 
-                    <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, justifyContent: 'center' }}>
+                    {/* <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, justifyContent: 'center' }}>
                         <TextInput
                             style={{ fontSize: 16, paddingLeft: 0 }}
                             onChangeText={props.handleContentChange}
@@ -87,29 +87,30 @@ class VideoMeetingForm extends React.Component {
                             placeholder="内容"
                             underlineColorAndroid="transparent"
                         />
-                    </View>
+                    </View> */}
+
+              <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Text style={{ fontSize: 16 }}>标题</Text>
+                <Text style={{ fontSize: 16, color: 'gray' }}>{props.title}</Text>
+              </View>
 
                     <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
 
-                    <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, justifyContent: 'center' }}>
-                        <TextInput
-                            style={{ fontSize: 16, paddingLeft: 0 }}
-                            onChangeText={props.handleAddressChange}
-                            value={props.address}
-                            placeholder="地点"
-                            underlineColorAndroid="transparent"
-                        />
-                    </View>
+
+              <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Text style={{ fontSize: 16 }}>地址</Text>
+                <Text style={{ fontSize: 16, color: 'gray' }}>{props.address || '暂无'}</Text>
+              </View>
                 </View>
 
                 <TouchableHighlight
                     style={{ marginTop: 20, backgroundColor: 'white' }}
-                    onPress={this.handleDatePressed}
+                    // onPress={this.handleDatePressed}
                     underlayColor={'lightgray'}
                 >
                     <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <Text style={{ fontSize: 16 }}>时间</Text>
-                        <Text style={{ fontSize: 16 }}>{props.date && formatDate(props.date)}</Text>
+                        <Text style={{ fontSize: 16 }}>预定时间</Text>
+                        <Text style={{ fontSize: 16, color: 'gray' }}>{props.date && formatDate(props.date)}</Text>
                     </View>
                 </TouchableHighlight>
 
