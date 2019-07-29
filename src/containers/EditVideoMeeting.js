@@ -356,12 +356,12 @@ class EditVideoMeeting extends React.Component {
   }
 
   joinMeeting = async () => {
-    const { meeting: { meetingKey } } = this.schedule;
+    const { meeting: { meetingKey, password } } = this.schedule;
     let joinMeetingSchema = '';
     if (Platform.OS == 'ios') {
-      joinMeetingSchema = `wbx://investarget.webex.com.cn/investarget?MK=${meetingKey}&MTGTK=&sitetype=TRAIN&r2sec=1&ST=1`;
+      joinMeetingSchema = `wbx://cisco.webex.com/cisco?MK=${meetingKey}`;
     } else if (Platform.OS == 'android') {
-      joinMeetingSchema = `wbx://meeting/investarget.webex.com.cn/investarget?MK=${meetingKey}&MTGTK=&sitetype=TRAIN&r2sec=1`;
+      joinMeetingSchema = `wbx://meeting?MK=${meetingKey}&MPW=${password}`;
     }
     console.log('schema', joinMeetingSchema);
     try {
