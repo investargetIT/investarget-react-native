@@ -283,14 +283,28 @@ class EditVideoMeeting extends React.Component {
 
   deleteSchedule = () => {
     this.props.dispatch(requestContents());
-    api.deleteSchedule(this.schedule.id)
-      .then(result => {
-        this.props.dispatch(hideLoading());
-        const { navigation } = this.props;
-        navigation.goBack();
-        navigation.state.params.onEditEventCompleted(this.schedule);
-      })
-      .catch(err => console.error(err));
+    this.deleteEventAsync().then(() => {
+      this.props.dispatch(hideLoading());
+      const { navigation } = this.props;
+      navigation.goBack();
+      navigation.state.params.onEditEventCompleted(this.schedule);
+    }).catch(err => console.error(err));
+  }
+
+  /**
+   * 删除日程，现在的逻辑是这样的
+   * 如果是非视频会议日程正常删除
+   * 如果是视频会议日程且当前用户是参会人，也是正常删除
+   * 如果是视频会议日程且当前用户是主持人，调用删除会议接口，服务端应该会把相关日程、参会人员等一起删除
+   */
+  deleteEventAsync = async () => {
+    if (this.isCurrentUserHost()) {
+      const { meeting: { id: meetingID } } = this.schedule;
+      await api.deleteWebexMeeting(meetingID);
+    } else {
+      const { id: scheduleID } = this.schedule;
+      await api.deleteSchedule(scheduleID);
+    }
   }
 
   getWID = (url) => {
@@ -424,7 +438,7 @@ class EditVideoMeeting extends React.Component {
 
         { this.isShowMeetingButton() &&
         <TouchableHighlight
-          style={{ marginTop: 20, marginBottom: 80 }}
+          style={{ marginTop: 20 }}
           onPress={this.handleMeetingButtonPressed}
           underlayColor="lightgray"
         >
@@ -434,9 +448,9 @@ class EditVideoMeeting extends React.Component {
         </TouchableHighlight>
         }
 
-        {/* { this.props.userInfo.id === this.schedule.createuser.id ? 
+        {/* { this.props.userInfo.id === this.schedule.createuser.id ?  */}
         <TouchableHighlight
-          style={{ marginTop: 20 }}
+          style={{ marginTop: 20, marginBottom: 80 }}
           onPress={this.handleDeleteBtnPressed}
           underlayColor="lightgray"
         >
@@ -444,7 +458,7 @@ class EditVideoMeeting extends React.Component {
             <Text style={{ fontSize: 16, color: 'red' }}>删除</Text>
           </View>
         </TouchableHighlight>
-        : null } */}
+        {/* : null } */}
 
       </ScrollView>
     );
