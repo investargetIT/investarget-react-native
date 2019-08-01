@@ -2,6 +2,7 @@ import React from 'react';
 import {
     Text,
     View,
+    Image,
     TextInput,
     TouchableHighlight,
     Modal,
@@ -75,6 +76,10 @@ class AddVideoMeetingForm extends React.Component {
       this.props.onSelectCountry(country);
     }
 
+    handleEditTitleClicked = () => {
+      console.log('handle edit title clicked');
+    }
+
     render() {
 
         const props = this.props;
@@ -83,15 +88,17 @@ class AddVideoMeetingForm extends React.Component {
             <View>
                 <View style={{ backgroundColor: 'white', marginTop: 20 }}>
 
-                    <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, justifyContent: 'center' }}>
-                        <TextInput
-                            style={{ fontSize: 16, paddingLeft: 0 }}
-                            onChangeText={props.handleContentChange}
-                            value={props.title}
-                            placeholder="内容"
-                            underlineColorAndroid="transparent"
-                        />
-                    </View>
+              <TouchableHighlight
+                style={{ backgroundColor: 'white' }}
+                onPress={this.handleEditTitleClicked}
+                underlayColor={'lightgray'}
+              >
+                <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <Text style={{ fontSize: 16 }}>标题</Text>
+                  <Text style={{ fontSize: 16, color: 'gray', flex: 1, textAlign: 'right' }}>未填写</Text>
+                  <Image source={require('../images/userCenter/ic_chevron_right_black_24px.png')} style={{ width: 14, height: 14, flex: 0, marginLeft: 8 }} />
+                </View>
+              </TouchableHighlight>
 
                     <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
 
