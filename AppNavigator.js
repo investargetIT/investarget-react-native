@@ -42,6 +42,7 @@ import Timeline from './src/containers/Timeline';
 import LatestRemark from './src/containers/LatestRemark';
 import MyPartnerOrg from './src/containers/MyPartnerOrg';
 import AddSchedule from './src/containers/AddSchedule';
+import AddVideoMeeting from './src/containers/AddVideoMeeting';
 import SelectProject from './src/containers/SelectProject';
 import SearchUser from './src/containers/SearchUser';
 import EditSchedule from './src/containers/EditSchedule';
@@ -93,6 +94,7 @@ import OrgBDProjList from './src/containers/OrgBDProjList';
     MyPartnerOrg: { screen: MyPartnerOrg },
     MyCalendar: { screen: MyCalendar },
     AddSchedule: { screen: AddSchedule },
+    AddVideoMeeting: { screen: AddVideoMeeting },
     SelectProject: { screen: SelectProject },
     SearchUser: { screen: SearchUser },
     EditSchedule: { screen: EditSchedule },
