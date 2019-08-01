@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   TouchableHighlight,
+  TouchableWithoutFeedback,
   Platform,
   Button,
   Linking,
@@ -43,6 +44,7 @@ class MyCalendar extends React.Component {
     this.state = {
       items: {},
       markedDates: {},
+      showChooseScheduleTypeDialog: false,
     };
     this.loadingOrLoadedDate = [];
     this.tappedDate = null;
@@ -53,10 +55,7 @@ class MyCalendar extends React.Component {
   }
 
   handleAddIconPressed = () => {
-    this.props.navigation.navigate('AddSchedule', {
-      onEditEventCompleted: this.onEditEventCompleted,
-      initialDate: this.tappedDate,
-    });
+    this.setState({ showChooseScheduleTypeDialog: !this.state.showChooseScheduleTypeDialog });
   }
 
   onEditEventCompleted = event => {
@@ -64,6 +63,18 @@ class MyCalendar extends React.Component {
     this.loadItems({ dateString });
     this.props.dispatch(syncSchedule());
   };
+
+  handleSpecificScheduleTypeClicked(type) {
+    this.setState({ showChooseScheduleTypeDialog: false });
+    let scene = 'AddSchedule';
+    if (type === 0) {
+      scene = 'AddVideoMeeting';
+    }
+    this.props.navigation.navigate(scene, {
+      onEditEventCompleted: this.onEditEventCompleted,
+      initialDate: this.tappedDate,
+    });
+  }
 
   render() {
     return (
@@ -96,6 +107,16 @@ class MyCalendar extends React.Component {
           <Text style={{ marginLeft: 2, fontSize: 12 }}>视频会议</Text>
         </View>
 
+        {this.state.showChooseScheduleTypeDialog ?
+          <TouchableWithoutFeedback onPress={() => this.setState({ showChooseScheduleTypeDialog: false })}>
+            <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0, top: 0, backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
+              <View style={{ position: 'absolute', top: 0, right: 0, backgroundColor: '#10458F' }}>
+                <Text style={{ padding: 10, color: 'white' }} onPress={this.handleSpecificScheduleTypeClicked.bind(this, 0)}>视频会议</Text>
+                <Text style={{ padding: 10, color: 'white' }} onPress={this.handleSpecificScheduleTypeClicked.bind(this, 1)}>其他日程</Text>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+          : null}
       </View>
     );
   }
