@@ -193,6 +193,7 @@ class AddVideoMeeting extends React.Component {
 
   handleAddressChange = address => {
     this.setState({ address });
+    this.props.navigation.navigate('MyModal');
   }
 
   render () {

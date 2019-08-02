@@ -58,6 +58,7 @@ import OrgBDDetail from './src/containers/OrgBDDetail';
 import AddOrgBD from './src/containers/AddOrgBD';
 import EditUser from './src/containers/EditUser';
 import OrgBDProjList from './src/containers/OrgBDProjList';
+import ModalScreen from './src/containers/ModalScreen';
   
   const AppNavigator = StackNavigator({
     Home: { screen:  Home },
@@ -111,10 +112,25 @@ import OrgBDProjList from './src/containers/OrgBDProjList';
     OrgBDProjList: { screen: OrgBDProjList },
   })
 
+  const RootStack = StackNavigator(
+    {
+      Main: {
+        screen: AppNavigator,
+      },
+      MyModal: {
+        screen: ModalScreen,
+      },
+    },
+    {
+      mode: 'modal',
+      headerMode: 'none',
+    }
+  );
+
   const DrawerApp = DrawerNavigator(
     {
       App: {
-        screen: AppNavigator,
+        screen: RootStack,
       },
       MyCalendar: {
         screen: MyCalendar
