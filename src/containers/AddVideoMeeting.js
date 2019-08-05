@@ -3,6 +3,7 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
+  Image,
   View,
   DatePickerIOS,
   Platform,
@@ -193,14 +194,47 @@ class AddVideoMeeting extends React.Component {
 
   handleAddressChange = address => {
     this.setState({ address });
+  }
+
+  handleEditTitleClicked = () => {
     this.props.navigation.navigate('MyModal');
+  }
+
+  handleDatePressed = async () => {
+    if (Platform.OS === 'ios') {
+      this.setState({ showDatePickerIOS: true });
+    } else if (Platform.OS === 'android') {
+      try {
+        const {action, year, month, day} = await DatePickerAndroid.open({
+          // Use `new Date()` for current date.
+          // May 25 2020. Month 0 is January.
+          date: new Date(),
+          minDate: this.minimumDate,
+        });
+        if (action !== DatePickerAndroid.dismissedAction) {
+          // Selected year, month (0-11), day
+          const {action, hour, minute} = await TimePickerAndroid.open({
+            hour: 14,
+            minute: 0,
+            is24Hour: true, // Will display '2 PM'
+          });
+          if (action !== TimePickerAndroid.dismissedAction) {
+            // Selected hour (0-23), minute (0-59)
+            console.log(year, month, day, hour, minute);
+            this.props.onDateChange(new Date(`${year}-${pad(month + 1)}-${pad(day)}T${pad(hour)}:${pad(minute)}+08:00`))
+          }
+        }
+      } catch ({code, message}) {
+        console.warn('Cannot open date picker', message);
+      }
+    }
   }
 
   render () {
     return (
       <ScrollView>
 
-        <AddVideoMeetingForm 
+        {/* <AddVideoMeetingForm 
           title={this.state.title}
           handleContentChange={this.handleContentChange}
           address={this.state.address}
@@ -218,8 +252,96 @@ class AddVideoMeeting extends React.Component {
           onSelectCountry={country => this.setState({ country })}
           type={this.state.type}
           handleChangeType={type => this.setState({ type })}
-        />
-        
+        /> */}
+
+        <View style={{ backgroundColor: 'white', marginTop: 20 }}>
+
+          <TouchableHighlight
+            style={{ backgroundColor: 'white' }}
+            onPress={this.handleEditTitleClicked}
+            underlayColor={'lightgray'}
+          >
+            <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Text style={{ fontSize: 16 }}>标题</Text>
+              <Text style={{ fontSize: 16, color: 'gray', flex: 1, textAlign: 'right' }}>未填写</Text>
+              <Image source={require('../images/userCenter/ic_chevron_right_black_24px.png')} style={{ width: 14, height: 14, flex: 0, marginLeft: 8 }} />
+            </View>
+          </TouchableHighlight>
+
+          <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
+
+          {/* <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, justifyContent: 'center' }}>
+            <TextInput
+              style={{ fontSize: 16, paddingLeft: 0 }}
+              onChangeText={props.handleAddressChange}
+              value={props.address}
+              placeholder="地点"
+              underlineColorAndroid="transparent"
+            />
+          </View> */}
+        </View>
+
+        <TouchableHighlight
+          style={{ marginTop: 20, backgroundColor: 'white' }}
+          onPress={this.handleDatePressed}
+          underlayColor={'lightgray'}
+        >
+          <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Text style={{ fontSize: 16 }}>时间</Text>
+            <Text style={{ fontSize: 16 }}>{this.state.date && formatDate2(this.state.date)}</Text>
+          </View>
+        </TouchableHighlight>
+
+        {this.state.project ?
+          <View style={{ marginTop: 20 }}>
+            <ProjectItem {...this.state.project} onPress={this.handleProjectPressed} />
+          </View>
+          :
+          <TouchableHighlight
+            style={{ marginTop: 20 }}
+            underlayColor="lightgray"
+            onPress={this.handleProjectPressed}
+          >
+            <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, justifyContent: 'center', backgroundColor: 'white' }}>
+              <Text style={{ fontSize: 16 }}>添加项目</Text>
+            </View>
+          </TouchableHighlight>
+        }
+
+        {this.state.user ?
+          <View style={{ marginTop: 20 }}>
+            <UserItem {...this.state.user} onSelect={this.handleUserPressed} />
+          </View>
+          :
+          <TouchableHighlight style={{ marginTop: 20 }} underlayColor="lightgray" onPress={this.handleUserPressed}>
+            <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, justifyContent: 'center', backgroundColor: 'white' }}>
+              <Text style={{ fontSize: 16 }}>添加用户</Text>
+            </View>
+          </TouchableHighlight>
+        }
+
+        {Platform.OS === 'ios' && this.state.showDatePickerIOS ?
+          <Modal
+            transparent={true}
+            visible={true}
+            onRequestClose={() => { alert("Modal has been closed.") }}
+          >
+            <TouchableWithoutFeedback onPress={() => this.setState({ showDatePickerIOS: false })}>
+              <View style={{ position: 'absolute', bottom: 0, top: 0, left: 0, right: 0, backgroundColor: 'rgba(0, 0, 0, 0.1)' }}>
+                <DatePickerIOS
+                  style={{ position: 'absolute', bottom: 0, left: 0, right: 0, backgroundColor: 'white' }}
+                  date={this.state.date}
+                  mode="datetime"
+                  minimumDate={this.minimumDate}
+                  onDateChange={date => this.setState({ date })}
+                  minuteInterval={30}
+                />
+              </View>
+            </TouchableWithoutFeedback>
+          </Modal>
+          : null}
+
+
       </ScrollView>
     );
   }
@@ -231,6 +353,13 @@ function pad(number) {
     return '0' + number;
   }
   return number;
+}
+function formatDate2(date) {
+  return date.getFullYear() +
+  '-' + pad(date.getMonth() + 1) +
+  '-' + pad(date.getDate()) +
+  ' ' + pad(date.getHours()) +
+  ':' + pad(date.getMinutes());
 }
 function formatDate(date) {
   return date.getFullYear() +
