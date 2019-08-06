@@ -343,6 +343,20 @@ class AddVideoMeeting extends React.Component {
             </View>
           </TouchableHighlight>
 
+          <View style={{ height: 0.5, backgroundColor: "#CED0CE", marginLeft: 10 }} />
+
+          <TouchableHighlight
+            style={{ backgroundColor: 'white' }}
+            onPress={this.handleProjectPressed}
+            underlayColor={'lightgray'}
+          >
+            <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Text style={{ fontSize: 16 }}>项目</Text>
+              <Text style={{ fontSize: 16, color: 'gray', flex: 1, textAlign: 'right' }}>{this.state.project ? this.state.project.title : '未选择'}</Text>
+              <Image source={require('../images/userCenter/ic_chevron_right_black_24px.png')} style={{ width: 14, height: 14, flex: 0, marginLeft: 8 }} />
+            </View>
+          </TouchableHighlight>
+
         </View>
 
         <View style={{ backgroundColor: 'white', marginTop: 20 }}>
@@ -375,7 +389,7 @@ class AddVideoMeeting extends React.Component {
 
         </View>
 
-        {this.state.project ?
+        {/* {this.state.project ?
           <View style={{ marginTop: 20 }}>
             <ProjectItem {...this.state.project} onPress={this.handleProjectPressed} />
           </View>
@@ -389,7 +403,7 @@ class AddVideoMeeting extends React.Component {
               <Text style={{ fontSize: 16 }}>添加项目</Text>
             </View>
           </TouchableHighlight>
-        }
+        } */}
 
         {this.state.user ?
           <View style={{ marginTop: 20 }}>
