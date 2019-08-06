@@ -290,6 +290,10 @@ class AddVideoMeeting extends React.Component {
     }
   }
 
+  handleAddAttendeeBtnPressed = () => {
+
+  }
+
   render () {
     return (
       <ScrollView>
@@ -429,6 +433,36 @@ class AddVideoMeeting extends React.Component {
           </TouchableHighlight>
 
         </View>
+
+        <Text style={{ marginTop: 20, marginBottom: 8, marginLeft: 10, color: 'gray' }}>参会人</Text>
+
+        <View style={{ backgroundColor: 'white' }}>
+
+          <TouchableHighlight
+            style={{ backgroundColor: 'white' }}
+            onPress={this.handleTraderPressed}
+            underlayColor={'lightgray'}
+          >
+            <View style={{ padding: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <View>
+                <Text style={{ fontSize: 16 }}>交易师</Text>
+                <Text style={{ fontSize: 16, color: 'gray' }}>admin@test.com</Text>
+              </View>
+              <Image source={require('../images/userCenter/ic_chevron_right_black_24px.png')} style={{ width: 14, height: 14, flex: 0, marginLeft: 8 }} />
+            </View>
+          </TouchableHighlight>
+          
+        </View>
+
+        <TouchableHighlight
+          style={{ marginTop: 20, backgroundColor: 'white' }}
+          onPress={this.handleAddAttendeeBtnPressed}
+          underlayColor="lightgray"
+        >
+          <View style={{ height: 44, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
+            <Text style={{ fontSize: 16, color: '#10458f', fontWeight: 'bold' }}>添加参会人</Text>
+          </View>
+        </TouchableHighlight>
 
         {/* {this.state.project ?
           <View style={{ marginTop: 20 }}>
