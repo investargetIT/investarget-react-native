@@ -310,7 +310,8 @@ class AddVideoMeeting extends React.Component {
         >
           <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
             <Text style={{ fontSize: 16 }}>时间</Text>
-            <Text style={{ fontSize: 16 }}>{this.state.date && formatDate2(this.state.date)}</Text>
+            <Text style={{ fontSize: 16, color: 'gray', flex: 1, textAlign: 'right' }}>{this.state.date && formatDate2(this.state.date)}</Text>
+            <Image source={require('../images/userCenter/ic_chevron_right_black_24px.png')} style={{ width: 14, height: 14, flex: 0, marginLeft: 8 }} />
           </View>
         </TouchableHighlight>
 
