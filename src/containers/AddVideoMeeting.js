@@ -58,6 +58,7 @@ class AddVideoMeeting extends React.Component {
     this.state = {
       title: '',
       address: '',
+      password: '',
       showDatePickerIOS: false,
       date: initialDate || today,
       project: null,
@@ -220,6 +221,18 @@ class AddVideoMeeting extends React.Component {
     this.setState({ address });
   }
 
+  handleEditPasswordClicked = () => {
+    this.props.navigation.navigate('EditText', {
+      title: '会议密码',
+      initialValue: this.state.password,
+      onSave: this.handlePasswordSaved,
+    });
+  }
+
+  handlePasswordSaved = password => {
+    this.setState({ password });
+  }
+
   handleDatePressed = async () => {
     if (Platform.OS === 'ios') {
       this.setState({ showDatePickerIOS: true });
@@ -301,19 +314,38 @@ class AddVideoMeeting extends React.Component {
               <Image source={require('../images/userCenter/ic_chevron_right_black_24px.png')} style={{ width: 14, height: 14, flex: 0, marginLeft: 8 }} />
             </View>
           </TouchableHighlight>
+
+          <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
+
+          <TouchableHighlight
+            style={{ backgroundColor: 'white' }}
+            onPress={this.handleDatePressed}
+            underlayColor={'lightgray'}
+          >
+            <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Text style={{ fontSize: 16 }}>时间</Text>
+              <Text style={{ fontSize: 16, color: 'gray', flex: 1, textAlign: 'right' }}>{this.state.date && formatDate2(this.state.date)}</Text>
+              <Image source={require('../images/userCenter/ic_chevron_right_black_24px.png')} style={{ width: 14, height: 14, flex: 0, marginLeft: 8 }} />
+            </View>
+          </TouchableHighlight>
+
         </View>
 
-        <TouchableHighlight
-          style={{ marginTop: 20, backgroundColor: 'white' }}
-          onPress={this.handleDatePressed}
-          underlayColor={'lightgray'}
-        >
-          <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Text style={{ fontSize: 16 }}>时间</Text>
-            <Text style={{ fontSize: 16, color: 'gray', flex: 1, textAlign: 'right' }}>{this.state.date && formatDate2(this.state.date)}</Text>
-            <Image source={require('../images/userCenter/ic_chevron_right_black_24px.png')} style={{ width: 14, height: 14, flex: 0, marginLeft: 8 }} />
-          </View>
-        </TouchableHighlight>
+        <View style={{ backgroundColor: 'white', marginTop: 20 }}>
+
+          <TouchableHighlight
+            style={{ backgroundColor: 'white' }}
+            onPress={this.handleEditPasswordClicked}
+            underlayColor={'lightgray'}
+          >
+            <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Text style={{ fontSize: 16 }}>会议密码</Text>
+              <Text style={{ fontSize: 16, color: 'gray', flex: 1, textAlign: 'right' }}>{this.state.password || '未填写，必填'}</Text>
+              <Image source={require('../images/userCenter/ic_chevron_right_black_24px.png')} style={{ width: 14, height: 14, flex: 0, marginLeft: 8 }} />
+            </View>
+          </TouchableHighlight>
+
+        </View>
 
         {this.state.project ?
           <View style={{ marginTop: 20 }}>
