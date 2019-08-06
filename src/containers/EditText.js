@@ -28,6 +28,7 @@ class EditText extends React.Component {
     super(props);
     this.state = {
       text: props.navigation.state.params.initialValue || '',
+      keyboardType: props.navigation.state.params.keyboardType || 'default',
     };
   }
 
@@ -53,6 +54,7 @@ class EditText extends React.Component {
             style={{ fontSize: 16, paddingLeft: 0 }}
             onChangeText={this.handleTextChange}
             value={this.state.text}
+            keyboardType={this.state.keyboardType}
             placeholder="内容"
             underlineColorAndroid="transparent"
             autoFocus={true}

@@ -59,6 +59,7 @@ class AddVideoMeeting extends React.Component {
       title: '',
       address: '',
       password: '',
+      duration: 60,
       showDatePickerIOS: false,
       date: initialDate || today,
       project: null,
@@ -233,6 +234,19 @@ class AddVideoMeeting extends React.Component {
     this.setState({ password });
   }
 
+  handleEditDurationClicked = () => {
+    this.props.navigation.navigate('EditText', {
+      title: '持续时间',
+      initialValue: this.state.duration.toString(),
+      keyboardType: 'numeric',
+      onSave: this.handleDurationSaved,
+    });
+  }
+
+  handleDurationSaved = duration => {
+    this.setState({ duration: parseInt(duration, 10) });
+  }
+
   handleDatePressed = async () => {
     if (Platform.OS === 'ios') {
       this.setState({ showDatePickerIOS: true });
@@ -341,6 +355,20 @@ class AddVideoMeeting extends React.Component {
             <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
               <Text style={{ fontSize: 16 }}>会议密码</Text>
               <Text style={{ fontSize: 16, color: 'gray', flex: 1, textAlign: 'right' }}>{this.state.password || '未填写，必填'}</Text>
+              <Image source={require('../images/userCenter/ic_chevron_right_black_24px.png')} style={{ width: 14, height: 14, flex: 0, marginLeft: 8 }} />
+            </View>
+          </TouchableHighlight>
+
+          <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
+
+          <TouchableHighlight
+            style={{ backgroundColor: 'white' }}
+            onPress={this.handleEditDurationClicked}
+            underlayColor={'lightgray'}
+          >
+            <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Text style={{ fontSize: 16 }}>持续时间</Text>
+              <Text style={{ fontSize: 16, color: 'gray', flex: 1, textAlign: 'right' }}>{`${this.state.duration}分钟`}</Text>
               <Image source={require('../images/userCenter/ic_chevron_right_black_24px.png')} style={{ width: 14, height: 14, flex: 0, marginLeft: 8 }} />
             </View>
           </TouchableHighlight>
