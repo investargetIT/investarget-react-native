@@ -208,6 +208,18 @@ class AddVideoMeeting extends React.Component {
     this.setState({ title });
   }
 
+  handleEditAddressClicked = () => {
+    this.props.navigation.navigate('EditText', {
+      title: '地址',
+      initialValue: this.state.address,
+      onSave: this.handleAddressSaved,
+    });
+  }
+
+  handleAddressSaved = address => {
+    this.setState({ address });
+  }
+
   handleDatePressed = async () => {
     if (Platform.OS === 'ios') {
       this.setState({ showDatePickerIOS: true });
@@ -278,15 +290,17 @@ class AddVideoMeeting extends React.Component {
 
           <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
 
-          {/* <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, justifyContent: 'center' }}>
-            <TextInput
-              style={{ fontSize: 16, paddingLeft: 0 }}
-              onChangeText={props.handleAddressChange}
-              value={props.address}
-              placeholder="地点"
-              underlineColorAndroid="transparent"
-            />
-          </View> */}
+          <TouchableHighlight
+            style={{ backgroundColor: 'white' }}
+            onPress={this.handleEditAddressClicked}
+            underlayColor={'lightgray'}
+          >
+            <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Text style={{ fontSize: 16 }}>地址</Text>
+              <Text style={{ fontSize: 16, color: 'gray', flex: 1, textAlign: 'right' }}>{this.state.address || '未填写'}</Text>
+              <Image source={require('../images/userCenter/ic_chevron_right_black_24px.png')} style={{ width: 14, height: 14, flex: 0, marginLeft: 8 }} />
+            </View>
+          </TouchableHighlight>
         </View>
 
         <TouchableHighlight
