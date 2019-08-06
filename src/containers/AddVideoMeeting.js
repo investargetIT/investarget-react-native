@@ -61,6 +61,7 @@ class AddVideoMeeting extends React.Component {
       password: '',
       duration: 60,
       investor: null,
+      trader: null,
       showDatePickerIOS: false,
       date: initialDate || today,
       project: null,
@@ -168,6 +169,17 @@ class AddVideoMeeting extends React.Component {
 
   onSelectInvestor = user => {
     this.setState({ investor: user }, this.checkTimelineExist);
+  }
+
+  handleTraderPressed = () => {
+    this.props.navigation.navigate(
+      'SearchUser', 
+      { onSelectUser: this.onSelectTrader }
+    );
+  }
+
+  onSelectTrader = user => {
+    this.setState({ trader: user }, this.checkTimelineExist);
   }
 
   checkTimelineExist = () => {
@@ -402,6 +414,20 @@ class AddVideoMeeting extends React.Component {
             </View>
           </TouchableHighlight>
 
+          <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
+
+          <TouchableHighlight
+            style={{ backgroundColor: 'white' }}
+            onPress={this.handleTraderPressed}
+            underlayColor={'lightgray'}
+          >
+            <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Text style={{ fontSize: 16 }}>交易师</Text>
+              <Text style={{ fontSize: 16, color: 'gray', flex: 1, textAlign: 'right' }}>{this.state.trader ? this.state.trader.username : '未选择'}</Text>
+              <Image source={require('../images/userCenter/ic_chevron_right_black_24px.png')} style={{ width: 14, height: 14, flex: 0, marginLeft: 8 }} />
+            </View>
+          </TouchableHighlight>
+
         </View>
 
         {/* {this.state.project ?
@@ -420,7 +446,7 @@ class AddVideoMeeting extends React.Component {
           </TouchableHighlight>
         } */}
 
-        {this.state.user ?
+        {/* {this.state.user ?
           <View style={{ marginTop: 20 }}>
             <UserItem {...this.state.user} onSelect={this.handleUserPressed} />
           </View>
@@ -430,7 +456,7 @@ class AddVideoMeeting extends React.Component {
               <Text style={{ fontSize: 16 }}>添加用户</Text>
             </View>
           </TouchableHighlight>
-        }
+        } */}
 
         {Platform.OS === 'ios' && this.state.showDatePickerIOS ?
           <Modal
