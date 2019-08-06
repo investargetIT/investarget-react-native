@@ -1,7 +1,5 @@
 import React from 'react';
-import { View, Text, Button, TouchableOpacity, SafeAreaView, Platform, ScrollView, StatusBar, TextInput } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
-import CommonStatusBar from '../components/StatusBar';
+import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 
 class EditText extends React.Component {
 
@@ -33,14 +31,6 @@ class EditText extends React.Component {
     };
   }
 
-  componentDidMount() {
-    if (Platform.OS === 'android' && DeviceInfo.hasNotch()) {
-      SafeAreaView.setStatusBarHeight(
-        /* Some value for status bar height + notch height */
-      );
-    }
-  }
-
   handleTextChange = text => {
     this.setState({ text });
     if (text.length > 0) {
@@ -65,6 +55,7 @@ class EditText extends React.Component {
             value={this.state.text}
             placeholder="内容"
             underlineColorAndroid="transparent"
+            autoFocus={true}
           />
         </View>
       </View>
