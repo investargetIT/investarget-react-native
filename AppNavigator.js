@@ -59,6 +59,7 @@ import AddOrgBD from './src/containers/AddOrgBD';
 import EditUser from './src/containers/EditUser';
 import OrgBDProjList from './src/containers/OrgBDProjList';
 import ModalScreen from './src/containers/ModalScreen';
+import EditText from './src/containers/EditText';
   
   const AppNavigator = StackNavigator({
     Home: { screen:  Home },
@@ -110,6 +111,7 @@ import ModalScreen from './src/containers/ModalScreen';
     AddOrgBD: { screen: AddOrgBD },
     EditUser: { screen: EditUser },
     OrgBDProjList: { screen: OrgBDProjList },
+    EditText: { screen: EditText },
   })
 
   const RootStack = StackNavigator(

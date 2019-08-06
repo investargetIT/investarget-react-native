@@ -197,7 +197,15 @@ class AddVideoMeeting extends React.Component {
   }
 
   handleEditTitleClicked = () => {
-    this.props.navigation.navigate('MyModal');
+    this.props.navigation.navigate('EditText', {
+      title: '标题',
+      initialValue: this.state.title,
+      onSave: this.handleTitleSaved,
+    });
+  }
+
+  handleTitleSaved = title => {
+    this.setState({ title });
   }
 
   handleDatePressed = async () => {
@@ -263,7 +271,7 @@ class AddVideoMeeting extends React.Component {
           >
             <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
               <Text style={{ fontSize: 16 }}>标题</Text>
-              <Text style={{ fontSize: 16, color: 'gray', flex: 1, textAlign: 'right' }}>未填写</Text>
+              <Text style={{ fontSize: 16, color: 'gray', flex: 1, textAlign: 'right' }}>{this.state.title || '未填写'}</Text>
               <Image source={require('../images/userCenter/ic_chevron_right_black_24px.png')} style={{ width: 14, height: 14, flex: 0, marginLeft: 8 }} />
             </View>
           </TouchableHighlight>
