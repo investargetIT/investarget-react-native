@@ -320,6 +320,22 @@ class AddVideoMeeting extends React.Component {
     });
   }
 
+  handleRemoveAttendeeBtnPressed = index => {
+    Alert.alert(
+      '确定移除？',
+      '移除后无法恢复，需要重新输入',
+      [
+        {text: '取消', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: '确定', onPress: () => this.removeAttendee(index)},
+      ],
+      { cancelable: true }
+    )
+  }
+
+  removeAttendee = index => {
+    this.setState({ attendees: this.state.attendees.filter((f, i) => i !== index) })
+  }
+
   render () {
     return (
       <ScrollView>
@@ -451,7 +467,12 @@ class AddVideoMeeting extends React.Component {
               underlayColor={'lightgray'}
             >
               <View style={{ padding: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                <View>
+                <TouchableOpacity onPress={this.handleRemoveAttendeeBtnPressed.bind(this, i)}>
+                  <View style={{ marginRight: 8, width: 24, height: 24, backgroundColor: 'red', borderRadius: 12, justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ width: 12, height: 4, backgroundColor: 'white' }} />
+                  </View>
+                </TouchableOpacity>
+                <View style={{ flex: 1 }}>
                   <Text style={{ fontSize: 16 }}>{m.username}</Text>
                   <Text style={{ fontSize: 16, color: 'gray' }}>{m.email}</Text>
                 </View>

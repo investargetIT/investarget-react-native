@@ -47,7 +47,7 @@ function r(url, method, body, isUploadFile) {
       throw new ApiError(1299, 'data source missing')
     })
     .catch(error => {
-      console.log('###', error)
+      console.log('###', url, method, body, error.toString())
       throw error
     })
 }
