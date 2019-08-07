@@ -479,12 +479,10 @@ class AddVideoMeeting extends React.Component {
                 <Image source={require('../images/userCenter/ic_chevron_right_black_24px.png')} style={{ width: 14, height: 14, flex: 0, marginLeft: 8 }} />
               </View>
             </TouchableHighlight>
-            {i !== this.state.attendees.length - 1 && <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />}
+            <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
           </View>))}
           
         </View>
-
-        <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
 
         <TouchableHighlight
           style={{ marginBottom: 40, backgroundColor: 'white' }}
