@@ -62,7 +62,7 @@ class AddVideoMeeting extends React.Component {
       duration: 60,
       investor: null,
       trader: null,
-      attendees: [{ username: 'test', email: 'test@admin.com' }, { username: 'test1', email: 'test1@admin.com' }],
+      attendees: [],
       showDatePickerIOS: false,
       date: initialDate || today,
       project: null,
@@ -484,13 +484,15 @@ class AddVideoMeeting extends React.Component {
           
         </View>
 
+        <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
+
         <TouchableHighlight
-          style={{ marginTop: 20, marginBottom: 40, backgroundColor: 'white' }}
+          style={{ marginBottom: 40, backgroundColor: 'white' }}
           onPress={this.handleAddAttendeeBtnPressed}
           underlayColor="lightgray"
         >
           <View style={{ height: 44, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
-            <Text style={{ fontSize: 16, color: '#10458f', fontWeight: 'bold' }}>添加参会人</Text>
+            <Text style={{ fontSize: 16, color: '#10458f' }}>添加参会人</Text>
           </View>
         </TouchableHighlight>
 
