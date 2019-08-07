@@ -100,7 +100,11 @@ class Container extends React.Component {
             password: password
         })
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo))
-        .then(() => this.setState({ isShowApp: true }));
+        .then(() => {
+          this.setState({ isShowApp: true });
+          // 同步App日程到iOS日历
+          this.syncSchedule();
+        });
       
         JPushModule.setAlias(String(userInfo.id), ()=>{});
 
@@ -157,7 +161,7 @@ class Container extends React.Component {
     })
 
     // 同步App日程到iOS日历
-    this.syncSchedule();
+    // this.syncSchedule();
 
     // AsyncStorage.removeItem('is_first_time'); return;
     // 检查是否是首次打开App
