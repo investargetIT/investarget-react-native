@@ -299,33 +299,30 @@ class AddVideoMeeting extends React.Component {
   }
 
   handleAttendeeSaved = attendee => {
-    console.log('handle attendee save', attendee);
-    this.setState({ attendees: this.state.attendees.concat(attendee) });
+    if (attendee.index === undefined) {
+      this.setState({ attendees: this.state.attendees.concat(attendee) });
+      return;
+    }
+    const { index, username, email } = attendee;
+    const newAttendees = [...this.state.attendees];
+    newAttendees[index].username = username;
+    newAttendees[index].email = email;
+    this.setState({ attendees: newAttendees });
+  }
+
+  handleAttendeeItemPressed = (index, item) => {
+    const { username, email } = item;
+    this.props.navigation.navigate('EditAttendee', {
+      index,
+      username,
+      email,
+      onSave: this.handleAttendeeSaved,
+    });
   }
 
   render () {
     return (
       <ScrollView>
-
-        {/* <AddVideoMeetingForm 
-          title={this.state.title}
-          handleContentChange={this.handleContentChange}
-          address={this.state.address}
-          handleAddressChange={this.handleAddressChange}
-          date={this.state.date}
-          onDateChange={date => this.setState({ date })}
-          project={this.state.project}
-          handleProjectPressed={this.handleProjectPressed}
-          user={this.state.user}
-          handleUserPressed={this.handleUserPressed}
-          areaOptions={this.state.areaOptions}
-          location={this.state.location}
-          handleChangeArea={ location => this.setState({ location }) }
-          country={this.state.country}
-          onSelectCountry={country => this.setState({ country })}
-          type={this.state.type}
-          handleChangeType={type => this.setState({ type })}
-        /> */}
 
         <View style={{ backgroundColor: 'white', marginTop: 20 }}>
 
@@ -450,7 +447,7 @@ class AddVideoMeeting extends React.Component {
           {this.state.attendees.map((m, i) => (<View key={i}>
             <TouchableHighlight
               style={{ backgroundColor: 'white' }}
-              onPress={this.handleTraderPressed}
+              onPress={this.handleAttendeeItemPressed.bind(this, i, m)}
               underlayColor={'lightgray'}
             >
               <View style={{ padding: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>

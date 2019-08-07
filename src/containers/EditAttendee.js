@@ -30,6 +30,7 @@ class EditAttendee extends React.Component {
       username: props.navigation.state.params.username || '',
       email: props.navigation.state.params.email || '',
     };
+    this.index = props.navigation.state.params.index;
   }
 
   handleUsernameChange = text => {
@@ -53,7 +54,7 @@ class EditAttendee extends React.Component {
   handleSubmit = () => {
     this.props.navigation.goBack();
     const { username, email } = this.state;
-    this.props.navigation.state.params.onSave({ username, email });
+    this.props.navigation.state.params.onSave({ username, email, index: this.index });
   }
 
   render() {
