@@ -469,7 +469,7 @@ class AddVideoMeeting extends React.Component {
               <View style={{ padding: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <TouchableOpacity onPress={this.handleRemoveAttendeeBtnPressed.bind(this, i)}>
                   <View style={{ marginRight: 8, width: 24, height: 24, backgroundColor: 'red', borderRadius: 12, justifyContent: 'center', alignItems: 'center' }}>
-                    <View style={{ width: 12, height: 4, backgroundColor: 'white' }} />
+                    <View style={{ width: 12, height: 2, backgroundColor: 'white' }} />
                   </View>
                 </TouchableOpacity>
                 <View style={{ flex: 1 }}>
