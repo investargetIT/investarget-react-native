@@ -62,6 +62,7 @@ class AddVideoMeeting extends React.Component {
       duration: 60,
       investor: null,
       trader: null,
+      attendees: [{ username: 'test', email: 'test@admin.com' }, { username: 'test1', email: 'test1@admin.com' }],
       showDatePickerIOS: false,
       date: initialDate || today,
       project: null,
@@ -293,8 +294,13 @@ class AddVideoMeeting extends React.Component {
   handleAddAttendeeBtnPressed = () => {
     this.props.navigation.navigate('EditAttendee', {
       initialValue: this.state.password,
-      onSave: this.handlePasswordSaved,
+      onSave: this.handleAttendeeSaved,
     });
+  }
+
+  handleAttendeeSaved = attendee => {
+    console.log('handle attendee save', attendee);
+    this.setState({ attendees: this.state.attendees.concat(attendee) });
   }
 
   render () {
@@ -441,19 +447,22 @@ class AddVideoMeeting extends React.Component {
 
         <View style={{ backgroundColor: 'white' }}>
 
-          <TouchableHighlight
-            style={{ backgroundColor: 'white' }}
-            onPress={this.handleTraderPressed}
-            underlayColor={'lightgray'}
-          >
-            <View style={{ padding: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-              <View>
-                <Text style={{ fontSize: 16 }}>交易师</Text>
-                <Text style={{ fontSize: 16, color: 'gray' }}>admin@test.com</Text>
+          {this.state.attendees.map((m, i) => (<View key={i}>
+            <TouchableHighlight
+              style={{ backgroundColor: 'white' }}
+              onPress={this.handleTraderPressed}
+              underlayColor={'lightgray'}
+            >
+              <View style={{ padding: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <View>
+                  <Text style={{ fontSize: 16 }}>{m.username}</Text>
+                  <Text style={{ fontSize: 16, color: 'gray' }}>{m.email}</Text>
+                </View>
+                <Image source={require('../images/userCenter/ic_chevron_right_black_24px.png')} style={{ width: 14, height: 14, flex: 0, marginLeft: 8 }} />
               </View>
-              <Image source={require('../images/userCenter/ic_chevron_right_black_24px.png')} style={{ width: 14, height: 14, flex: 0, marginLeft: 8 }} />
-            </View>
-          </TouchableHighlight>
+            </TouchableHighlight>
+            {i !== this.state.attendees.length - 1 && <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />}
+          </View>))}
           
         </View>
 

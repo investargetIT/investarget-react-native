@@ -52,7 +52,8 @@ class EditAttendee extends React.Component {
 
   handleSubmit = () => {
     this.props.navigation.goBack();
-    this.props.navigation.state.params.onSave(this.state.text);
+    const { username, email } = this.state;
+    this.props.navigation.state.params.onSave({ username, email });
   }
 
   render() {
