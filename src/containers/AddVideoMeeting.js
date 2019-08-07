@@ -291,7 +291,10 @@ class AddVideoMeeting extends React.Component {
   }
 
   handleAddAttendeeBtnPressed = () => {
-
+    this.props.navigation.navigate('EditAttendee', {
+      initialValue: this.state.password,
+      onSave: this.handlePasswordSaved,
+    });
   }
 
   render () {
