@@ -759,3 +759,5 @@ export const getUserSession = () => r('/user/session/');
 
 export const getWebexUser = param => r('/msg/webex/user/?' + qs.stringify(param));
 export const deleteWebexMeeting = id => r(`/msg/webex/meeting/${id}/`, 'DELETE');
+
+export const getUserInfo = (id, isShowAllLangInfo) => isShowAllLangInfo ? r2(`/user/${id}/`) : r(`/user/${id}/`);

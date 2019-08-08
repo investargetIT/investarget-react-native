@@ -48,7 +48,7 @@ class FilterUser extends React.Component {
   handleSubmit = () => {}
 
   searchUser = () => {
-    this.asyncFetchAllUsers().then(data => {
+    this.asyncFetchData(this.state.search).then(data => {
       const list = data.map(m => {
         const { id, username, photourl, org, email } = m;
         return {
@@ -62,7 +62,25 @@ class FilterUser extends React.Component {
       this.setState({ users: list });
     }).catch(err => console.error(err));
   }
- 
+
+  asyncFetchData = async value => {
+    if (this.project) {
+      const getOrgBdListReq = await api.getOrgBdList({ proj: this.project.id, page_size: 1000 });
+      const { count: orgBdListCount } = getOrgBdListReq;
+      if (orgBdListCount > 0) {
+        const { data: orgBdListData } = getOrgBdListReq;
+        const getUserInfoReq = await Promise.all(
+          orgBdListData.map(m => api.getUserInfo(m.bduser))
+        );
+        return getUserInfoReq.filter(f => f.username.includes(value));
+      } else {
+        return await this.asyncFetchAllUsers(value);
+      }
+    } else {
+      return await this.asyncFetchAllUsers(value);
+    }
+  }
+
   asyncFetchAllUsers = async value => {
     const reqUserGroup = await api.queryUserGroup({ type: this.type || 'investor' });
     const reqUsers = await api.getUser({ search: value, groups: reqUserGroup.data.map(m => m.id), page_size: 100 });
