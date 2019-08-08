@@ -68,7 +68,6 @@ class AddVideoMeeting extends React.Component {
       location: null,
       areaOptions: [],
       country: { label: '中国', value: 42 },
-      type: 3,
     }
   }
 
@@ -81,31 +80,66 @@ class AddVideoMeeting extends React.Component {
   }
 
   handleSubmit = () => {
-    console.log('handle submit', this.state);
-  }
-
-  addSchedule = async () => {
-    this.props.dispatch(requestContents());
-    const body = {
+    const param = {
       scheduledtime: formatDate(this.state.date),
       comments: this.state.title,
       proj: this.state.project && this.state.project.id,
       address: this.state.address,
-      user: this.state.user && this.state.user.id,
-      country: this.state.country.value,
-      location: ['中国', 'China'].includes(this.state.country.label) ? this.state.location : null,
-      type: this.state.type,
+      type: 4, // 视频会议类型的日程为4
+      duration: this.state.duration,
+      password: this.state.password,
     };
-    try {
+    this.props.dispatch(requestContents());
+    this.addEventAsync(param)
+      .then(() => {
+        this.props.dispatch(hideLoading());
+        const { navigation } = this.props;
+        navigation.goBack();
+        navigation.state.params.onEditEventCompleted(param);
+      })
+      .catch(error => {
+        this.props.dispatch(hideLoading());
+        // 必须将弹框延时，否则页面会出错，感觉loading效果和alert冲突了
+        setTimeout(() => Alert.alert(error.message), 100);
+      });
+  }
+
+  addEventAsync = async (param) => {
+    const body = { ...param, title: param.comments };
+    await api.getUserSession();
+    const meetingResult = await api.addSchedule([body]);
+    if (param.type === 4) {
+      const { id: meeting, meetingKey } = meetingResult[0].meeting;
+      const attendee = this.formatAttendee(param);
+      const userBody = attendee.map(m => ({ ...m, meeting, meetingKey }));
+      await api.addWebexUser(userBody);
+
+      // 为在库里的参会人创建日程
+      const existAttendees = attendee.filter(f => f.user !== undefined && f.user !== this.props.userInfo.id);
+      const attendeeBody = existAttendees.map(m => ({ ...body, manager: m.user, meeting }));
       await api.getUserSession();
-      await api.addSchedule([body]);
-      this.props.dispatch(hideLoading());
-      const { navigation } = this.props;
-      navigation.goBack();
-      navigation.state.params.onEditEventCompleted(body);
-    } catch (err) {
-      console.error(err);
+      await api.addSchedule(attendeeBody);
     }
+  }
+
+  formatAttendee = () => {
+    const existAttendees = this.state.investors.concat(this.state.traders).map(m => ({
+      user: m.id,
+      name: m.username,
+      email: m.email,
+    }));
+    const manualAttendees = this.state.attendees.map(m => ({
+      name: m.username,
+      email: m.email,
+    }));
+    const currentUser = this.props.userInfo;
+    const meetingHost = {
+      user: currentUser.id,
+      name: currentUser.username,
+      email: currentUser.emailAddress,
+      meetingRole: true,
+    };
+    return existAttendees.concat(meetingHost, manualAttendees);
   }
 
   onSelectProject = project => {

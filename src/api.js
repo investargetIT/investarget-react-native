@@ -757,6 +757,7 @@ export const readOrgBD = body => r('/bd/orgbd/read/', 'POST', body);
 
 export const getUserSession = () => r('/user/session/');
 
+export const addWebexUser = body => r('/msg/webex/user/', 'POST', body);
 export const getWebexUser = param => r('/msg/webex/user/?' + qs.stringify(param));
 export const deleteWebexMeeting = id => r(`/msg/webex/meeting/${id}/`, 'DELETE');
 
