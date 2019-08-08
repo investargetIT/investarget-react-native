@@ -162,10 +162,11 @@ class AddVideoMeeting extends React.Component {
   }
 
   handleInvestorPressed = () => {
-    this.props.navigation.navigate(
-      'SearchUser', 
-      { onSelectUser: this.onSelectInvestor }
-    );
+    this.props.navigation.navigate('FilterUser', {
+      project: this.state.project,
+      type: 'investor',
+      onSelectUser: this.onSelectInvestor,
+    });
   }
 
   onSelectInvestor = user => {
@@ -173,10 +174,10 @@ class AddVideoMeeting extends React.Component {
   }
 
   handleTraderPressed = () => {
-    this.props.navigation.navigate(
-      'SearchUser', 
-      { onSelectUser: this.onSelectTrader }
-    );
+    this.props.navigation.navigate('FilterUser', {
+      type: 'trader',
+      onSelectUser: this.onSelectTrader,
+    });
   }
 
   onSelectTrader = user => {
