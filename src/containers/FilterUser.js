@@ -11,6 +11,7 @@ import * as api from '../api';
 import UserItem from '../components/UserItem';
 import debounce from 'lodash.debounce';
 import { connect } from 'react-redux';
+import { requestContents, hideLoading } from '../../actions';
 
 class FilterUser extends React.Component {
 
@@ -48,7 +49,9 @@ class FilterUser extends React.Component {
   handleSubmit = () => {}
 
   searchUser = () => {
+    this.props.dispatch(requestContents());
     this.asyncFetchData(this.state.search).then(data => {
+      this.props.dispatch(hideLoading());
       const list = data.map(m => {
         const { id, username, photourl, org, email } = m;
         return {
