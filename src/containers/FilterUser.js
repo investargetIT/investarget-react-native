@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import * as api from '../api';
 import UserItem from '../components/UserItem';
+import debounce from 'lodash.debounce';
 
 class FilterUser extends React.Component {
 
@@ -37,7 +38,10 @@ class FilterUser extends React.Component {
       users: [],
       selected: [],
     }
-    console.log('select user', props.navigation.state.params);
+    const { project, type } = props.navigation.state.params;
+    this.project = project;
+    this.type = type;
+    this.searchUser = debounce(this.searchUser, 1000);
   }
 
   handleSubmit = () => {}
