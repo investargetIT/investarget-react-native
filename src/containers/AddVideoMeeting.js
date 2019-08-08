@@ -20,7 +20,7 @@ import UserItem from '../components/UserItem';
 import * as api from '../api';
 import { requestContents, hideLoading } from '../../actions';
 import { connect } from 'react-redux';
-import AddVideoMeetingForm from '../components/AddVideoMeetingForm';
+import Toast from 'react-native-root-toast';
 
 class AddVideoMeeting extends React.Component {
   
@@ -83,7 +83,8 @@ class AddVideoMeeting extends React.Component {
   }
 
   handleSubmit = () => {
-
+    console.log('handle submit', this.state);
+    return;
     if (!this.timeline) {
       this.addSchedule();
       return;
@@ -200,15 +201,6 @@ class AddVideoMeeting extends React.Component {
     .catch(err => console.error(err));
   }
 
-  handleContentChange = title => {
-    this.setState({ title });
-    if (title.length > 0) {
-      this.props.navigation.setParams({ onPress: this.handleSubmit });
-    } else {
-      this.props.navigation.setParams({ onPress: null });
-    }
-  }
-
   handleAddressChange = address => {
     this.setState({ address });
   }
@@ -223,6 +215,9 @@ class AddVideoMeeting extends React.Component {
 
   handleTitleSaved = title => {
     this.setState({ title });
+    if (title.length > 0 && this.state.password.length >= 4) {
+      this.props.navigation.setParams({ onPress: this.handleSubmit });
+    }
   }
 
   handleEditAddressClicked = () => {
@@ -246,7 +241,14 @@ class AddVideoMeeting extends React.Component {
   }
 
   handlePasswordSaved = password => {
+    if (password.length < 4) {
+      Toast.show('密码长度至少四位', {position: Toast.positions.CENTER})
+      return;
+    }
     this.setState({ password });
+    if (this.state.title.length > 0) {
+      this.props.navigation.setParams({ onPress: this.handleSubmit });
+    }
   }
 
   handleEditDurationClicked = () => {
@@ -382,7 +384,7 @@ class AddVideoMeeting extends React.Component {
           >
             <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
               <Text style={{ fontSize: 16 }}>标题</Text>
-              <Text style={{ fontSize: 16, color: 'gray', flex: 1, textAlign: 'right' }}>{this.state.title || '未填写'}</Text>
+              <Text style={{ fontSize: 16, color: 'gray', flex: 1, textAlign: 'right' }}>{this.state.title || '未填写(必填)'}</Text>
               <Image source={require('../images/userCenter/ic_chevron_right_black_24px.png')} style={{ width: 14, height: 14, flex: 0, marginLeft: 8 }} />
             </View>
           </TouchableHighlight>
@@ -440,7 +442,7 @@ class AddVideoMeeting extends React.Component {
           >
             <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
               <Text style={{ fontSize: 16 }}>会议密码</Text>
-              <Text style={{ fontSize: 16, color: 'gray', flex: 1, textAlign: 'right' }}>{this.state.password || '未填写，必填'}</Text>
+              <Text style={{ fontSize: 16, color: 'gray', flex: 1, textAlign: 'right' }}>{this.state.password || '未填写(必填，长度至少四位)'}</Text>
               <Image source={require('../images/userCenter/ic_chevron_right_black_24px.png')} style={{ width: 14, height: 14, flex: 0, marginLeft: 8 }} />
             </View>
           </TouchableHighlight>
