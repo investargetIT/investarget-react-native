@@ -61,7 +61,7 @@ class AddVideoMeeting extends React.Component {
       password: '',
       duration: 60,
       investors: [],
-      trader: null,
+      traders: [],
       attendees: [],
       showDatePickerIOS: false,
       date: initialDate || today,
@@ -180,7 +180,7 @@ class AddVideoMeeting extends React.Component {
   }
 
   onSelectTrader = user => {
-    this.setState({ trader: user }, this.checkTimelineExist);
+    this.setState({ traders: this.state.traders.concat(user)}, this.checkTimelineExist);
   }
 
   checkTimelineExist = () => {
@@ -336,6 +336,22 @@ class AddVideoMeeting extends React.Component {
     this.setState({ investors: this.state.investors.filter((f, i) => i !== index) });
   }
 
+  handleRemoveTraderBtnPressed = index => {
+    Alert.alert(
+      '确定移除？',
+      '移除后无法恢复，需要重新输入',
+      [
+        {text: '取消', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: '确定', onPress: () => this.removeTrader(index)},
+      ],
+      { cancelable: true }
+    )
+  }
+
+  removeTrader = index => {
+    this.setState({ traders: this.state.traders.filter((f, i) => i !== index) });
+  }
+
   handleRemoveAttendeeBtnPressed = index => {
     Alert.alert(
       '确定移除？',
@@ -442,20 +458,6 @@ class AddVideoMeeting extends React.Component {
             </View>
           </TouchableHighlight>
 
-          <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
-
-          <TouchableHighlight
-            style={{ backgroundColor: 'white' }}
-            onPress={this.handleTraderPressed}
-            underlayColor={'lightgray'}
-          >
-            <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Text style={{ fontSize: 16 }}>交易师</Text>
-              <Text style={{ fontSize: 16, color: 'gray', flex: 1, textAlign: 'right' }}>{this.state.trader ? this.state.trader.username : '未选择'}</Text>
-              <Image source={require('../images/userCenter/ic_chevron_right_black_24px.png')} style={{ width: 14, height: 14, flex: 0, marginLeft: 8 }} />
-            </View>
-          </TouchableHighlight>
-
         </View>
 
         <Text style={{ marginTop: 20, marginBottom: 8, marginLeft: 10, color: 'gray' }}>投资人</Text>
@@ -486,6 +488,37 @@ class AddVideoMeeting extends React.Component {
         >
           <View style={{ height: 44, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
             <Text style={{ fontSize: 16, color: '#10458f' }}>添加投资人</Text>
+          </View>
+        </TouchableHighlight>
+
+        <Text style={{ marginTop: 20, marginBottom: 8, marginLeft: 10, color: 'gray' }}>交易师</Text>
+
+        <View style={{ backgroundColor: 'white' }}>
+
+          {this.state.traders.map((m, i) => (<View key={i}>
+            <View style={{ padding: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <TouchableOpacity onPress={this.handleRemoveTraderBtnPressed.bind(this, i)}>
+                <View style={{ marginRight: 8, width: 24, height: 24, backgroundColor: 'red', borderRadius: 12, justifyContent: 'center', alignItems: 'center' }}>
+                  <View style={{ width: 12, height: 2, backgroundColor: 'white' }} />
+                </View>
+              </TouchableOpacity>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 16 }}>{m.username}</Text>
+                <Text style={{ fontSize: 16, color: 'gray' }}>{m.email}</Text>
+              </View>
+            </View>
+            <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
+          </View>))}
+
+        </View>
+
+        <TouchableHighlight
+          style={{ backgroundColor: 'white' }}
+          onPress={this.handleTraderPressed}
+          underlayColor="lightgray"
+        >
+          <View style={{ height: 44, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
+            <Text style={{ fontSize: 16, color: '#10458f' }}>添加交易师</Text>
           </View>
         </TouchableHighlight>
 
