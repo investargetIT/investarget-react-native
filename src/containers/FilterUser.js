@@ -10,6 +10,7 @@ import {
 import * as api from '../api';
 import UserItem from '../components/UserItem';
 import debounce from 'lodash.debounce';
+import { connect } from 'react-redux';
 
 class FilterUser extends React.Component {
 
@@ -41,34 +42,33 @@ class FilterUser extends React.Component {
     const { project, type } = props.navigation.state.params;
     this.project = project;
     this.type = type;
-    this.searchUser = debounce(this.searchUser, 1000);
+    this.searchUser = debounce(this.searchUser, 400);
   }
 
   handleSubmit = () => {}
 
   searchUser = () => {
-    const params = {
-      search: this.state.search
-    };
-      api.getUserRelation(params)
-      .then(data => {
-        var { count: total, data: list } = data
-        list = list.map(item => {
-            const user = item.investoruser
-            const { id, username, photourl, org, title } = user
-            return {
-                id,
-                username,
-                photoUrl: photourl,
-                org: org ? org.orgname : '',
-                title: title ? title.name : '',
-            }
-        })
-        this.setState({ users: list });
-    })
-    .catch(err => console.error(err));
+    this.asyncFetchAllUsers().then(data => {
+      const list = data.map(m => {
+        const { id, username, photourl, org, title } = m;
+        return {
+          id,
+          username,
+          photoUrl: photourl,
+          org: org ? org.orgname : '',
+          title: title + '',
+        }
+      });
+      this.setState({ users: list });
+    }).catch(err => console.error(err));
   }
-  
+ 
+  asyncFetchAllUsers = async value => {
+    const reqUserGroup = await api.queryUserGroup({ type: this.type || 'investor' });
+    const reqUsers = await api.getUser({ search: value, groups: reqUserGroup.data.map(m => m.id), page_size: 100 });
+    return reqUsers.data.filter(f => f.id !== this.props.userInfo.id);
+  }
+
   componentDidMount () {
     // this.props.navigation.setParams({ onPress: this.handleSubmit });
   }
@@ -124,4 +124,9 @@ class FilterUser extends React.Component {
   }
 }
 
-export default FilterUser;
+function mapStateToProps (state) {
+  const { userInfo } = state.app;
+  return { userInfo };
+}
+
+export default connect(mapStateToProps)(FilterUser);
