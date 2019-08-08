@@ -50,13 +50,13 @@ class FilterUser extends React.Component {
   searchUser = () => {
     this.asyncFetchAllUsers().then(data => {
       const list = data.map(m => {
-        const { id, username, photourl, org, title } = m;
+        const { id, username, photourl, org, email } = m;
         return {
           id,
           username,
+          email,
           photoUrl: photourl,
           org: org ? org.orgname : '',
-          title: title + '',
         }
       });
       this.setState({ users: list });
