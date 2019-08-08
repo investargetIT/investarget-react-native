@@ -53,8 +53,6 @@ class AddVideoMeeting extends React.Component {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    this.timeline = null;
-
     this.state = {
       title: '',
       address: '',
@@ -84,22 +82,6 @@ class AddVideoMeeting extends React.Component {
 
   handleSubmit = () => {
     console.log('handle submit', this.state);
-    return;
-    if (!this.timeline) {
-      this.addSchedule();
-      return;
-    }
-
-    Alert.alert(
-      '是否同步到时间轴备忘录？',
-      '',
-      [
-        {text: '否', onPress: this.addSchedule},
-        {text: '是', onPress: this.addScheduleAndSyncRemark},
-      ],
-      { cancelable: true }
-    );
-
   }
 
   addSchedule = async () => {
@@ -126,33 +108,8 @@ class AddVideoMeeting extends React.Component {
     }
   }
 
-  addScheduleAndSyncRemark = () => {
-    const body = {
-      scheduledtime: formatDate(this.state.date),
-      comments: this.state.title,
-      proj: this.state.project && this.state.project.id,
-      address: this.state.address,
-      user: this.state.user && this.state.user.id
-    };
-    const request = [
-      api.addTimelineRemark({
-        remark: this.state.title,
-        timeline: this.timeline.id
-      }),
-      api.addSchedule(body),
-    ]
-    Promise.all(request)
-    .then(result => {
-      this.props.dispatch(hideLoading());
-      const { navigation } = this.props;
-      navigation.goBack();
-      navigation.state.params.onEditEventCompleted(body);
-    })
-    .catch(err => console.error(err));
-  }
-
   onSelectProject = project => {
-    this.setState({ project }, this.checkTimelineExist);
+    this.setState({ project });
   }
   
   handleProjectPressed = () => {
@@ -171,7 +128,7 @@ class AddVideoMeeting extends React.Component {
   }
 
   onSelectInvestor = user => {
-    this.setState({ investors: this.state.investors.concat(user) }, this.checkTimelineExist);
+    this.setState({ investors: this.state.investors.concat(user) });
   }
 
   handleTraderPressed = () => {
@@ -182,23 +139,7 @@ class AddVideoMeeting extends React.Component {
   }
 
   onSelectTrader = user => {
-    this.setState({ traders: this.state.traders.concat(user)}, this.checkTimelineExist);
-  }
-
-  checkTimelineExist = () => {
-    if (!this.state.project || !this.state.user) return;
-    const params = {
-      proj: this.state.project.id,
-      investor: this.state.user.id,
-      trader: this.props.userInfo.id,
-    };
-    api.getTimeline(params)
-    .then(result => {
-      if (result.count > 0) {
-        this.timeline = result.data[0];
-      }
-    })
-    .catch(err => console.error(err));
+    this.setState({ traders: this.state.traders.concat(user) });
   }
 
   handleAddressChange = address => {
