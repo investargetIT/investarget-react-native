@@ -88,7 +88,7 @@ class MyCalendar extends React.Component {
   };
 
   handleSpecificScheduleTypeClicked(type) {
-    this.setState({ showChooseScheduleTypeDialog: false });
+    this.setState({ showChooseScheduleTypeDialog: false, showIosPicker: false });
     let scene = 'AddSchedule';
     if (type === 0) {
       scene = 'AddVideoMeeting';
@@ -145,11 +145,11 @@ class MyCalendar extends React.Component {
         <Modal visible={this.state.showIosPicker} animationType="slide" transparent={true}>
           <View style={pickerContainerStyle}>
             <PickerIOS2
-              // value={this.props.value || (this.props.options.length > 0 && this.props.options[0].value)}
+              value={0}
               options={scheduleTypeOptions}
               onCancel={() => this.setState({ showIosPicker: false })}
-              // onConfirm={this.handleConfirm}
-              // title={this.props.title || '选择'}
+              onConfirm={this.handleSpecificScheduleTypeClicked.bind(this)}
+              title="选择日程类型"
             />
           </View>
         </Modal>
