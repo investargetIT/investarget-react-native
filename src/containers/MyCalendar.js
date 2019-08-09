@@ -11,6 +11,7 @@ import {
   Button,
   Linking,
   Alert,
+  Modal,
 } from 'react-native';
 import { Agenda } from 'react-native-calendars';
 import * as api from '../api';
@@ -19,6 +20,23 @@ import { connect } from 'react-redux';
 import AsyncStorage from '../AsyncStorage';
 import moment from 'moment';
 import { syncSchedule } from '../../actions';
+import PickerIOS2 from '../components/PickerIOS2';
+
+const pickerContainerStyle = {
+  display: 'flex',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  width: '100%',
+  backgroundColor: '#fff',
+  borderTopWidth:1,
+  borderTopColor:'#ddd'
+}
+
+const scheduleTypeOptions = [
+  { label: '视频会议', value: 0 },
+  { label: '其他日程', value: 1 },
+];
 
 class MyCalendar extends React.Component {
   
@@ -44,7 +62,8 @@ class MyCalendar extends React.Component {
     this.state = {
       items: {},
       markedDates: {},
-      showChooseScheduleTypeDialog: false,
+      showChooseScheduleTypeDialog: false, // 为Android准备的日程类型选择控件
+      showIosPicker: false, // 为iOS准备的日程类型选择控件
     };
     this.loadingOrLoadedDate = [];
     this.tappedDate = null;
@@ -55,7 +74,11 @@ class MyCalendar extends React.Component {
   }
 
   handleAddIconPressed = () => {
-    this.setState({ showChooseScheduleTypeDialog: !this.state.showChooseScheduleTypeDialog });
+    if (Platform.OS === 'ios') {
+      this.setState({ showIosPicker: true });
+    } else {
+      this.setState({ showChooseScheduleTypeDialog: !this.state.showChooseScheduleTypeDialog });
+    }
   }
 
   onEditEventCompleted = event => {
@@ -117,6 +140,21 @@ class MyCalendar extends React.Component {
             </View>
           </TouchableWithoutFeedback>
           : null}
+
+        {Platform.OS === 'ios' &&  
+        <Modal visible={this.state.showIosPicker} animationType="slide" transparent={true}>
+          <View style={pickerContainerStyle}>
+            <PickerIOS2
+              // value={this.props.value || (this.props.options.length > 0 && this.props.options[0].value)}
+              options={scheduleTypeOptions}
+              onCancel={() => this.setState({ showIosPicker: false })}
+              // onConfirm={this.handleConfirm}
+              // title={this.props.title || '选择'}
+            />
+          </View>
+        </Modal>
+        }
+
       </View>
     );
   }
