@@ -44,12 +44,14 @@ class FilterUser extends React.Component {
     const { project, type } = props.navigation.state.params;
     this.project = project;
     this.type = type;
-    this.searchUser = debounce(this.searchUser, 400);
+    this.searchUser = debounce(this.searchUser, 1000);
   }
 
   handleSubmit = () => {}
 
   searchUser = () => {
+    if (this.state.search.length < 2) return;
+    Keyboard.dismiss();
     this.props.dispatch(requestContents());
     this.asyncFetchData(this.state.search).then(data => {
       this.props.dispatch(hideLoading());
@@ -102,11 +104,10 @@ class FilterUser extends React.Component {
   }
 
   handleSearchTextChange = value => {
-    this.setState({ search: value });
+    this.setState({ search: value }, this.searchUser);
   }
 
   handleSearchBtnPressed = () => {
-    Keyboard.dismiss();
     this.searchUser();
   }
 
@@ -119,7 +120,7 @@ class FilterUser extends React.Component {
         <View style={{ backgroundColor: 'white', paddingLeft: 8, paddingRight: 8, flex: 1, flexDirection: 'row', alignItems: 'center' }}>
           <TextInput
             style={{ flex: 1, fontSize: 15 }}
-            placeholder="搜索用户"
+            placeholder="输入两个字自动检索"
             value={this.state.search}
             onChangeText={this.handleSearchTextChange}
             underlineColorAndroid="transparent"

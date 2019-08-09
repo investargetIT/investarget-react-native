@@ -12,6 +12,7 @@ import ProjectItem from '../components/ProjectItem';
 import * as api from '../api';
 import { requestContents, hideLoading } from '../../actions';
 import { connect } from 'react-redux';
+import debounce from 'lodash.debounce';
 
 class SelectProject extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -38,6 +39,7 @@ class SelectProject extends React.Component {
       search: '',
       projects: [],
     }
+    this.searchProject = debounce(this.searchProject, 1000);
   }
   
   componentDidMount () {
@@ -47,6 +49,8 @@ class SelectProject extends React.Component {
   handleSubmit = () => {}
 
   searchProject = () => {
+    if (this.state.search.length < 2) return;
+    Keyboard.dismiss();
     this.props.dispatch(requestContents());
     const params = {
       search: this.state.search
@@ -79,11 +83,10 @@ class SelectProject extends React.Component {
   }
 
   handleSearchTextChange = value => {
-    this.setState({ search: value });
+    this.setState({ search: value }, this.searchProject);
   }
 
   handleSearchBtnPressed = () => {
-    Keyboard.dismiss();
     this.searchProject();
   }
 
@@ -96,7 +99,7 @@ class SelectProject extends React.Component {
           <View style={{ backgroundColor: 'white', paddingLeft: 8, paddingRight: 8, flex: 1, flexDirection: 'row', alignItems: 'center' }}>
             <TextInput
               style={{ flex: 1, fontSize: 15 }}
-              placeholder="搜索项目"
+              placeholder="输入两个字自动检索"
               value={this.state.search}
               onChangeText={this.handleSearchTextChange}
               underlineColorAndroid="transparent"
