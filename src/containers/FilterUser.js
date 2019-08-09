@@ -6,6 +6,7 @@ import {
   TextInput,
   Image,
   FlatList,
+  Keyboard,
 } from 'react-native';
 import * as api from '../api';
 import UserItem from '../components/UserItem';
@@ -101,27 +102,34 @@ class FilterUser extends React.Component {
   }
 
   handleSearchTextChange = value => {
-    this.setState({ search: value }, this.searchUser());
+    this.setState({ search: value });
+  }
+
+  handleSearchBtnPressed = () => {
+    Keyboard.dismiss();
+    this.searchUser();
   }
 
   render () {
     return (
       <View>
       
-      <View style={{ position: 'absolute' }} >
+      <View style={{ position: 'absolute', left: 0, right: 0, height: 48 }} >
         
-        <View style={{ height: 48, backgroundColor: 'white', paddingLeft: 8, paddingRight: 8, flexDirection: 'row', alignItems: 'center' }}>
-          <Image
-            source={require('../images/home/search.png')}
-            style={{ width: 20, height: 20, marginRight: 8 }}
-          />
+        <View style={{ backgroundColor: 'white', paddingLeft: 8, paddingRight: 8, flex: 1, flexDirection: 'row', alignItems: 'center' }}>
           <TextInput
-            style={{ width: '100%', fontSize: 15 }}
+            style={{ flex: 1, fontSize: 15 }}
             placeholder="搜索用户"
             value={this.state.search}
             onChangeText={this.handleSearchTextChange}
             underlineColorAndroid="transparent"
           />
+          <TouchableOpacity style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center' }} onPress={this.handleSearchBtnPressed}>
+            <Image
+              source={require('../images/home/search.png')}
+              style={{ width: 20, height: 20 }}
+            />
+          </TouchableOpacity>
         </View>
 
         <View style={{ height: 0.4, backgroundColor: "#CED0CE" }} />

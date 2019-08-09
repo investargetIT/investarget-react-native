@@ -392,7 +392,7 @@ class AddVideoMeeting extends React.Component {
             </View>
           </TouchableHighlight>
 
-          <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
+          <View style={{ height: 0.5, backgroundColor: "#CED0CE", marginLeft: 10 }} />
 
           <TouchableHighlight
             style={{ backgroundColor: 'white' }}
