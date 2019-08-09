@@ -6,7 +6,7 @@ class EditAttendee extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const { params } = navigation.state;
     return {
-      title: '编辑参会人', 
+      title: params.title || '编辑参会人', 
         headerStyle: {
           backgroundColor: '#10458f',
       },

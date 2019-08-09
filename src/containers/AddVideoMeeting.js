@@ -155,6 +155,7 @@ class AddVideoMeeting extends React.Component {
 
   handleInvestorPressed = () => {
     this.props.navigation.navigate('FilterUser', {
+      title: '添加投资人',
       project: this.state.project,
       type: 'investor',
       onSelectUser: this.onSelectInvestor,
@@ -167,6 +168,7 @@ class AddVideoMeeting extends React.Component {
 
   handleTraderPressed = () => {
     this.props.navigation.navigate('FilterUser', {
+      title: '添加交易师',
       type: 'trader',
       onSelectUser: this.onSelectTrader,
     });
@@ -271,7 +273,7 @@ class AddVideoMeeting extends React.Component {
 
   handleAddAttendeeBtnPressed = () => {
     this.props.navigation.navigate('EditAttendee', {
-      initialValue: this.state.password,
+      title: '添加参会人', 
       onSave: this.handleAttendeeSaved,
     });
   }

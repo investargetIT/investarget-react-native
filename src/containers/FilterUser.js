@@ -19,7 +19,7 @@ class FilterUser extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const { params } = navigation.state;
     return {
-      title: '选择用户',
+      title: params.title || '选择用户',
       headerStyle: {
         backgroundColor: '#10458f',
       },
