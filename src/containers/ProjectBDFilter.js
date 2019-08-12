@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Image, TextInput, } from 'react-native';
+import { Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
 
 class ProjectBDFilter extends React.Component {
 
@@ -49,7 +49,25 @@ class ProjectBDFilter extends React.Component {
   }
 
   render() {
-    return <Text>{this.state.search}</Text>;
+    return (
+      <View style={{ flex: 1 }}>
+        <View style={{ flex: 1 }} />
+        <View style={{ height: 60, backgroundColor: '#fff', paddingLeft: 6, paddingRight: 6, paddingTop: 4, paddingBottom: 4 }}>
+          <Text style={{ fontSize: 14, color: '#333' }}>已选条件:</Text>
+          <Text numberOfLines={2} style={{ fontSize: 13, color: '#666', lineHeight: 18 }}>
+            {`项目名称：${this.state.search}`}
+          </Text>
+        </View>
+        <View style={{ flexDirection: 'row', height: 48 }}>
+          <TouchableOpacity onPress={this.reset} style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#71a2e5' }}>
+            <Text style={{ fontSize: 16, color: '#fff' }}>清空</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this.submit} style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#10458f' }}>
+            <Text style={{ fontSize: 16, color: '#fff' }}>确定</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
   }
 }
 
