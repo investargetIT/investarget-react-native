@@ -30,7 +30,7 @@
    }
 
    handleFilterBtnPressed = () => {
-     this.props.navigation.navigate('OrgFilter')
+     this.props.navigation.navigate('ProjectBDFilter');
    }
 
   	render(){

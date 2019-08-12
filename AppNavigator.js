@@ -62,6 +62,7 @@ import ModalScreen from './src/containers/ModalScreen';
 import EditText from './src/containers/EditText';
 import EditAttendee from './src/containers/EditAttendee';
 import FilterUser from './src/containers/FilterUser';
+import ProjectBDFilter from './src/containers/ProjectBDFilter';
   
   const AppNavigator = StackNavigator({
     Home: { screen:  Home },
@@ -116,6 +117,7 @@ import FilterUser from './src/containers/FilterUser';
     EditText: { screen: EditText },
     EditAttendee: { screen: EditAttendee },
     FilterUser: { screen: FilterUser },
+    ProjectBDFilter: { screen: ProjectBDFilter },
   })
 
   const RootStack = StackNavigator(
