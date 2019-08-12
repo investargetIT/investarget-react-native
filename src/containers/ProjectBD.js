@@ -5,21 +5,33 @@
  import Toast from 'react-native-root-toast'
 
  class ProjectBD extends React.Component{
- 	static navigationOptions=({navigation}) =>{
 
- 	return {
-      title: '项目BD',
-      headerStyle: {
-        backgroundColor: '#10458f',
-      },
-			headerTintColor: '#fff',
-			headerBackTitle: null
-    }
- 	}
+   static navigationOptions = ({ navigation }) => {
+    const { params } = navigation.state;
+     return {
+       title: '项目BD',
+       headerStyle: {
+         backgroundColor: '#10458f',
+       },
+       headerTintColor: '#fff',
+       headerBackTitle: null,
+       headerRight: (
+         <TouchableOpacity style={{ marginRight:16 }} onPress={params && params.onPress}> 
+           <Text style={{ color: 'white', fontSize: 16 }}>筛选</Text>
+         </TouchableOpacity>
+       ),
+     };
+   }
 
- 	constructor(props) {
-	    super(props);
-  	}
+   constructor(props) {
+     super(props);
+
+     this.props.navigation.setParams({ onPress: this.handleFilterBtnPressed });
+   }
+
+   handleFilterBtnPressed = () => {
+     this.props.navigation.navigate('OrgFilter')
+   }
 
   	render(){
   		return (<View style={{flex:1}}> 
