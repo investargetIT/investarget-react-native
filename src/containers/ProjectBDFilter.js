@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, Image, TextInput, TouchableOpacity, TouchableHighlight, Modal } from 'react-native';
 import BaseSelect from '../components/BaseSelect';
+import * as api from '../api';
 
 const selectStyle = {
   position: 'absolute',
@@ -48,12 +49,19 @@ class ProjectBDFilter extends React.Component {
       industryGroups: [],
       managers: [],
       showSelectIndustryGroupModal: false,
-      industryGroupOptions: [{ value: 1, label: '健康组' }],
+      industryGroupOptions: [],
     };
 
     this.props.navigation.setParams({
       value: this.state.search,
       onChange: this.handleChangeSearch,
+    });
+  }
+
+  componentDidMount() {
+    api.getSource('industryGroup').then(result => {
+      const industryGroupOptions = result.map(m => ({ value: m.id, label: m.name}));
+      this.setState({ industryGroupOptions });
     });
   }
 
