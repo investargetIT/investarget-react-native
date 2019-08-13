@@ -1,5 +1,15 @@
 import React from 'react';
-import { Text, View, Image, TextInput, TouchableOpacity, TouchableHighlight } from 'react-native';
+import { Text, View, Image, TextInput, TouchableOpacity, TouchableHighlight, Modal } from 'react-native';
+import BaseSelect from '../components/BaseSelect';
+
+const selectStyle = {
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  width: '100%',
+  borderTopWidth:1,
+  borderTopColor:'#ddd',
+}
 
 class ProjectBDFilter extends React.Component {
 
@@ -37,6 +47,8 @@ class ProjectBDFilter extends React.Component {
       search: '',
       industryGroups: [],
       managers: [],
+      showSelectIndustryGroupModal: false,
+      industryGroupOptions: [{ value: 1, label: '健康组' }],
     };
 
     this.props.navigation.setParams({
@@ -51,7 +63,7 @@ class ProjectBDFilter extends React.Component {
   }
 
   handleEditIndustryGroupClicked = () => {
-
+    this.setState({ showSelectIndustryGroupModal: true });
   }
 
   handleManagerPressed = () => {
@@ -59,6 +71,14 @@ class ProjectBDFilter extends React.Component {
       title: '添加交易师',
       type: 'trader',
       onSelectUser: this.onSelectTrader,
+    });
+  }
+
+  handleIndustryGroupChange = values => {
+    const industryGroups = values.map(m => this.state.industryGroupOptions.filter(f => f.value === m)[0]);
+    this.setState({
+      industryGroups,
+      showSelectIndustryGroupModal: false,
     });
   }
 
@@ -76,7 +96,7 @@ class ProjectBDFilter extends React.Component {
               <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Text style={{ fontSize: 16 }}>行业组</Text>
                 <Text style={{ fontSize: 16, color: 'gray', flex: 1, textAlign: 'right' }}>
-                  {this.state.industryGroups.length > 0 ? this.state.industryGroups.map(m => m.name).join('、') : '未选择'}
+                  {this.state.industryGroups.length > 0 ? this.state.industryGroups.map(m => m.label).join('、') : '未选择'}
                 </Text>
                 <Image source={require('../images/userCenter/ic_chevron_right_black_24px.png')} style={{ width: 14, height: 14, flex: 0, marginLeft: 8 }} />
               </View>
@@ -125,6 +145,18 @@ class ProjectBDFilter extends React.Component {
             <Text style={{ fontSize: 16, color: '#fff' }}>确定</Text>
           </TouchableOpacity>
         </View>
+
+        <Modal visible={this.state.showSelectIndustryGroupModal} animationType="slide" transparent={true} onRequestClose={() => {}}>
+          <BaseSelect
+            value={this.state.industryGroups.map(m => m.value)}
+            onChange={this.handleIndustryGroupChange}
+            options={this.state.industryGroupOptions}
+            title="选择行业组"
+            multiple
+            style={selectStyle}
+          />
+        </Modal>
+
       </View>
     );
   }
