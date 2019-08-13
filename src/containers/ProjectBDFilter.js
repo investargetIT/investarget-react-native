@@ -116,7 +116,9 @@ class ProjectBDFilter extends React.Component {
       manager: this.state.managers.map(m => m.id),
       search: this.state.search,
     };
-    this.props.navigation.state.params.onConfirmFilters(filters);
+    const { navigation } = this.props;
+    navigation.goBack();
+    navigation.state.params.onConfirmFilters(filters);
   }
 
   render() {

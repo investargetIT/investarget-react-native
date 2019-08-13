@@ -26,6 +26,10 @@
    constructor(props) {
      super(props);
 
+     this.state = {
+       filters: null,
+     };
+
      this.props.navigation.setParams({ onPress: this.handleFilterBtnPressed });
    }
 
@@ -36,6 +40,7 @@
    }
 
    handleFilter = filters => {
+     this.setState({ filters });
    }
 
   	render(){
@@ -49,10 +54,10 @@
                     tabBarInactiveTextColor="#666"                
                 >
                     
-                    <View style={{ flex: 1 }} tabLabel="未BD"><ProjectBDList status="1" {...this.props}/></View>
-                    <View style={{ flex: 1 }} tabLabel="BD中"><ProjectBDList status="2" {...this.props}/></View>
-                    <View style={{ flex: 1 }} tabLabel="BD成功"><ProjectBDList status="3" {...this.props}/></View>
-                    <View style={{ flex: 1 }} tabLabel="暂不BD"><ProjectBDList status="4" {...this.props}/></View>
+                    <View style={{ flex: 1 }} tabLabel="未BD"><ProjectBDList status="1" filters={this.state.filters} {...this.props}/></View>
+                    <View style={{ flex: 1 }} tabLabel="BD中"><ProjectBDList status="2" filters={this.state.filters} {...this.props}/></View>
+                    <View style={{ flex: 1 }} tabLabel="BD成功"><ProjectBDList status="3" filters={this.state.filters} {...this.props}/></View>
+                    <View style={{ flex: 1 }} tabLabel="暂不BD"><ProjectBDList status="4" filters={this.state.filters} {...this.props}/></View>
                 </ScrollableTabView>
             </View>)
   	}
@@ -78,7 +83,7 @@
   		
   	}
 
-  	getData = isLoadingMore =>{
+  	getData = (isLoadingMore, filters) =>{
   		if (isLoadingMore === undefined) {
 	        this.setState({ loading: true });
 	    }
@@ -86,8 +91,9 @@
   		const params={
   			bd_status,
   			page_index:isLoadingMore?this.state.page_index+1 : 1,
-  			page_size
-  		}
+        page_size,
+        ...filters,
+      }
   		api.getProjBDList(params).then((result)=>{			
 			this.setState({
 				total:result.count,
@@ -113,6 +119,12 @@
   		this.getData()
   		this.subscription = DeviceEventEmitter.addListener('updateProjBD', this.getData)
   	}
+
+    componentWillReceiveProps(nextProps) {
+      if (JSON.stringify(nextProps.filters) !== JSON.stringify(this.props.filters)) {
+        this.getData(false, nextProps.filters);
+      }
+    }
 
   	componentWillUnmount(){
   		this.subscription.remove()
