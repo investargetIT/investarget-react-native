@@ -162,7 +162,7 @@ class ProjectBDFilter extends React.Component {
         <View style={{ height: 60, backgroundColor: '#fff', paddingLeft: 6, paddingRight: 6, paddingTop: 4, paddingBottom: 4 }}>
           <Text style={{ fontSize: 14, color: '#333' }}>已选条件:</Text>
           <Text numberOfLines={2} style={{ fontSize: 13, color: '#666', lineHeight: 18 }}>
-            {`项目名称：${this.state.search}`}
+            {`项目名称：${this.state.search}；行业组：${this.state.industryGroups.map(m => m.label).join('、')}；BD负责人：${this.state.managers.map(m => m.username).join('、')}`}
           </Text>
         </View>
         <View style={{ flexDirection: 'row', height: 48 }}>
