@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Image, TextInput, TouchableOpacity, TouchableHighlight, Modal } from 'react-native';
+import { Text, View, Image, TextInput, TouchableOpacity, TouchableHighlight, Modal, Alert } from 'react-native';
 import BaseSelect from '../components/BaseSelect';
 import * as api from '../api';
 
@@ -76,10 +76,14 @@ class ProjectBDFilter extends React.Component {
 
   handleManagerPressed = () => {
     this.props.navigation.navigate('FilterUser', {
-      title: '添加交易师',
+      title: '添加BD负责人',
       type: 'trader',
-      onSelectUser: this.onSelectTrader,
+      onSelectUser: this.onSelectManager,
     });
+  }
+
+  onSelectManager = user => {
+    this.setState({ managers: this.state.managers.concat(user) });
   }
 
   handleIndustryGroupChange = values => {
@@ -88,6 +92,22 @@ class ProjectBDFilter extends React.Component {
       industryGroups,
       showSelectIndustryGroupModal: false,
     });
+  }
+
+  handleRemoveManagerBtnPressed = index => {
+    Alert.alert(
+      '确定移除？',
+      '移除后无法恢复，需要重新输入',
+      [
+        {text: '取消', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: '确定', onPress: () => this.removeManager(index)},
+      ],
+      { cancelable: true }
+    )
+  }
+
+  removeManager = index => {
+    this.setState({ managers: this.state.managers.filter((f, i) => i !== index) });
   }
 
   render() {
@@ -115,7 +135,7 @@ class ProjectBDFilter extends React.Component {
           <View style={{ backgroundColor: 'white' }}>
             {this.state.managers.map((m, i) => (<View key={i}>
               <View style={{ padding: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                <TouchableOpacity onPress={this.handleRemoveTraderBtnPressed.bind(this, i)}>
+                <TouchableOpacity onPress={this.handleRemoveManagerBtnPressed.bind(this, i)}>
                   <View style={{ marginRight: 8, width: 24, height: 24, backgroundColor: 'red', borderRadius: 12, justifyContent: 'center', alignItems: 'center' }}>
                     <View style={{ width: 12, height: 2, backgroundColor: 'white' }} />
                   </View>
