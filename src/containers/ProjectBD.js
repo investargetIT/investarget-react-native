@@ -30,7 +30,12 @@
    }
 
    handleFilterBtnPressed = () => {
-     this.props.navigation.navigate('ProjectBDFilter');
+     this.props.navigation.navigate('ProjectBDFilter', {
+       onConfirmFilters: this.handleFilter,
+     });
+   }
+
+   handleFilter = filters => {
    }
 
   	render(){

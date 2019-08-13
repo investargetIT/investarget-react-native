@@ -110,6 +110,15 @@ class ProjectBDFilter extends React.Component {
     this.setState({ managers: this.state.managers.filter((f, i) => i !== index) });
   }
 
+  submit = () => {
+    const filters = {
+      indGroup: this.state.industryGroups.map(m => m.value),
+      manager: this.state.managers.map(m => m.id),
+      search: this.state.search,
+    };
+    this.props.navigation.state.params.onConfirmFilters(filters);
+  }
+
   render() {
     return (
       <View style={{ flex: 1 }}>
