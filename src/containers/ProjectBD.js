@@ -1,6 +1,6 @@
  import React from 'react'
  import { Image, Text, View, FlatList, RefreshControl, TouchableOpacity, Alert,Linking, ActivityIndicator, DeviceEventEmitter} from 'react-native';
- import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view'
+ import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view'
  import * as api from '../api'
  import Toast from 'react-native-root-toast'
  import { connect } from 'react-redux';
@@ -29,9 +29,17 @@
 
      this.state = {
        filters: null,
+       bdStatus: [],
      };
 
      this.props.navigation.setParams({ onPress: this.handleFilterBtnPressed });
+   }
+
+   componentDidMount() {
+     api.getSource('bdStatus').then(result => {
+       const bdStatus = result.map(m => ({ id: m.id, name: m.name }));
+       this.setState({ bdStatus });
+     });
    }
 
    handleFilterBtnPressed = () => {
@@ -44,24 +52,26 @@
      this.setState({ filters });
    }
 
-  	render(){
-  		return (<View style={{flex:1}}> 
-                <ScrollableTabView
-                    renderTabBar={() => <DefaultTabBar style={{borderBottomColor: '#f4f4f4'}} tabStyle={{paddingBottom: 0}} />}
-                    tabBarUnderlineStyle={{height:0}}
-                    tabBarTextStyle={{fontSize:14}}
-                    tabBarBackgroundColor="#fff"
-                    tabBarActiveTextColor="#10458f"
-                    tabBarInactiveTextColor="#666"                
-                >
-                    
-                    <View style={{ flex: 1 }} tabLabel="未BD"><ProjectBDList status="1" filters={this.state.filters} {...this.props}/></View>
-                    <View style={{ flex: 1 }} tabLabel="BD中"><ProjectBDList status="2" filters={this.state.filters} {...this.props}/></View>
-                    <View style={{ flex: 1 }} tabLabel="BD成功"><ProjectBDList status="3" filters={this.state.filters} {...this.props}/></View>
-                    <View style={{ flex: 1 }} tabLabel="暂不BD"><ProjectBDList status="4" filters={this.state.filters} {...this.props}/></View>
-                </ScrollableTabView>
-            </View>)
-  	}
+   render() {
+     return (
+       <View style={{ flex: 1 }}>
+         <ScrollableTabView
+           renderTabBar={() => <ScrollableTabBar style={{ borderBottomColor: '#f4f4f4' }} tabStyle={{ paddingBottom: 0 }} />}
+           tabBarUnderlineStyle={{ height: 0 }}
+           tabBarTextStyle={{ fontSize: 14 }}
+           tabBarBackgroundColor="#fff"
+           tabBarActiveTextColor="#10458f"
+           tabBarInactiveTextColor="#666"
+         >
+           {this.state.bdStatus.map(m => (
+             <View style={{ flex: 1 }} tabLabel={m.name}>
+               <ProjectBDList status={m.id} filters={this.state.filters} {...this.props} />
+             </View>
+           ))}
+         </ScrollableTabView>
+       </View>
+     );
+   }
  }
 
  class ProjectBDList extends React.Component{
