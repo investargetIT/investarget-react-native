@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, View, Image, TextInput, TouchableOpacity, TouchableHighlight, Modal, Alert } from 'react-native';
 import BaseSelect from '../components/BaseSelect';
 import * as api from '../api';
+import { connect } from 'react-redux';
 
 const selectStyle = {
   position: 'absolute',
@@ -121,59 +122,70 @@ class ProjectBDFilter extends React.Component {
     navigation.state.params.onConfirmFilters(filters);
   }
 
+  showSummary = () => {
+    let summary = `项目名称：${this.state.search}；`
+    if (this.props.userInfo.permissions.includes('BD.manageProjectBD')) {
+      summary += `行业组：${this.state.industryGroups.map(m => m.label).join('、')}；BD负责人：${this.state.managers.map(m => m.username).join('、')}`;
+    }
+    return summary;
+  }
+
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <View style={{ flex: 1 }}>
-          
-          <View style={{ backgroundColor: 'white', marginTop: 20 }}>
+        {this.props.userInfo.permissions.includes('BD.manageProjectBD') ?
+          <View style={{ flex: 1 }}>
+
+            <View style={{ backgroundColor: 'white', marginTop: 20 }}>
+              <TouchableHighlight
+                style={{ backgroundColor: 'white' }}
+                onPress={this.handleEditIndustryGroupClicked}
+                underlayColor={'lightgray'}
+              >
+                <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <Text style={{ fontSize: 16 }}>行业组</Text>
+                  <Text style={{ fontSize: 16, color: 'gray', flex: 1, textAlign: 'right' }}>
+                    {this.state.industryGroups.length > 0 ? this.state.industryGroups.map(m => m.label).join('、') : '未选择'}
+                  </Text>
+                  <Image source={require('../images/userCenter/ic_chevron_right_black_24px.png')} style={{ width: 14, height: 14, flex: 0, marginLeft: 8 }} />
+                </View>
+              </TouchableHighlight>
+            </View>
+
+            <Text style={{ marginTop: 20, marginBottom: 8, marginLeft: 10, color: 'gray' }}>BD负责人</Text>
+            <View style={{ backgroundColor: 'white' }}>
+              {this.state.managers.map((m, i) => (<View key={i}>
+                <View style={{ padding: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <TouchableOpacity onPress={this.handleRemoveManagerBtnPressed.bind(this, i)}>
+                    <View style={{ marginRight: 8, width: 24, height: 24, backgroundColor: 'red', borderRadius: 12, justifyContent: 'center', alignItems: 'center' }}>
+                      <View style={{ width: 12, height: 2, backgroundColor: 'white' }} />
+                    </View>
+                  </TouchableOpacity>
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ fontSize: 16 }}>{m.username}</Text>
+                    <Text style={{ fontSize: 16, color: 'gray' }}>{m.email}</Text>
+                  </View>
+                </View>
+                <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
+              </View>))}
+            </View>
             <TouchableHighlight
               style={{ backgroundColor: 'white' }}
-              onPress={this.handleEditIndustryGroupClicked}
-              underlayColor={'lightgray'}
+              onPress={this.handleManagerPressed}
+              underlayColor="lightgray"
             >
-              <View style={{ height: 44, paddingLeft: 10, paddingRight: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Text style={{ fontSize: 16 }}>行业组</Text>
-                <Text style={{ fontSize: 16, color: 'gray', flex: 1, textAlign: 'right' }}>
-                  {this.state.industryGroups.length > 0 ? this.state.industryGroups.map(m => m.label).join('、') : '未选择'}
-                </Text>
-                <Image source={require('../images/userCenter/ic_chevron_right_black_24px.png')} style={{ width: 14, height: 14, flex: 0, marginLeft: 8 }} />
+              <View style={{ height: 44, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
+                <Text style={{ fontSize: 16, color: '#10458f' }}>添加BD负责人</Text>
               </View>
             </TouchableHighlight>
-          </View>
 
-          <Text style={{ marginTop: 20, marginBottom: 8, marginLeft: 10, color: 'gray' }}>BD负责人</Text>
-          <View style={{ backgroundColor: 'white' }}>
-            {this.state.managers.map((m, i) => (<View key={i}>
-              <View style={{ padding: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                <TouchableOpacity onPress={this.handleRemoveManagerBtnPressed.bind(this, i)}>
-                  <View style={{ marginRight: 8, width: 24, height: 24, backgroundColor: 'red', borderRadius: 12, justifyContent: 'center', alignItems: 'center' }}>
-                    <View style={{ width: 12, height: 2, backgroundColor: 'white' }} />
-                  </View>
-                </TouchableOpacity>
-                <View style={{ flex: 1 }}>
-                  <Text style={{ fontSize: 16 }}>{m.username}</Text>
-                  <Text style={{ fontSize: 16, color: 'gray' }}>{m.email}</Text>
-                </View>
-              </View>
-              <View style={{ height: 0.4, backgroundColor: "#CED0CE", marginLeft: 10 }} />
-            </View>))}
           </View>
-          <TouchableHighlight
-            style={{ backgroundColor: 'white' }}
-            onPress={this.handleManagerPressed}
-            underlayColor="lightgray"
-          >
-            <View style={{ height: 44, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
-              <Text style={{ fontSize: 16, color: '#10458f' }}>添加BD负责人</Text>
-            </View>
-          </TouchableHighlight>
+          : <View style={{ flex: 1 }} />}
 
-        </View>
         <View style={{ height: 60, backgroundColor: '#fff', paddingLeft: 6, paddingRight: 6, paddingTop: 4, paddingBottom: 4 }}>
           <Text style={{ fontSize: 14, color: '#333' }}>已选条件:</Text>
           <Text numberOfLines={2} style={{ fontSize: 13, color: '#666', lineHeight: 18 }}>
-            {`项目名称：${this.state.search}；行业组：${this.state.industryGroups.map(m => m.label).join('、')}；BD负责人：${this.state.managers.map(m => m.username).join('、')}`}
+            {this.showSummary()}
           </Text>
         </View>
         <View style={{ flexDirection: 'row', height: 48 }}>
@@ -201,4 +213,9 @@ class ProjectBDFilter extends React.Component {
   }
 }
 
-export default ProjectBDFilter;
+function mapStateToProps (state) {
+  let { userInfo } = state.app;
+  return { userInfo };
+}
+
+export default connect(mapStateToProps)(ProjectBDFilter);
