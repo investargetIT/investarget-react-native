@@ -3,6 +3,7 @@
  import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view'
  import * as api from '../api'
  import Toast from 'react-native-root-toast'
+ import { connect } from 'react-redux';
 
  class ProjectBD extends React.Component{
 
@@ -94,6 +95,9 @@
   			page_index:isLoadingMore?this.state.page_index+1 : 1,
         page_size,
         ...additionalFilters,
+      }
+      if (!this.props.userInfo.permissions.includes('BD.manageProjectBD')) {
+        params.manager = this.props.userInfo.id;
       }
   		api.getProjBDList(params).then((result)=>{			
 			this.setState({
@@ -220,4 +224,9 @@
 }
 }
 
- export default ProjectBD
+function mapStateToProps (state) {
+  let { userInfo } = state.app;
+  return { userInfo };
+}
+
+ export default connect(mapStateToProps)(ProjectBD);
