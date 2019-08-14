@@ -87,12 +87,13 @@
   		if (isLoadingMore === undefined) {
 	        this.setState({ loading: true });
 	    }
-  		const {bd_status, page_size} =this.state
+      const {bd_status, page_size} =this.state
+      const additionalFilters = filters || this.props.filters;
   		const params={
   			bd_status,
   			page_index:isLoadingMore?this.state.page_index+1 : 1,
         page_size,
-        ...filters,
+        ...additionalFilters,
       }
   		api.getProjBDList(params).then((result)=>{			
 			this.setState({
@@ -122,7 +123,7 @@
 
     componentWillReceiveProps(nextProps) {
       if (JSON.stringify(nextProps.filters) !== JSON.stringify(this.props.filters)) {
-        this.getData(false, nextProps.filters);
+        this.getData(undefined, nextProps.filters);
       }
     }
 
