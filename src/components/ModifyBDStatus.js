@@ -3,6 +3,7 @@ import { Image, Text, TextInput, View, FlatList, RefreshControl, TouchableOpacit
 import * as api from '../api'
 import Toast from 'react-native-root-toast'
 import Picker from '../components/Picker'
+import { connect } from 'react-redux';
 
 const backgroundStyle ={
 	flex:1,
@@ -58,11 +59,6 @@ const cellContentStyle = {
     borderWidth:1,
     borderColor:'#f4f4f4'
 }
-const status_options=[{label: '未BD',value: 1},
-{label: 'BD中',value: 2},
-{label: 'BD成功',value: 3},
-{label: '暂不BD',value: 4}]
-
 
 class ModifyBDStatus extends React.Component{
 constructor(props){
@@ -264,7 +260,7 @@ confirmModify = () =>{
 }
 
 handleChangeStatus = value =>{
-	this.setState({bd_status:{name:status_options.find(item=>item.value==value).label, id:value}},this.checkInvalid)	
+	this.setState({bd_status:{name:this.props.statusOptions.find(item=>item.value==value).label, id:value}},this.checkInvalid)	
 
 }
 
@@ -300,7 +296,7 @@ render(){
     	<View style={cellStyle}>
 		<Text style={cellLabelStyle}>状态</Text>
     	<View style={{width:'50%'}}>
-    	<Picker value={bd_status&&bd_status.id} options={status_options} onChange={this.handleChangeStatus}/>
+    	<Picker value={bd_status&&bd_status.id} options={this.props.statusOptions} onChange={this.handleChangeStatus}/>
     	</View>
     	</View>
     	{source=='orgBD'&&!currentBD.bduser&&currentBD.bd_status.id!=3&&bd_status.id==3 ?
@@ -397,5 +393,10 @@ class SelectInvestorGroup extends React.Component {
   }
 }
 
+function mapStateToProps(state) {
+  const { bdStatus } = state.app;
+  const statusOptions = bdStatus.map(m => ({ label: m.name, value: m.id }));
+  return { statusOptions };
+}
 
-export default ModifyBDStatus
+export default connect(mapStateToProps)(ModifyBDStatus);
