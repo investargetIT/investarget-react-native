@@ -103,11 +103,9 @@ class PersonalDetail extends React.Component{
            	<View style={cellStyle}>
                 <Text style={cellLabelStyle}>当前状态</Text>
                 <Text>{bd_status.name}</Text>
-				{ (source === 'orgBD' && (this.props.userInfo.permissions.includes('BD.manageOrgBD') || this.props.userInfo.id === item.manager.id)) || (source === 'projectBD') ? 
                 <TouchableOpacity onPress={this.setModalVisible.bind(this,true)}>
                 	<Text style={{width:200,textAlign:'right'}}>修改</Text>
                 </TouchableOpacity>
-				: null }
             </View> : null}
 			<TimelineRemark 
 			  disableAdd={source === 'orgBD' && !this.props.userInfo.permissions.includes('BD.manageOrgBD') && this.props.userInfo.id !== item.manager.id} 
