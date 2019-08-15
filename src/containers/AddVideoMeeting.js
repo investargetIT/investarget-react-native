@@ -64,6 +64,7 @@ class AddVideoMeeting extends React.Component {
       showDatePickerIOS: false,
       date: initialDate || today,
       project: null,
+      oldSelectedProj: null,
       user: null,
       location: null,
       areaOptions: [],
@@ -143,7 +144,33 @@ class AddVideoMeeting extends React.Component {
   }
 
   onSelectProject = project => {
-    this.setState({ project });
+    this.setState(
+      { project, oldSelectedProj: this.state.project },
+      () => this.checkProjectContact(project),
+    );
+  }
+
+  checkProjectContact = project => {
+    api.getProjDetail(project.id)
+      .then((response) => {
+        const { email } = response;
+        if (!email) return;
+        const { contactPerson: username } = response;
+        const contact = { username, email };
+        const projectWithContact = { ...project, ...contact };
+        let newAttendees = this.state.attendees.concat(contact);
+
+        // 自动删除原来选的项目的联系人
+        if (this.state.oldSelectedProj && this.state.oldSelectedProj.email) {
+          const { email: oldContactEmail } = this.state.oldSelectedProj;
+          newAttendees = newAttendees.filter(f => f.email !== oldContactEmail);
+        }
+
+        this.setState({
+          project: projectWithContact,
+          attendees: newAttendees,
+        });
+      });
   }
   
   handleProjectPressed = () => {
