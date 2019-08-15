@@ -38,6 +38,7 @@ export const UPDATE_PROJECT_STRUCTURE = 'UPDATE_PROJECT_STRUCTURE'
 export const SYNC_SCHEDULE = 'SYNC_SCHEDULE';
 export const SCHEDULE_SYNCED = 'SCHEDULE_SYNCED';
 export const RECEIVE_ORGBDRES = 'RECEIVE_ORGBDRES';
+export const RECEIVE_BD_STATUS = 'RECEIVE_BD_STATUS';
 
 export function updateProjectStructure(structure) {
   return {
@@ -168,6 +169,13 @@ export function receiveOrgBDRes(orgbdres) {
   return {
     type: RECEIVE_ORGBDRES,
     orgbdres
+  }
+}
+
+export function receiveBdStatus(bdStatus) {
+  return {
+    type: RECEIVE_BD_STATUS,
+    bdStatus 
   }
 }
 

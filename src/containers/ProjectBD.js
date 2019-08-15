@@ -4,6 +4,7 @@
  import * as api from '../api'
  import Toast from 'react-native-root-toast'
  import { connect } from 'react-redux';
+ import { receiveBdStatus } from '../../actions';
 
  class ProjectBD extends React.Component{
 
@@ -29,7 +30,6 @@
 
      this.state = {
        filters: null,
-       bdStatus: [],
      };
 
      this.props.navigation.setParams({ onPress: this.handleFilterBtnPressed });
@@ -37,8 +37,7 @@
 
    componentDidMount() {
      api.getSource('bdStatus').then(result => {
-       const bdStatus = result.map(m => ({ id: m.id, name: m.name }));
-       this.setState({ bdStatus });
+       this.props.dispatch(receiveBdStatus(result))
      });
    }
 
@@ -63,7 +62,7 @@
            tabBarActiveTextColor="#10458f"
            tabBarInactiveTextColor="#666"
          >
-           {this.state.bdStatus.map(m => (
+           {this.props.bdStatus.map(m => (
              <View style={{ flex: 1 }} tabLabel={m.name}>
                <ProjectBDList status={m.id} filters={this.state.filters} {...this.props} />
              </View>
@@ -235,8 +234,8 @@
 }
 
 function mapStateToProps (state) {
-  let { userInfo } = state.app;
-  return { userInfo };
+  let { userInfo, bdStatus } = state.app;
+  return { userInfo, bdStatus };
 }
 
  export default connect(mapStateToProps)(ProjectBD);
