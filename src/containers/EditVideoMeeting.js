@@ -288,7 +288,13 @@ class EditVideoMeeting extends React.Component {
       const { navigation } = this.props;
       navigation.goBack();
       navigation.state.params.onEditEventCompleted(this.schedule);
-    }).catch(err => console.error(err));
+    }).catch(err => {
+      this.props.dispatch(hideLoading());
+      if (err.code === 8006) {
+        // 必须将弹框延时，否则页面会出错，感觉loading效果和alert冲突了
+        setTimeout(() => Alert.alert('请稍后再试同时关闭webex客户端'), 100);
+      }
+    });
   }
 
   /**
