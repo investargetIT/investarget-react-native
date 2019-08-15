@@ -69,7 +69,7 @@ const status_options=[{label: '未BD',value: 1},
 {label: '暂不BD',value: 4}]
 
 
-class ModifyBDStatus extends React.Component{
+class ModifyOrgBDStatus extends React.Component{
 constructor(props){
 	super(props)
 	this.state={
@@ -424,4 +424,4 @@ function mapStateToProps (state) {
   return { orgbdres, userInfo };
 }
 
-export default connect(mapStateToProps)(ModifyBDStatus);
+export default connect(mapStateToProps)(ModifyOrgBDStatus);
