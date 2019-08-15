@@ -2,7 +2,7 @@ import React from 'react'
 import { Image, Text, TextInput, View, FlatList, RefreshControl, TouchableOpacity, DeviceEventEmitter, Modal, Alert} from 'react-native';
 import * as api from '../api'
 import Toast from 'react-native-root-toast'
-import Picker from '../components/Picker'
+import Picker from './Picker'
 import { connect } from 'react-redux';
 
 const backgroundStyle ={
@@ -60,7 +60,7 @@ const cellContentStyle = {
     borderColor:'#f4f4f4'
 }
 
-class ModifyBDStatus extends React.Component{
+class ModifyProjBDStatus extends React.Component{
 constructor(props){
 	super(props)
 	this.state={
@@ -399,4 +399,4 @@ function mapStateToProps(state) {
   return { statusOptions };
 }
 
-export default connect(mapStateToProps)(ModifyBDStatus);
+export default connect(mapStateToProps)(ModifyProjBDStatus);
