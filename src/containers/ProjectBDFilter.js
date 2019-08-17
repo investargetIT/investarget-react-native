@@ -45,10 +45,20 @@ class ProjectBDFilter extends React.Component {
   constructor(props) {
     super(props);
 
+    const { filters }  = props.navigation.state.params;
+    let search = '';
+    let industryGroups = [];
+    let managers = [];
+    if (filters) {
+      search = filters.search;
+      industryGroups = filters.industryGroups;
+      managers = filters.managers;
+    }
+
     this.state = {
-      search: '',
-      industryGroups: [],
-      managers: [],
+      search,
+      industryGroups,
+      managers,
       showSelectIndustryGroupModal: false,
       industryGroupOptions: [],
     };
@@ -113,8 +123,8 @@ class ProjectBDFilter extends React.Component {
 
   submit = () => {
     const filters = {
-      indGroup: this.state.industryGroups.map(m => m.value),
-      manager: this.state.managers.map(m => m.id),
+      industryGroups: this.state.industryGroups,
+      managers: this.state.managers,
       search: this.state.search,
     };
     const { navigation } = this.props;

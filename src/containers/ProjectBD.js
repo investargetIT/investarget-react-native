@@ -30,6 +30,7 @@
 
      this.state = {
        filters: null,
+       rawFilters: null,
      };
 
      this.props.navigation.setParams({ onPress: this.handleFilterBtnPressed });
@@ -44,11 +45,18 @@
    handleFilterBtnPressed = () => {
      this.props.navigation.navigate('ProjectBDFilter', {
        onConfirmFilters: this.handleFilter,
+       filters: this.state.rawFilters,
      });
    }
 
-   handleFilter = filters => {
-     this.setState({ filters });
+   handleFilter = rawFilters => {
+    const { industryGroups, managers, search  } = rawFilters;
+    const filters = {
+      indGroup: industryGroups.map(m => m.value),
+      manager: managers.map(m => m.id),
+      search,
+    };
+    this.setState({ filters, rawFilters });
    }
 
    render() {
@@ -63,7 +71,7 @@
            tabBarInactiveTextColor="#666"
          >
            {this.props.bdStatus.map(m => (
-             <View style={{ flex: 1 }} tabLabel={m.name}>
+             <View key={m.id} style={{ flex: 1 }} tabLabel={m.name}>
                <ProjectBDList status={m.id} filters={this.state.filters} {...this.props} />
              </View>
            ))}
