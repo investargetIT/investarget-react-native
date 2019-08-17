@@ -18,8 +18,11 @@
        headerTintColor: '#fff',
        headerBackTitle: null,
        headerRight: (
-         <TouchableOpacity style={{ marginRight:16 }} onPress={params && params.onPress}> 
-           <Text style={{ color: 'white', fontSize: 16 }}>筛选</Text>
+         <TouchableOpacity style={{ marginRight:16 }} onPress={params && params.onPress}>
+           <View style={{ position: 'relative' }}>
+             <Text style={{ color: 'white', fontSize: 16 }}>筛选</Text>
+             {params && params.hasFilters && <View style={{ position: 'absolute', top: -3, right: -3, width: 8, height: 8, borderRadius: 4, backgroundColor: 'red' }} />}
+           </View>
          </TouchableOpacity>
        ),
      };
@@ -57,6 +60,13 @@
       search,
     };
     this.setState({ filters, rawFilters });
+
+    // 设置筛选按钮右上角的小红点
+    let hasFilters = false;
+    if (industryGroups.length > 0 || managers.length > 0 || search.length > 0) {
+      hasFilters = true;
+    }
+    this.props.navigation.setParams({ hasFilters });
    }
 
    render() {
