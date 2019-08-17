@@ -132,6 +132,15 @@ class ProjectBDFilter extends React.Component {
     navigation.state.params.onConfirmFilters(filters);
   }
 
+  reset = () => {
+    this.setState({
+      search: '',
+      industryGroups: [],
+      managers: [],
+    });
+    this.props.navigation.setParams({ value: '' });
+  }
+
   showSummary = () => {
     let summary = `项目名称：${this.state.search}；`
     if (this.props.userInfo.permissions.includes('BD.manageProjectBD')) {
