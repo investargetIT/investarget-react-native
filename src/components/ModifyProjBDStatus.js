@@ -60,13 +60,22 @@ const cellContentStyle = {
     borderColor:'#f4f4f4'
 }
 
+const textInputProps = {
+  autoCapitalize: "none",
+  spellCheck: false,
+  underlineColorAndroid: "transparent",
+  selectionColor: "#2269d4",
+  placeholderTextColor: "#999",
+}
+
 class ModifyProjBDStatus extends React.Component{
 constructor(props){
 	super(props)
 	this.state={
 		bd_status:props.currentBD.bd_status,
 		username: '', 
-	    mobile: '',
+      mobile: '',
+      mobileAreaCode: '86',
 	    wechat: '', 
 	    email: '',
 	    group: '',
@@ -304,37 +313,31 @@ render(){
     	<Picker value={bd_status&&bd_status.id} options={this.props.statusOptions} onChange={this.handleChangeStatus}/>
     	</View>
     	</View>
-    	{this.isShowContactForm() &&
-    	<View>
-            <SelectInvestorGroup 
-              value={group} 
-              onLoadData={ options => options.length > 0 ? this.setState({ group: options[0].value }) : null }
-              onChange={this.changeGroup.bind(this)}/>
-			<View style={cellStyle} >
-                <Text style={cellLabelStyle}>姓名</Text>
-                <TextInput style={cellContentStyle} underlineColorAndroid="transparent" onChangeText={username=>{this.setState({username},this.checkInvalid);}}/>
-            </View>
-            <View style={cellStyle} >
-                <Text style={cellLabelStyle}>手机号码</Text>
-                <TextInput style={cellContentStyle} underlineColorAndroid="transparent" onChangeText={mobile=>{this.setState({mobile},this.checkInvalid)}}/>
-            </View>
-            <View style={cellStyle} >
-                <Text style={cellLabelStyle}>微信</Text>
-                <TextInput style={cellContentStyle} underlineColorAndroid="transparent" onChangeText={wechat=>{this.setState({wechat},this.checkInvalid)}}/>
-            </View>
-            <View style={cellStyle} >
-                <Text style={cellLabelStyle}>邮箱</Text>
-                <TextInput style={cellContentStyle} underlineColorAndroid="transparent" onChangeText={email=>{this.setState({email},this.checkInvalid)}}/>
-            </View>
-    	</View>
-    	}
+            {this.isShowContactForm() &&
+              <View>
+                <View style={cellStyle} >
+                  <Text style={cellLabelStyle}>联系人姓名</Text>
+                  <TextInput style={cellContentStyle} underlineColorAndroid="transparent" onChangeText={username => { this.setState({ username }, this.checkInvalid); }} />
+                </View>
+                <SelectTitle
+                  value={group}
+                  onLoadData={options => options.length > 0 ? this.setState({ group: options[0].value }) : null}
+                  onChange={this.changeGroup.bind(this)} />
+                <View style={cellStyle} >
+                  <Text style={cellLabelStyle}>联系人电话</Text>
+                  <Text style={{ color: '#333' }}>+</Text>
 
-    	{source=='orgBD'&&currentBD.bduser&&currentBD.bd_status.id!=3&&bd_status.id==3 ?
-			<View style={cellStyle} >
-                <Text style={cellLabelStyle}>微信</Text>
-                <TextInput style={cellContentStyle} onChangeText={wechat=>{this.setState({wechat},this.checkInvalid)}}/>
-            </View>
-    	:null}
+                  <TextInput placeholder="区号" style={{ width: 40, fontSize: 15, color: '#333', borderWidth: 1, borderColor:'#f4f4f4' }} {...textInputProps} value={this.state.mobileAreaCode} onChangeText={value => this.setState({ mobileAreaCode: value })} />
+
+                  <TextInput style={{...cellContentStyle, width: '40%'}} underlineColorAndroid="transparent" onChangeText={mobile => { this.setState({ mobile }, this.checkInvalid) }} />
+                </View>
+                <View style={cellStyle} >
+                  <Text style={cellLabelStyle}>邮箱</Text>
+                  <TextInput style={cellContentStyle} underlineColorAndroid="transparent" onChangeText={email => { this.setState({ email }, this.checkInvalid) }} />
+                </View>
+              </View>
+            }
+
     	<View style={buttonContainer}>
     		<TouchableOpacity style={{...buttonStyle}} onPress={disabled ? null : this.confirmModify.bind(this)}>
 			<Text style={{width:30}}>确认</Text>
@@ -368,15 +371,15 @@ render(){
 }
 }
 
-class SelectInvestorGroup extends React.Component {
+class SelectTitle extends React.Component {
 	state = {
     options: []
   	}
 
   	componentDidMount() {
-    api.queryUserGroup({ type: 'investor' })
+    api.getSource('title' )
       .then(result => {
-        const options = result.data.map(m => ({ label: m.name, value: m.id }));
+        const options = result.map(m => ({ label: m.name, value: m.id }));
         this.setState({ options });
         this.props.onLoadData(options);
       }).catch(error => {
@@ -389,7 +392,7 @@ class SelectInvestorGroup extends React.Component {
     if (options.length === 0) return null;
     return (
     <View style={cellStyle}>
-      <Text style={cellLabelStyle}>角色</Text>
+      <Text style={cellLabelStyle}>联系人职位</Text>
       <View style={{width:'50%'}}>
       <Picker value={this.props.value} options={options} onChange={this.props.onChange}/>
       </View>
