@@ -273,6 +273,11 @@ componentDidMount(){
     this.checkInvalid()
 }
 
+// 项目BD状态改为已见面或已联系(对应id为6,7)时需要填写联系人信息, 详细需求见bugClose#340
+isShowContactForm = () => {
+  return ![6, 7].includes(this.props.currentBD.bd_status.id) && [6, 7].includes(this.state.bd_status.id);
+}
+
 render(){
 	const {bd_status, group, disabled, confirmModal, visible} = this.state
 	const {source, currentBD} = this.props
@@ -299,7 +304,7 @@ render(){
     	<Picker value={bd_status&&bd_status.id} options={this.props.statusOptions} onChange={this.handleChangeStatus}/>
     	</View>
     	</View>
-    	{source=='orgBD'&&!currentBD.bduser&&currentBD.bd_status.id!=3&&bd_status.id==3 ?
+    	{this.isShowContactForm() &&
     	<View>
             <SelectInvestorGroup 
               value={group} 
@@ -322,7 +327,7 @@ render(){
                 <TextInput style={cellContentStyle} underlineColorAndroid="transparent" onChangeText={email=>{this.setState({email},this.checkInvalid)}}/>
             </View>
     	</View>
-    	:null}
+    	}
 
     	{source=='orgBD'&&currentBD.bduser&&currentBD.bd_status.id!=3&&bd_status.id==3 ?
 			<View style={cellStyle} >
