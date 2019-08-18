@@ -99,6 +99,8 @@ checkInvalid = () =>{
 
 
   confirmModify = () => {
+    console.log('confirm modify', this.state);
+    return;
     const { bd_status, username, mobile, wechat, email, group } = this.state
     const { source, currentBD } = this.props
     this.setModalVisible(false)
