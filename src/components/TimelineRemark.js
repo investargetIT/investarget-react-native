@@ -90,10 +90,14 @@ class TimelineRemark extends React.Component {
     }
 
     deleteRemark = (id) => {
-        Alert.alert('提示', '确定要删除该条备注吗？', [
-            { text: '取消', onPress: () => {} },
-            { text: '确定', onPress: () => { this.confirmDeleteRemark(id) } },
-        ])
+      Alert.alert(
+        '提示',
+        this.state.source === 'projectBD' ? '确定要删除该条行动计划吗？' : '确定要删除该条备注吗？',
+        [
+          { text: '取消', onPress: () => { } },
+          { text: '确定', onPress: () => { this.confirmDeleteRemark(id) } },
+        ],
+      );
     }
 
     confirmDeleteRemark = (id) => {
@@ -159,10 +163,10 @@ class TimelineRemark extends React.Component {
         return (
             <View style={this.props.style || {}}>
                 <View style={headStyle}>
-                    <Text style={{width: 120, fontSize: undefined, color:'#333'}}>{source=='timeline'?'时间轴备注':'备注'}</Text>
+                    <Text style={{width: 120, fontSize: undefined, color:'#333'}}>{source=='timeline'?'时间轴备注': source === 'projectBD' ? '行动计划' : '备注'}</Text>
                     { this.props.disableAdd ? null :
                     <TouchableOpacity onPress={this.addRemark} style={{flex:0}}>
-                        <Text style={{fontSize: undefined,color:'#10458f'}}>添加备注</Text>
+                        <Text style={{fontSize: undefined,color:'#10458f'}}>{source === 'projectBD' ? '添加行动计划' : '添加备注'}</Text>
                     </TouchableOpacity>
                     }
                 </View>
@@ -200,7 +204,7 @@ class TimelineRemark extends React.Component {
                     <View style={{flex:1,backgroundColor:'rgba(0,0,0,.5)'}}>
                         <View style={{ marginTop:180, marginLeft: 16,marginRight:16, padding: 12,backgroundColor:'#fff',borderRadius:4,shadowColor:'skyblue',shadowOffset:{h:1,w:0},shadowRadius:3,shadowOpacity:0.5 }}>
                             <View style={{flexDirection:'row', justifyContent:'space-between', height:36,borderBottomColor:'#f4f4f4',borderBottomWidth:1}}>
-                                <Text style={{fontSize: 16, color:'#10458f',marginTop: 4}}>备注信息</Text>
+                                <Text style={{fontSize: 16, color:'#10458f',marginTop: 4}}>{source ==='projectBD' ? '行动计划' : '备注信息'}</Text>
                                 <TouchableOpacity onPress={this.cancelSaveRemark}>
                                     <Image source={require('../images/closeView.png')} style={{width:20,height:20}} />
                                 </TouchableOpacity>
