@@ -97,14 +97,30 @@ checkInvalid = () =>{
     this.setState({disabled})       
 }
 
+  updatePorjectBD = async () => {
+    const { currentBD } = this.props;
+    const { bd_status, email, group: title, mobile, mobileAreaCode, username } = this.state;
+    const editProjBDBody = { bd_status: bd_status.id };
+    if (this.isShowContactForm()) {
+      if (username.length === 0 || mobile.length === 0) {
+        Alert.alert('请填写完整相关信息');
+        return;
+      }
+      const usermobile = (mobileAreaCode && mobile) ? mobileAreaCode + '-' + mobile : mobile;
+      await api.addProjBDCom({
+        projectBD: currentBD.id,
+        comments: `联系人姓名：${username}，电话：${usermobile}，邮箱：${email || '暂无'}`,
+      });
+      editProjBDBody.username = username;
+      editProjBDBody.usertitle = title;
+      editProjBDBody.usermobile = usermobile;
+      editProjBDBody.useremail = email;
+    }
+    await api.editProjBD(currentBD.id, editProjBDBody);
+  }
 
   confirmModify = () => {
-    console.log('confirm modify', this.state);
-    return;
-    const { bd_status, username, mobile, wechat, email, group } = this.state
-    const { source, currentBD } = this.props
-    this.setModalVisible(false)
-    api.editProjBD(currentBD.id, { bd_status: bd_status.id }).then(() => {
+    this.updatePorjectBD().then(() => {
       DeviceEventEmitter.emit('updateProjBD')
       this.props.navigation.goBack()
     }).catch(error => {
