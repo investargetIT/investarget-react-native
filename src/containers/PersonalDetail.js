@@ -57,7 +57,6 @@ class PersonalDetail extends React.Component{
 			currentBD:null,
 			org:null,
 			proj:null,
-			visible:false,
 		}
 	}
 
@@ -66,8 +65,11 @@ class PersonalDetail extends React.Component{
 		
 	}
 	
-	setModalVisible = (visible) =>{
-	this.setState({visible:visible})
+	handleModifyBtnClicked = () =>{
+		this.props.navigation.navigate('ModifyProjBDStatus', {
+      currentBD: this.state.currentBD,
+      source: 'projectBD',
+    });
 	}
 
 	componentDidMount(){
@@ -93,7 +95,7 @@ class PersonalDetail extends React.Component{
  
 	}
 	render(){
-		let {proj, comments, bd_status, id, org, currentBD, visible } =this.state
+		let {proj, comments, bd_status, id, org, currentBD } =this.state
 		const {item, source} = this.props.navigation.state.params
 		return(
 		<ScrollView style={containerStyle}>
@@ -103,7 +105,7 @@ class PersonalDetail extends React.Component{
            	<View style={cellStyle}>
                 <Text style={cellLabelStyle}>当前状态</Text>
                 <Text>{bd_status.name}</Text>
-                <TouchableOpacity onPress={this.setModalVisible.bind(this,true)}>
+                <TouchableOpacity onPress={this.handleModifyBtnClicked}>
                 	<Text style={{width:200,textAlign:'right'}}>修改</Text>
                 </TouchableOpacity>
             </View> : null}
@@ -114,13 +116,7 @@ class PersonalDetail extends React.Component{
 			  id={item.id} 
 			  comments={item.BDComments} 
 			/>
-            {visible?
-			<ModifyProjBDStatus 
-			  currentBD={item} 
-			  source={source} 
-			  setVisible={this.setModalVisible} 
-			  {...this.props}/> 
-			:null}
+
             
             
         </ScrollView>

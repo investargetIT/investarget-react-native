@@ -70,9 +70,13 @@ const textInputProps = {
 
 class ModifyProjBDStatus extends React.Component{
 constructor(props){
-	super(props)
+  super(props)
+  
+  const { currentBD, source } = props.navigation.state.params;
+
 	this.state={
-		bd_status:props.currentBD.bd_status,
+    currentBD,
+		bd_status:currentBD.bd_status,
 		username: '', 
       mobile: '',
       mobileAreaCode: '86',
@@ -91,14 +95,14 @@ setModalVisible = (visible) =>{
 checkInvalid = () =>{
     if (this.props.source === 'projectBD') return;
     const {username, mobile, wechat, email, bd_status, group} =this.state
-    const {currentBD} = this.props
+    const {currentBD} = this.state;
     let disabled = ((username.length === 0 || mobile.length === 0 || wechat.length === 0 || email.length === 0 || group.length === 0) && bd_status.id === 3 && currentBD.bduser === null && currentBD.bd_status.id !== 3)
            || (wechat.length === 0 && bd_status.id === 3 && currentBD.bduser !== null && currentBD.bd_status.id !== 3);
     this.setState({disabled})       
 }
 
   updatePorjectBD = async () => {
-    const { currentBD } = this.props;
+    const { currentBD } = this.state;
     const { bd_status, email, group: title, mobile, mobileAreaCode, username } = this.state;
     const editProjBDBody = { bd_status: bd_status.id };
     if (this.isShowContactForm()) {
@@ -144,12 +148,12 @@ componentDidMount(){
 
 // 项目BD状态改为已见面或已联系(对应id为6,7)时需要填写联系人信息, 详细需求见bugClose#340
 isShowContactForm = () => {
-  return ![6, 7].includes(this.props.currentBD.bd_status.id) && [6, 7].includes(this.state.bd_status.id);
+  return ![6, 7].includes(this.state.currentBD.bd_status.id) && [6, 7].includes(this.state.bd_status.id);
 }
 
 render(){
 	const {bd_status, group, disabled, visible} = this.state
-	const {source, currentBD} = this.props
+	const {source, currentBD} = this.state;
     let color=disabled ? 'white' : 'lightblue'
     buttonStyle={...buttonStyle,backgroundColor:color}
 	return(

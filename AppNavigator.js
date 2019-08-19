@@ -63,6 +63,7 @@ import EditText from './src/containers/EditText';
 import EditAttendee from './src/containers/EditAttendee';
 import FilterUser from './src/containers/FilterUser';
 import ProjectBDFilter from './src/containers/ProjectBDFilter';
+import ModifyProjBDStatus from './src/components/ModifyProjBDStatus';
   
   const AppNavigator = StackNavigator({
     Home: { screen:  Home },
@@ -118,6 +119,7 @@ import ProjectBDFilter from './src/containers/ProjectBDFilter';
     EditAttendee: { screen: EditAttendee },
     FilterUser: { screen: FilterUser },
     ProjectBDFilter: { screen: ProjectBDFilter },
+    ModifyProjBDStatus: { screen: ModifyProjBDStatus },
   })
 
   const RootStack = StackNavigator(
