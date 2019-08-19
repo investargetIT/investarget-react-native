@@ -1,9 +1,10 @@
 import React from 'react'
-import { Image, Text, TextInput, View, FlatList, RefreshControl, TouchableOpacity, DeviceEventEmitter, Modal, Alert} from 'react-native';
+import { Image, Text, TextInput, View, FlatList, RefreshControl, TouchableOpacity, DeviceEventEmitter, Alert} from 'react-native';
 import * as api from '../api'
 import Toast from 'react-native-root-toast'
 import Picker from './Picker'
 import { connect } from 'react-redux';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const backgroundStyle ={
 	flex:1,
@@ -41,19 +42,21 @@ let buttonStyle={
 	flexDirection:'row',
 	justifyContent:'center'
 }
-
 const cellStyle = {
-    flexDirection:'row',
-    alignItems:'center',
-    marginLeft: 10,
-    height: 40,
-    borderBottomColor: '#f4f4f4',
-    borderBottomWidth: 1
+  flexDirection:'row',
+  alignItems:'center',
+  backgroundColor:'#fff',
+  marginBottom: 1,
+  height:40,
+  paddingLeft:16,
+  paddingRight:16,
 }
 const cellLabelStyle = {
     width: 80,
     flex: 0,
 }
+const leftStyle = {width:'30%',fontSize:15,color:'#333'}
+const rightStyle = {flex:1,fontSize:15,color:'#333',paddingLeft: 0}
 const cellContentStyle = {
     width:'60%',
     borderWidth:1,
@@ -86,10 +89,6 @@ constructor(props){
 	    disabled: this.props.source === 'projectBD' ? false : true,
         visible: true,
 	}
-}
-
-setModalVisible = (visible) =>{              
-	this.props.setVisible(visible)    
 }
 
 checkInvalid = () =>{
@@ -157,60 +156,47 @@ render(){
     let color=disabled ? 'white' : 'lightblue'
     buttonStyle={...buttonStyle,backgroundColor:color}
 	return(
-    <View>
-	<Modal          
-      animationType={"fade"}
-      transparent={true}
-      visible={visible}
-    >
-    <View style={backgroundStyle}>
-    	<View style={modalStyle}>
-    		<View style={titleStyle}>
-    		<Text >修改BD状态</Text>
-    		<TouchableOpacity onPress={this.setModalVisible.bind(this,false)}>
-			<Text >X</Text>
-			</TouchableOpacity>
-    		</View>
-    	<View style={cellStyle}>
-		<Text style={cellLabelStyle}>状态</Text>
-    	<View style={{width:'50%'}}>
-    	<Picker value={bd_status&&bd_status.id} options={this.props.statusOptions} onChange={this.handleChangeStatus}/>
-    	</View>
-    	</View>
-            {this.isShowContactForm() &&
-              <View>
-                <View style={cellStyle} >
-                  <Text style={cellLabelStyle}>联系人姓名</Text>
-                  <TextInput style={cellContentStyle} underlineColorAndroid="transparent" onChangeText={username => { this.setState({ username }, this.checkInvalid); }} />
-                </View>
-                <SelectTitle
-                  value={group}
-                  onLoadData={options => options.length > 0 ? this.setState({ group: options[0].value }) : null}
-                  onChange={this.changeGroup.bind(this)} />
-                <View style={cellStyle} >
-                  <Text style={cellLabelStyle}>联系人电话</Text>
-                  <Text style={{ color: '#333' }}>+</Text>
+    <KeyboardAwareScrollView style={{ flex: 1 }}>
 
-                  <TextInput placeholder="区号" style={{ width: 40, fontSize: 15, color: '#333', borderWidth: 1, borderColor:'#f4f4f4' }} {...textInputProps} value={this.state.mobileAreaCode} onChangeText={value => this.setState({ mobileAreaCode: value })} />
+      <View style={cellStyle}>
+        <Text style={leftStyle}>状态</Text>
+        <View style={rightStyle}>
+          <Picker value={bd_status && bd_status.id} options={this.props.statusOptions} onChange={this.handleChangeStatus} />
+        </View>
+      </View>
 
-                  <TextInput style={{...cellContentStyle, width: '40%'}} underlineColorAndroid="transparent" onChangeText={mobile => { this.setState({ mobile }, this.checkInvalid) }} />
-                </View>
-                <View style={cellStyle} >
-                  <Text style={cellLabelStyle}>邮箱</Text>
-                  <TextInput style={cellContentStyle} underlineColorAndroid="transparent" onChangeText={email => { this.setState({ email }, this.checkInvalid) }} />
-                </View>
-              </View>
-            }
+      {this.isShowContactForm() &&
+        <View>
+          <View style={cellStyle} >
+            <Text style={leftStyle}>联系人姓名</Text>
+            <TextInput style={rightStyle} underlineColorAndroid="transparent" onChangeText={username => { this.setState({ username }, this.checkInvalid); }} />
+          </View>
+          <SelectTitle
+            value={group}
+            onLoadData={options => options.length > 0 ? this.setState({ group: options[0].value }) : null}
+            onChange={this.changeGroup.bind(this)} />
+          <View style={cellStyle} >
+            <Text style={cellLabelStyle}>联系人电话</Text>
+            <Text style={{ color: '#333' }}>+</Text>
 
-    	<View style={buttonContainer}>
-    		<TouchableOpacity style={{...buttonStyle}} onPress={disabled ? null : this.confirmModify.bind(this)}>
-			<Text style={{width:30}}>确认</Text>
-			</TouchableOpacity>
-    	</View>	
-    	</View>
-    </View>
-    </Modal>
-    </View>
+            <TextInput placeholder="区号" style={{ width: 40, fontSize: 15, color: '#333', borderWidth: 1, borderColor: '#f4f4f4' }} {...textInputProps} value={this.state.mobileAreaCode} onChangeText={value => this.setState({ mobileAreaCode: value })} />
+
+            <TextInput style={{ ...cellContentStyle, width: '40%' }} underlineColorAndroid="transparent" onChangeText={mobile => { this.setState({ mobile }, this.checkInvalid) }} />
+          </View>
+          <View style={cellStyle} >
+            <Text style={cellLabelStyle}>邮箱</Text>
+            <TextInput style={cellContentStyle} underlineColorAndroid="transparent" onChangeText={email => { this.setState({ email }, this.checkInvalid) }} />
+          </View>
+        </View>
+      }
+
+      <View style={buttonContainer}>
+        <TouchableOpacity style={{ ...buttonStyle }} onPress={disabled ? null : this.confirmModify.bind(this)}>
+          <Text style={{ width: 30 }}>确认</Text>
+        </TouchableOpacity>
+      </View>
+
+    </KeyboardAwareScrollView>
 	)
 }
 }
@@ -236,8 +222,8 @@ class SelectTitle extends React.Component {
     if (options.length === 0) return null;
     return (
     <View style={cellStyle}>
-      <Text style={cellLabelStyle}>联系人职位</Text>
-      <View style={{width:'50%'}}>
+      <Text style={leftStyle}>联系人职位</Text>
+      <View style={rightStyle}>
       <Picker value={this.props.value} options={options} onChange={this.props.onChange}/>
       </View>
     </View>
