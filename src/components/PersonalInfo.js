@@ -151,9 +151,9 @@ class PersonalInfo extends React.Component{
             <BusinessCard cardUrl={cardUrl} /> 
 
             <Cell label="职位" content={title} />
-            <Cell label="标签" content={tags} />
+            {this.props.source !== 'ProjectBDDetail' && <Cell label="标签" content={tags} />}
             <Cell label="微信" content={wechat} />
-            <Cell label="交易师" content={traders} />
+            <Cell label={this.props.source === 'ProjectBDDetail' ? '负责人' : '交易师'} content={traders} />
             {org ? <Cell label="机构" content={org} /> : null}
             { !this.props.currentBD && this.state.famlv !== null ? 
             <View style={cellStyle}>

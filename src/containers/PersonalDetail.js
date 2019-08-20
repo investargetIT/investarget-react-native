@@ -120,7 +120,7 @@ class PersonalDetail extends React.Component{
 		const {item, source} = this.props.navigation.state.params
 		return(
 		<ScrollView style={containerStyle}>
-           <PersonalInfo currentBD={item} />
+           <PersonalInfo currentBD={item} source="ProjectBDDetail" />
            {proj ? <Cell label="项目" content={proj} /> : null}
            {bd_status? 
            	<View style={{...cellStyle, justifyContent: 'space-between', paddingRight: 16 }}>
