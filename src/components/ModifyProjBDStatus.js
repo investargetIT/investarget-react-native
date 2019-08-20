@@ -81,7 +81,7 @@ class ModifyProjBDStatus extends React.Component{
   static navigationOptions = ({ navigation }) => {
     const { params } = navigation.state
     return {
-      title: '修改',
+      title: '修改项目BD状态',
       headerStyle: {
         backgroundColor: '#10458f',
       },
@@ -101,6 +101,7 @@ constructor(props){
   super(props)
   
   const { currentBD, source } = props.navigation.state.params;
+  props.navigation.setParams({ onPress: this.confirmModify });
 
 	this.state={
     currentBD,
@@ -131,8 +132,7 @@ checkInvalid = () =>{
     const editProjBDBody = { bd_status: bd_status.id };
     if (this.isShowContactForm()) {
       if (username.length === 0 || mobile.length === 0) {
-        Alert.alert('请填写完整相关信息');
-        return;
+        throw new Error('请填写完整相关信息');
       }
       const usermobile = (mobileAreaCode && mobile) ? mobileAreaCode + '-' + mobile : mobile;
       await api.addProjBDCom({
@@ -240,12 +240,6 @@ render(){
         </View>
       }
 
-      <View style={buttonContainer}>
-        <TouchableOpacity style={{ ...buttonStyle }} onPress={disabled ? null : this.confirmModify.bind(this)}>
-          <Text style={{ width: 30 }}>确认</Text>
-        </TouchableOpacity>
-      </View>
-
     </KeyboardAwareScrollView>
 	)
 }
@@ -273,7 +267,7 @@ class SelectTitle extends React.Component {
     return (
     <View style={cellStyle}>
       <Text style={leftStyle}>联系人职位</Text>
-      <View style={rightStyle}>
+      <View style={{ flex:1, color:'#333', paddingLeft: 0 }}>
       <Picker value={this.props.value} options={options} onChange={this.props.onChange}/>
       </View>
     </View>

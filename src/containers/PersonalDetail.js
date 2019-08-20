@@ -44,7 +44,8 @@ class PersonalDetail extends React.Component{
       headerStyle: {
         backgroundColor: '#10458f',
       },
-      headerTintColor: '#fff'
+	  headerTintColor: '#fff',
+	  headerBackTitle: null,
     }
  	}
 
