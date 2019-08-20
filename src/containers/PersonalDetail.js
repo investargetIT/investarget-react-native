@@ -58,7 +58,9 @@ class PersonalDetail extends React.Component{
 			currentBD:null,
 			org:null,
 			proj:null,
+			isShowComments: true,
 		}
+		this.id = null;
 	}
 
 	handleChangeStatus = value =>{
@@ -66,16 +68,20 @@ class PersonalDetail extends React.Component{
 		
 	}
 	
-	handleModifyBtnClicked = () =>{
+	handleModifyBtnClicked = () => {
 		this.props.navigation.navigate('ModifyProjBDStatus', {
-      currentBD: this.state.currentBD,
-      source: 'projectBD',
-    });
+			currentBD: this.state.currentBD,
+			source: 'projectBD',
+			onComplete: this.loadData,
+		});
 	}
 
 	componentDidMount(){
 		this.props.navigation.setParams({ handleSubmit: this.handleSubmit })
 		const {item, source} = this.props.navigation.state.params
+
+		this.id = item.id;
+
 		if(source == 'projectBD'){
 			this.setState({
 				currentBD:item, 
@@ -95,6 +101,20 @@ class PersonalDetail extends React.Component{
 		}
  
 	}
+
+    loadData = () => {
+		this.setState({ isShowComments: false });
+		api.getProjBDDetail(this.id).then(item => {
+			this.setState({
+				currentBD:item, 
+				proj: item.com_name, 
+				bd_status: item.bd_status,
+				comments: item.BDComments,
+				isShowComments: true,
+			})
+		});
+	}
+
 	render(){
 		let {proj, comments, bd_status, id, org, currentBD } =this.state
 		const {item, source} = this.props.navigation.state.params
@@ -103,13 +123,14 @@ class PersonalDetail extends React.Component{
            <PersonalInfo currentBD={item} />
            {proj ? <Cell label="项目" content={proj} /> : null}
            {bd_status? 
-           	<View style={cellStyle}>
+           	<View style={{...cellStyle, justifyContent: 'space-between', paddingRight: 16 }}>
                 <Text style={cellLabelStyle}>当前状态</Text>
-                <Text>{bd_status.name}</Text>
+                <Text style={{ flex: 1 }}>{bd_status.name}</Text>
                 <TouchableOpacity onPress={this.handleModifyBtnClicked}>
-                	<Text style={{width:200,textAlign:'right'}}>修改</Text>
+                	<Text>修改</Text>
                 </TouchableOpacity>
-            </View> : null}
+			</View> : null}
+			{this.state.isShowComments &&
 			<TimelineRemark 
 			  disableAdd={source === 'orgBD' && !this.props.userInfo.permissions.includes('BD.manageOrgBD') && this.props.userInfo.id !== item.manager.id} 
 			  style={{flex: 1}} 
@@ -117,6 +138,7 @@ class PersonalDetail extends React.Component{
 			  id={item.id} 
 			  comments={item.BDComments} 
 			/>
+			}
 
             
             

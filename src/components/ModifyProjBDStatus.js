@@ -150,7 +150,8 @@ checkInvalid = () =>{
   confirmModify = () => {
     this.updatePorjectBD().then(() => {
       DeviceEventEmitter.emit('updateProjBD')
-      this.props.navigation.goBack()
+      this.props.navigation.goBack();
+      this.props.navigation.state.params.onComplete();
     }).catch(error => {
       Toast.show(error.message, { position: Toast.positions.CENTER })
     })
@@ -185,7 +186,7 @@ render(){
 
       <View style={cellStyle}>
         <Text style={leftStyle}>状态</Text>
-        <View style={rightStyle}>
+        <View style={{flex:1,paddingLeft: 0}}>
           <Picker value={bd_status && bd_status.id} options={this.props.statusOptions} onChange={this.handleChangeStatus} />
         </View>
       </View>
@@ -267,7 +268,7 @@ class SelectTitle extends React.Component {
     return (
     <View style={cellStyle}>
       <Text style={leftStyle}>联系人职位</Text>
-      <View style={{ flex:1, color:'#333', paddingLeft: 0 }}>
+      <View style={{ flex:1, paddingLeft: 0 }}>
       <Picker value={this.props.value} options={options} onChange={this.props.onChange}/>
       </View>
     </View>

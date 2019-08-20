@@ -233,6 +233,8 @@ export function getProjBDList(param) {
   return r('/bd/projbd/?' + qs.stringify(param))
 }
 
+export const getProjBDDetail = id => r(`/bd/projbd/${id}`);
+
 export const editProjBD = (id, data) => {
   return r('/bd/projbd/' + id + '/', 'PUT', data)
 }
