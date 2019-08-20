@@ -77,6 +77,26 @@ const textInputProps = {
 }
 
 class ModifyProjBDStatus extends React.Component{
+
+  static navigationOptions = ({ navigation }) => {
+    const { params } = navigation.state
+    return {
+      title: '修改',
+      headerStyle: {
+        backgroundColor: '#10458f',
+      },
+      headerTintColor: '#fff',
+      headerRight: (
+        <TouchableOpacity
+          style={{ marginRight: 16 }}
+          onPress={() => { params.onPress && params.onPress() }}>
+          <Text style={{ fontSize: 15, color: '#fff' }}>提交</Text>
+        </TouchableOpacity>
+      ),
+      headerBackTitle: null,
+    }
+  }
+
 constructor(props){
   super(props)
   
