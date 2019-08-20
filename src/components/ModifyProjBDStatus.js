@@ -56,7 +56,12 @@ const cellLabelStyle = {
     flex: 0,
 }
 const leftStyle = {width:'30%',fontSize:15,color:'#333'}
-const rightStyle = {flex:1,fontSize:15,color:'#333',paddingLeft: 0}
+const rightStyle = {
+  flex:1,
+  fontSize:15,
+  color:'#333',
+  paddingLeft: 0,
+};
 const cellContentStyle = {
     width:'60%',
     borderWidth:1,
@@ -167,26 +172,51 @@ render(){
 
       {this.isShowContactForm() &&
         <View>
+
           <View style={cellStyle} >
             <Text style={leftStyle}>联系人姓名</Text>
-            <TextInput style={rightStyle} underlineColorAndroid="transparent" onChangeText={username => { this.setState({ username }, this.checkInvalid); }} />
+            <TextInput
+              style={{ ...rightStyle, paddingLeft: 8, paddingRight: 16 }}
+              underlineColorAndroid="transparent"
+              onChangeText={username => { this.setState({ username }, this.checkInvalid); }}
+              placeholder="未填写"
+            />
           </View>
+
           <SelectTitle
             value={group}
             onLoadData={options => options.length > 0 ? this.setState({ group: options[0].value }) : null}
-            onChange={this.changeGroup.bind(this)} />
-          <View style={cellStyle} >
-            <Text style={cellLabelStyle}>联系人电话</Text>
-            <Text style={{ color: '#333' }}>+</Text>
+            onChange={this.changeGroup.bind(this)}
+          />
 
-            <TextInput placeholder="区号" style={{ width: 40, fontSize: 15, color: '#333', borderWidth: 1, borderColor: '#f4f4f4' }} {...textInputProps} value={this.state.mobileAreaCode} onChangeText={value => this.setState({ mobileAreaCode: value })} />
-
-            <TextInput style={{ ...cellContentStyle, width: '40%' }} underlineColorAndroid="transparent" onChangeText={mobile => { this.setState({ mobile }, this.checkInvalid) }} />
-          </View>
           <View style={cellStyle} >
-            <Text style={cellLabelStyle}>邮箱</Text>
-            <TextInput style={cellContentStyle} underlineColorAndroid="transparent" onChangeText={email => { this.setState({ email }, this.checkInvalid) }} />
+            <Text style={leftStyle}>联系人电话</Text>
+            <Text style={{ color: '#333', paddingLeft: 8 }}>+</Text>
+            <TextInput
+              placeholder="区号"
+              style={{ width: 40, fontSize: 15, color: '#333' }}
+              {...textInputProps}
+              value={this.state.mobileAreaCode}
+              onChangeText={value => this.setState({ mobileAreaCode: value })}
+            />
+            <TextInput
+              style={{ ...rightStyle, paddingRight: 16 }}
+              underlineColorAndroid="transparent"
+              onChangeText={mobile => { this.setState({ mobile }, this.checkInvalid) }}
+              placeholder="未填写"
+            />
           </View>
+
+          <View style={cellStyle} >
+            <Text style={leftStyle}>邮箱</Text>
+            <TextInput
+              style={{ ...rightStyle, paddingLeft: 8, paddingRight: 16 }}
+              underlineColorAndroid="transparent"
+              onChangeText={email => { this.setState({ email }, this.checkInvalid) }}
+              placeholder="未填写"
+            />
+          </View>
+
         </View>
       }
 
