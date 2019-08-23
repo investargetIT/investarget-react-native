@@ -102,11 +102,12 @@ class Dashboard extends React.Component {
 
     let list = [];
     if (allData.count > 0) {
+      const ids = allData.data.filter(f => f.proj).map(m => m.proj);
       const reqProjList = await api.getProj({
-        ids: allData.data.filter(f => f.proj).map(m => m.proj),
+        ids,
         max_size: PAGE_SIZE,
       });
-      list = reqProjList.data;
+      list = ids.map(m => reqProjList.data.filter(f => f.id === m)[0]);
     }
 
     this.setState({ 
