@@ -19,7 +19,11 @@ To generate signed Android apk, run:
 ```
 cd android && ./gradlew assembleRelease
 ```
-and it will be generated at:
+it will be generated at:
 ```
 android/app/build/outputs/apk/app-release.apk
+```
+test it on device:
+```
+react-native run-android --variant=release
 ```
