@@ -53,14 +53,14 @@ class ScheduleForm extends React.Component {
             const {action, year, month, day} = await DatePickerAndroid.open({
               // Use `new Date()` for current date.
               // May 25 2020. Month 0 is January.
-              date: new Date(),
+              date: this.props.date,
               minDate: this.minimumDate,
             });
             if (action !== DatePickerAndroid.dismissedAction) {
               // Selected year, month (0-11), day
               const {action, hour, minute} = await TimePickerAndroid.open({
-                hour: 14,
-                minute: 0,
+                hour: this.props.date.getHours(),
+                minute: this.props.date.getMinutes(),
                 is24Hour: true, // Will display '2 PM'
               });
               if (action !== TimePickerAndroid.dismissedAction) {

@@ -70,6 +70,9 @@ class AddVideoMeeting extends React.Component {
       areaOptions: [],
       country: { label: '中国', value: 42 },
     }
+
+    const now = new Date();
+    this.minimumDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   }
 
   componentDidMount() {
@@ -276,20 +279,20 @@ class AddVideoMeeting extends React.Component {
         const {action, year, month, day} = await DatePickerAndroid.open({
           // Use `new Date()` for current date.
           // May 25 2020. Month 0 is January.
-          date: new Date(),
+          date: this.state.date,
           minDate: this.minimumDate,
         });
         if (action !== DatePickerAndroid.dismissedAction) {
           // Selected year, month (0-11), day
           const {action, hour, minute} = await TimePickerAndroid.open({
-            hour: 14,
-            minute: 0,
+            hour: this.state.date.getHours(),
+            minute: this.state.date.getMinutes(),
             is24Hour: true, // Will display '2 PM'
           });
           if (action !== TimePickerAndroid.dismissedAction) {
             // Selected hour (0-23), minute (0-59)
             console.log(year, month, day, hour, minute);
-            this.props.onDateChange(new Date(`${year}-${pad(month + 1)}-${pad(day)}T${pad(hour)}:${pad(minute)}+08:00`))
+            this.setState({ date: new Date(`${year}-${pad(month + 1)}-${pad(day)}T${pad(hour)}:${pad(minute)}+08:00`) });
           }
         }
       } catch ({code, message}) {
