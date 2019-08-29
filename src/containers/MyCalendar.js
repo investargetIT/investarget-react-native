@@ -180,22 +180,36 @@ class MyCalendar extends React.Component {
     const items = Object.assign({}, this.state.items);
     const markedDates = Object.assign({}, this.state.markedDates);
     let newItems;
-    api.getSchedule({ manager: this.props.userInfo.id, date: day.dateString, page_size: 10000 })
-    .then(result => {
-      
-      // console.log('data from result', result);
+
+    const selectedDate = moment(day.dateString);
+    const lastMonth = selectedDate.clone().subtract(1, 'M');
+    const nextMonth = selectedDate.clone().add(1, 'M');
+    const requestThreeMonthsSchedule = [
+      lastMonth,
+      selectedDate,
+      nextMonth,
+    ].map(m => api.getSchedule({
+      manager: this.props.userInfo.id, 	
+      page_size: 10000, 	    
+      date: m.format('YYYY-MM-DD'),
+    }));
+
+    Promise.all(requestThreeMonthsSchedule).then(res => {
+     
+      const data = res.reduce((prev, curr) => prev.concat(curr.data), []);
+      const result = { data };
 
       const loadDate = moment(day.dateString);
-      const startOfMonth = loadDate.clone().startOf('month');
-      const dayNumOfTheMonth = loadDate.clone().endOf('month').date();
-      const dateOfTheMonth = [];
-      for (const i = 0; i < dayNumOfTheMonth; i++) {
-        const currentDate = startOfMonth.clone().add(i, 'd').format('YYYY-MM-DD');
-        dateOfTheMonth.push(currentDate);
+      const startOfLastMonth = loadDate.clone().subtract(1, 'M').startOf('month');
+      const endOfNextMonth = loadDate.clone().add(1, 'M').endOf('month');
+      const dayNumOfThreeMonths = endOfNextMonth.diff(startOfLastMonth, 'days') + 1;
+      const dateOfThreeMonths = [];
+      for (const i = 0; i < dayNumOfThreeMonths; i++) {
+        const currentDate = startOfLastMonth.clone().add(i, 'd').format('YYYY-MM-DD');
+        dateOfThreeMonths.push(currentDate);
       }
-      // console.log('dateOfTheMonth', dateOfTheMonth);
 
-      dateOfTheMonth.forEach(element => {
+      dateOfThreeMonths.forEach(element => {
         const cachedEvent = items[element] && items[element].slice();
         // console.log('cachedEvent', cachedEvent);
         const eventFromServer = result.data.filter(f => f.scheduledtime.slice(0, 10) === element);
