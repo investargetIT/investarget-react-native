@@ -121,12 +121,14 @@
   			bd_status,
   			page_index:isLoadingMore?this.state.page_index+1 : 1,
         page_size,
+        sort: 'lastmodifytime',
+        desc: 1,
         ...additionalFilters,
       }
       if (!this.props.userInfo.permissions.includes('BD.manageProjectBD')) {
         params.manager = this.props.userInfo.id;
       }
-  		api.getProjBDList(params).then((result)=>{			
+  		api.getProjBDList(params).then((result)=>{
 			this.setState({
 				total:result.count,
 				list: isLoadingMore?this.state.list.concat(result.data) :result.data,
