@@ -3,9 +3,9 @@ import { logout } from '../actions';
 import { NavigationActions } from 'react-navigation'
 
 let baseUrl = "http://apitest.investarget.com"
-// baseUrl = "https://api.investarget.com";
+baseUrl = "https://api.investarget.com";
 let mobileUrl = 'http://mtest.investarget.com';
-// mobileUrl = 'https://m.investarget.com';
+mobileUrl = 'https://m.investarget.com';
 export { baseUrl, mobileUrl };
 
 export class ApiError extends Error {
