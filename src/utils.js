@@ -255,7 +255,7 @@ export function convertDetailProject(proj) {
         // hasPublicDataRoom
         id: proj.id,
         industrys: proj.industries ? proj.industries.map(item => convertProjIndustry(item)) : [],
-        isMarketPlace: proj.ismarketplace,
+        isMarketPlace: false,
         ishidden: proj.isHidden,
         phoneNumber: proj.phoneNumber,
         projectAttachment: proj.attachment ? proj.attachment.map(item => convertProjAttachment(item)) : [],

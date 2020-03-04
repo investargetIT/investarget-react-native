@@ -84,7 +84,7 @@ class EditSchedule extends React.Component {
         obj['country'] = item.country.country
         obj['imgUrl'] = item.industries[0].url
         obj['industrys'] = item.industries.map(i => i.name)
-        obj['isMarketPlace'] = item.ismarketplace
+        obj['isMarketPlace'] = false 
         obj['amount_cny'] = item.financeAmount
         obj['currency'] = item.currency.id
       }

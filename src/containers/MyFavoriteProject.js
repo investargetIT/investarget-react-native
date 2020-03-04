@@ -192,7 +192,7 @@ class MyFavoriteProject extends React.Component {
             obj['country'] = item.country.country
             obj['imgUrl'] = item.industries[0].url
             obj['industrys'] = item.industries.map(i => i.name)
-            obj['isMarketPlace'] = item.ismarketplace
+            obj['isMarketPlace'] = false 
             return obj
         }
         return (
