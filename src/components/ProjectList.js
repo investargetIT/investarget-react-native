@@ -158,8 +158,8 @@ class ProjectList extends React.Component {
             obj['title'] = item.projtitle
             obj['amount'] = item.financeAmount_USD
             obj['country'] = item.country.country
-            obj['imgUrl'] = item.industries[0].url
-            obj['industrys'] = item.industries.map(i => i.name)
+            obj['imgUrl'] = item.industries && item.industries.length > 0 ? item.industries[0].url : ''
+            obj['industrys'] = item.industries ? item.industries.map(i => i.name) : []
             obj['isMarketPlace'] = false 
             obj['amount_cny'] = item.financeAmount
             obj['currency'] = item.currency.id
@@ -183,14 +183,15 @@ class ProjectList extends React.Component {
         }
         Promise.all(requestArr)
           .then(result => {
+            console.log(result);
             const projects = result.map(item => item.data).reduce((acc, val) => acc.concat(val), []).map(item => {
               var obj = {}
               obj['id'] = item.id
               obj['title'] = item.projtitle
               obj['amount'] = item.financeAmount_USD
               obj['country'] = item.country.country
-              obj['imgUrl'] = item.industries[0].url
-              obj['industrys'] = item.industries.map(i => i.name)
+              obj['imgUrl'] = item.industries && item.industries.length > 0 ? item.industries[0].url : ''
+              obj['industrys'] = item.industries ? item.industries.map(i => i.name) : []
               obj['isMarketPlace'] = false 
               obj['amount_cny'] = item.financeAmount
               obj['currency'] = item.currency.id
