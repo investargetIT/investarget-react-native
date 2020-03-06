@@ -190,7 +190,7 @@ class ProjectList extends React.Component {
               obj['title'] = item.projtitle
               obj['amount'] = item.financeAmount_USD
               obj['country'] = item.country.country
-              obj['imgUrl'] = item.industries && item.industries.length > 0 ? item.industries[0].url : ''
+              obj['imgUrl'] = item.industries && item.industries.length > 0 ? (item.industries[0].url || '') : ''
               obj['industrys'] = item.industries ? item.industries.map(i => i.name) : []
               obj['isMarketPlace'] = false 
               obj['amount_cny'] = item.financeAmount
