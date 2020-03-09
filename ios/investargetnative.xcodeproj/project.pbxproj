@@ -1539,7 +1539,7 @@
 				CODE_SIGN_ENTITLEMENTS = investargetnative/investargetnative.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3.5.3.2;
+				CURRENT_PROJECT_VERSION = 3.5.3.4;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 374UGTYGK8;
 				HEADER_SEARCH_PATHS = (
@@ -1578,7 +1578,7 @@
 				CODE_SIGN_ENTITLEMENTS = investargetnative/investargetnative.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3.5.3.2;
+				CURRENT_PROJECT_VERSION = 3.5.3.4;
 				DEVELOPMENT_TEAM = 374UGTYGK8;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
