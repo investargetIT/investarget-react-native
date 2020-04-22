@@ -26,13 +26,13 @@ function OrgBDGroupByProjCell (props) {
         <View style={{ width: '80%', alignSelf: 'center', alignItems: 'center', backgroundColor: undefined }}>
           <Text style={{ marginTop: 20, marginBottom: 20, lineHeight: 20, textAlign: 'center', fontSize: 15 }}>{projtitle}</Text>
           <Text style={{ margin: 2, fontSize: 13, color: '#666' }}>地区：{country.country}</Text>
-          <Text style={{ margin: 2, fontSize: 13, color: '#666' }}>交易类型：{transactionType.map(m => m.name).join('、')}</Text>
+          {/* <Text style={{ margin: 2, fontSize: 13, color: '#666' }}>交易类型：{transactionType.map(m => m.name).join('、')}</Text> */}
           <Text style={{ margin: 2, fontSize: 13, color: '#666', textAlign: 'center' }}>标签：{tags.map(m => m.name).join('、')}</Text>
           {/* <Text style={{ margin: 10, lineHeight: 30, color: '#10458F', backgroundColor: undefined }}>点击查看时间轴</Text> */}
         </View>
 
         <View style={{ margin: 10, marginTop: 10, marginBottom: 10, height: undefined, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: undefined}}>
-          <Text>BD机构：{orgCount}</Text>
+          <Text></Text>
           <TouchableOpacity style={{ padding: 10 }} onPress={projOnPress}>
             <Text style={{ color: '#10458F' }}>项目详情</Text>
           </TouchableOpacity>
@@ -99,16 +99,17 @@ class Dashboard extends React.Component {
       page_size: PAGE_SIZE,
       page_index: isLoadingMore ? this.state.page + 1 : 1,
     });
-
-    let list = [];
-    if (allData.count > 0) {
-      const ids = allData.data.filter(f => f.proj).map(m => m.proj);
-      const reqProjList = await api.getProj({
-        ids,
-        max_size: PAGE_SIZE,
-      });
-      list = ids.map(m => reqProjList.data.filter(f => f.id === m)[0]);
-    }
+    
+    // let list = [];
+    // if (allData.count > 0) {
+    //   const ids = allData.data.filter(f => f.proj).map(m => m.proj);
+    //   const reqProjList = await api.getProj({
+    //     ids,
+    //     max_size: PAGE_SIZE,
+    //   });
+    //   list = ids.map(m => reqProjList.data.filter(f => f.id === m)[0]);
+    // }
+    const list = allData.data.filter(f => f.proj).map(m => m.proj);
 
     this.setState({ 
       list: isLoadingMore ? this.state.list.concat(list) : list, 
