@@ -94,19 +94,18 @@ class OrgBDProjList extends React.Component {
       page_size: PAGE_SIZE,
       page_index: isLoadingMore ? this.state.page + 1 : 1,
     });
-
     const allData = allProj.data.filter(f => f.proj).map(m => m.proj);
 
-    for (let index = 0; index < allData.data.length; index++) {
-      const element = allData.data[index];
+    for (let index = 0; index < allData.length; index++) {
+      const element = allData[index];
       const bdReq = await api.getOrgBdBase({ proj: element.id, manager: this.props.userInfo.id });
       element.orgCount = bdReq.count;
     }
 
     this.setState({ 
-      list: isLoadingMore ? this.state.list.concat(allData.data) : allData.data, 
+      list: isLoadingMore ? this.state.list.concat(allData) : allData, 
       loading: false, 
-      isLoadingAll: allData.data.length < PAGE_SIZE,
+      isLoadingAll: allData.length < PAGE_SIZE,
       isLoadingMore: false,
       page: isLoadingMore ? this.state.page + 1 : 1,
     });
