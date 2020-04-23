@@ -26,7 +26,7 @@ function OrgBDGroupByProjCell (props) {
         <View style={{ width: '80%', alignSelf: 'center', alignItems: 'center', backgroundColor: undefined }}>
           <Text style={{ marginTop: 20, marginBottom: 20, lineHeight: 20, textAlign: 'center', fontSize: 15 }}>{projtitle}</Text>
           <Text style={{ margin: 2, fontSize: 13, color: '#666' }}>地区：{country.country}</Text>
-          <Text style={{ margin: 2, fontSize: 13, color: '#666' }}>交易类型：{transactionType.map(m => m.name).join('、')}</Text>
+          {/* <Text style={{ margin: 2, fontSize: 13, color: '#666' }}>交易类型：{transactionType.map(m => m.name).join('、')}</Text> */}
           <Text style={{ margin: 2, fontSize: 13, color: '#666', textAlign: 'center' }}>标签：{tags.map(m => m.name).join('、')}</Text>
           {/* <Text style={{ margin: 10, lineHeight: 30, color: '#10458F', backgroundColor: undefined }}>点击查看时间轴</Text> */}
         </View>
@@ -63,6 +63,7 @@ class OrgBDProjList extends React.Component {
       loading: false,
       isLoadingMore: false,
       isLoadingAll: false,
+      page: 0,
     };
     this.search = '';
   }
@@ -80,13 +81,21 @@ class OrgBDProjList extends React.Component {
     if (isLoadingMore === undefined) {
       this.setState({ loading: true });
     }
-    const allData = await api.getProj({ 
-      bdm: this.props.userInfo.id, 
-      projstatus: [4, 6, 7], 
-      skip_count: isLoadingMore ? this.state.list.length : 0, 
-      max_size: PAGE_SIZE,
+    // const allData = await api.getProj({ 
+    //   bdm: this.props.userInfo.id, 
+    //   projstatus: [4, 6, 7], 
+    //   skip_count: isLoadingMore ? this.state.list.length : 0, 
+    //   max_size: PAGE_SIZE,
+    //   search: this.search,
+    // });
+    const allProj = await api.getOrgBDProj({ 
       search: this.search,
+      manager: [this.props.userInfo.id],
+      page_size: PAGE_SIZE,
+      page_index: isLoadingMore ? this.state.page + 1 : 1,
     });
+
+    const allData = allProj.data.filter(f => f.proj).map(m => m.proj);
 
     for (let index = 0; index < allData.data.length; index++) {
       const element = allData.data[index];
@@ -99,6 +108,7 @@ class OrgBDProjList extends React.Component {
       loading: false, 
       isLoadingAll: allData.data.length < PAGE_SIZE,
       isLoadingMore: false,
+      page: isLoadingMore ? this.state.page + 1 : 1,
     });
   }
 
