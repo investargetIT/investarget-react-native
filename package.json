@@ -22,7 +22,7 @@
   "dependencies": {
     "jcore-react-native": "^1.2.8",
     "jpush-react-native": "^2.2.7",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.19",
     "lodash.debounce": "^4.0.8",
     "moment": "^2.22.1",
     "qs": "^6.5.1",
