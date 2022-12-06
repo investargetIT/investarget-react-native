@@ -25,7 +25,7 @@
     "lodash": "^4.17.4",
     "lodash.debounce": "^4.0.8",
     "moment": "^2.22.1",
-    "qs": "^6.5.1",
+    "qs": "^6.5.3",
     "react": "16.0.0-alpha.12",
     "react-native": "0.51.0",
     "react-native-calendar-events": "^1.4.3",
